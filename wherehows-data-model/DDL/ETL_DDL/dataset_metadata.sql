@@ -66,39 +66,52 @@ CREATE TABLE "dict_dataset" (
   "name"                        VARCHAR(200)                                                                                NOT NULL,
   "schema"                      MEDIUMTEXT CHARACTER SET utf8,
   "schema_type"                 VARCHAR(50)                                                                                 DEFAULT 'JSON'
-  COMMENT 'JSON, Hive, DDL, XML, CSV',
+  ,
   "properties"                  TEXT CHARACTER SET utf8,
   "fields"                      MEDIUMTEXT CHARACTER SET utf8,
   "urn"                         VARCHAR(500)                                                                                NOT NULL,
   "source"                      VARCHAR(50)                                                                                 NULL
-  COMMENT 'The original data source type (for dataset in data warehouse). Oracle, Kafka ...',
+  ,
   "location_prefix"             VARCHAR(200)                                                                                NULL,
   "parent_name"                 VARCHAR(500)                                                                                NULL
-  COMMENT 'Schema Name for RDBMS, Group Name for Jobs/Projects/Tracking Datasets on HDFS ',
+  ,
   "storage_type"                ENUM('Table', 'View', 'Avro', 'ORC', 'RC', 'Sequence', 'Flat File', 'JSON', 'BINARY_JSON', 'XML', 'Thrift', 'Parquet', 'Protobuff') NULL,
   "ref_dataset_id"              INT(11) UNSIGNED                                                                            NULL
-  COMMENT 'Refer to Master/Main dataset for Views/ExternalTables',
-  "is_active"                   BOOLEAN NULL COMMENT 'is the dataset active / exist ?',
-  "is_deprecated"               BOOLEAN NULL COMMENT 'is the dataset deprecated by user ?',
+  ,
+  "is_active"                   BOOLEAN NULL ,
+  "is_deprecated"               BOOLEAN NULL ,
   "dataset_type"                VARCHAR(30)                                                                                 NULL
-  COMMENT 'hdfs, hive, kafka, teradata, mysql, sqlserver, file, nfs, pinot, salesforce, oracle, db2, netezza, cassandra, hbase, qfs, zfs',
+  ,
   "hive_serdes_class"           VARCHAR(300)                                                                                NULL,
   "is_partitioned"              CHAR(1)                                                                                     NULL,
   "partition_layout_pattern_id" SMALLINT(6)                                                                                 NULL,
   "sample_partition_full_path"  VARCHAR(256)
-  COMMENT 'sample partition full path of the dataset',
+  ,
   "source_created_time"         BIGINT                                                                                NULL
-  COMMENT 'source created time of the flow',
+  ,
   "source_modified_time"        BIGINT                                                                                NULL
-  COMMENT 'latest source modified time of the flow',
-  "created_time"                BIGINT COMMENT 'wherehows created time',
-  "modified_time"               BIGINT COMMENT 'latest wherehows modified',
-  "wh_etl_exec_id"              BIGINT COMMENT 'wherehows etl execution id that modified this record',
+  ,
+  "created_time"                BIGINT ,
+  "modified_time"               BIGINT ,
+  "wh_etl_exec_id"              BIGINT ,
   PRIMARY KEY ("id"),
   UNIQUE "uq_dataset_urn" ("urn")
 )
 
 ;
+COMMENT ON COLUMN dict_dataset.schema_type IS 'JSON, Hive, DDL, XML, CSV';
+COMMENT ON COLUMN dict_dataset.source IS 'The original data source type (for dataset in data warehouse). Oracle, Kafka ...';
+COMMENT ON COLUMN dict_dataset.parent_name IS 'Schema Name for RDBMS, Group Name for Jobs/Projects/Tracking Datasets on HDFS ';
+COMMENT ON COLUMN dict_dataset.ref_dataset_id IS 'Refer to Master/Main dataset for Views/ExternalTables';
+COMMENT ON COLUMN dict_dataset.is_active IS 'is the dataset active / exist ?';
+COMMENT ON COLUMN dict_dataset.is_deprecated IS 'is the dataset deprecated by user ?';
+COMMENT ON COLUMN dict_dataset.dataset_type IS 'hdfs, hive, kafka, teradata, mysql, sqlserver, file, nfs, pinot, salesforce, oracle, db2, netezza, cassandra, hbase, qfs, zfs';
+COMMENT ON COLUMN dict_dataset.sample_partition_full_path IS 'sample partition full path of the dataset';
+COMMENT ON COLUMN dict_dataset.source_created_time IS 'source created time of the flow';
+COMMENT ON COLUMN dict_dataset.source_modified_time IS 'latest source modified time of the flow';
+COMMENT ON COLUMN dict_dataset.created_time IS 'wherehows created time';
+COMMENT ON COLUMN dict_dataset.modified_time IS 'latest wherehows modified';
+COMMENT ON COLUMN dict_dataset.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
 
 -- stagging table for sample data
 CREATE TABLE "stg_dict_dataset_sample" (
@@ -120,7 +133,7 @@ CREATE TABLE "dict_dataset_sample" (
   "dataset_id" INT(11)          NULL,
   "urn"        VARCHAR(200)     NULL,
   "ref_id"     INT(11)          NULL
-  COMMENT 'Reference dataset id of which dataset that we fetch sample from. e.g. for tables we do not have permission, fetch sample data from DWH_STG correspond tables',
+  ,
   "data"       MEDIUMTEXT,
   "modified"   DATETIME         NULL,
   "created"    DATETIME         NULL,
@@ -130,6 +143,7 @@ CREATE TABLE "dict_dataset_sample" (
 
   AUTO_INCREMENT = 0
 ;
+COMMENT ON COLUMN dict_dataset_sample.ref_id IS 'Reference dataset id of which dataset that we fetch sample from. e.g. for tables we do not have permission, fetch sample data from DWH_STG correspond tables';
 
 -- stagging table for field detail
 CREATE TABLE "stg_dict_field_detail" (
@@ -152,7 +166,7 @@ CREATE TABLE "stg_dict_field_detail" (
   "namespace"      VARCHAR(200)                  NULL,
   "description"    VARCHAR(1000)                 NULL,
   "last_modified"  TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  "dataset_id"     BIGINT         NULL COMMENT 'used to opitimize metadata ETL performance',
+  "dataset_id"     BIGINT         NULL ,
   KEY "idx_stg_dict_field_detail__description" ("description"(100)),
   PRIMARY KEY ("urn", "sort_id", "db_id")
 )
@@ -160,6 +174,7 @@ CREATE TABLE "stg_dict_field_detail" (
 
   PARTITION BY HASH(db_id)
   PARTITIONS 8;
+  COMMENT ON COLUMN stg_dict_field_detail.dataset_id IS 'used to opitimize metadata ETL performance';
 
 -- field detail table
 CREATE TABLE "dict_field_detail" (
@@ -174,31 +189,31 @@ CREATE TABLE "dict_field_detail" (
   "data_type"          VARCHAR(50)          NOT NULL,
   "data_size"          INT(10) UNSIGNED              NULL,
   "data_precision"     TINYINT(4)                    NULL
-  COMMENT 'only in decimal type',
+  ,
   "data_fraction"      TINYINT(4)                    NULL
-  COMMENT 'only in decimal type',
+  ,
   "default_comment_id" INT(11) UNSIGNED              NULL
-  COMMENT 'a list of comment_id',
+  ,
   "comment_ids"        VARCHAR(500)                  NULL,
   "is_nullable"        CHAR(1)                       NULL,
   "is_indexed"         CHAR(1)                       NULL
-  COMMENT 'only in RDBMS',
+  ,
   "is_partitioned"     CHAR(1)                       NULL
-  COMMENT 'only in RDBMS',
+  ,
   "is_distributed"     TINYINT(4)                    NULL
-  COMMENT 'only in RDBMS',
+  ,
   "is_recursive"       CHAR(1)                       NULL,
   "confidential_flags" VARCHAR(200)                  NULL,
   "default_value"      VARCHAR(200)                  NULL,
   "namespace"          VARCHAR(200)                  NULL,
   "java_data_type"     VARCHAR(50)                   NULL
-  COMMENT 'correspond type in java',
+  ,
   "jdbc_data_type"     VARCHAR(50)                   NULL
-  COMMENT 'correspond type in jdbc',
+  ,
   "pig_data_type"      VARCHAR(50)                   NULL
-  COMMENT 'correspond type in pig',
+  ,
   "hcatalog_data_type" VARCHAR(50)                   NULL
-  COMMENT 'correspond type in hcatalog',
+  ,
   "modified"           TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY ("field_id"),
   UNIQUE "uix_dict_field__datasetid_parentpath_fieldname" ("dataset_id", "parent_path", "field_name") USING BTREE,
@@ -208,6 +223,16 @@ CREATE TABLE "dict_field_detail" (
   AUTO_INCREMENT = 0
 
   COMMENT = 'Flattened Fields/Columns';
+  COMMENT ON COLUMN dict_field_detail.data_precision IS 'only in decimal type';
+  COMMENT ON COLUMN dict_field_detail.data_fraction IS 'only in decimal type';
+  COMMENT ON COLUMN dict_field_detail.default_comment_id IS 'a list of comment_id';
+  COMMENT ON COLUMN dict_field_detail.is_indexed IS 'only in RDBMS';
+  COMMENT ON COLUMN dict_field_detail.is_partitioned IS 'only in RDBMS';
+  COMMENT ON COLUMN dict_field_detail.is_distributed IS 'only in RDBMS';
+  COMMENT ON COLUMN dict_field_detail.java_data_type IS 'correspond type in java';
+  COMMENT ON COLUMN dict_field_detail.jdbc_data_type IS 'correspond type in jdbc';
+  COMMENT ON COLUMN dict_field_detail.pig_data_type IS 'correspond type in pig';
+  COMMENT ON COLUMN dict_field_detail.hcatalog_data_type IS 'correspond type in hcatalog';
 
 -- schema history
 CREATE TABLE "dict_dataset_schema_history" (
@@ -272,7 +297,7 @@ CREATE TABLE "field_comments" (
   "comment"                VARCHAR(4000)    NOT NULL,
   "created"                TIMESTAMP        NOT NULL,
   "modified"               TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  "comment_crc32_checksum" INT(11) UNSIGNED          NULL COMMENT '4-byte CRC32',
+  "comment_crc32_checksum" INT(11) UNSIGNED          NULL ,
   PRIMARY KEY ("id"),
   KEY "comment_key" ("comment"(100)),
   FULLTEXT KEY "fti_comment" ("comment")
@@ -280,27 +305,28 @@ CREATE TABLE "field_comments" (
 
   AUTO_INCREMENT = 0
 ;
+COMMENT ON COLUMN field_comments.comment_crc32_checksum IS '4-byte CRC32';
 
 -- dict_dataset_instance
 CREATE TABLE dict_dataset_instance  (
 	dataset_id           	int(11) UNSIGNED NOT NULL,
-	db_id                	smallint(6) UNSIGNED COMMENT 'FK to cfg_database'  NOT NULL DEFAULT '0',
+	db_id                	smallint(6) UNSIGNED   NOT NULL DEFAULT '0',
 	deployment_tier      	enum('local','grid','dev','int','ei','ei2','ei3','qa','stg','prod') NOT NULL DEFAULT 'dev',
-	data_center          	varchar(30) COMMENT 'data center code: lva1, ltx1, dc2, dc3...'  NULL DEFAULT '*',
-	server_cluster       	varchar(150) COMMENT 'sfo1-bigserver, jfk3-sqlserver03'  NULL DEFAULT '*',
-	slice                	varchar(50) COMMENT 'virtual group/tenant id/instance tag'  NOT NULL DEFAULT '*',
-  is_active             BOOLEAN NULL COMMENT 'is the dataset active / exist ?',
-  is_deprecated         BOOLEAN NULL COMMENT 'is the dataset deprecated by user ?',
+	data_center          	varchar(30)   NULL DEFAULT '*',
+	server_cluster       	varchar(150)   NULL DEFAULT '*',
+	slice                	varchar(50)   NOT NULL DEFAULT '*',
+  is_active             BOOLEAN NULL ,
+  is_deprecated         BOOLEAN NULL ,
 	native_name          	varchar(250) NOT NULL,
 	logical_name         	varchar(250) NOT NULL,
-	version              	varchar(30) COMMENT '1.2.3 or 0.3.131'  NULL,
-	version_sort_id      	bigint(20) COMMENT '4-digit for each version number: 000100020003, 000000030131'  NOT NULL DEFAULT '0',
+	version              	varchar(30)   NULL,
+	version_sort_id      	bigint(20)   NOT NULL DEFAULT '0',
 	schema_text           MEDIUMTEXT CHARACTER SET utf8 NULL,
 	ddl_text              MEDIUMTEXT CHARACTER SET utf8 NULL,
-	instance_created_time	int(10) UNSIGNED COMMENT 'source instance created time'  NULL,
-	created_time         	int(10) UNSIGNED COMMENT 'wherehows created time'  NULL,
-	modified_time        	int(10) UNSIGNED COMMENT 'latest wherehows modified'  NULL,
-	wh_etl_exec_id       	bigint(20) COMMENT 'wherehows etl execution id that modified this record'  NULL,
+	instance_created_time	int(10) UNSIGNED   NULL,
+	created_time         	int(10) UNSIGNED   NULL,
+	modified_time        	int(10) UNSIGNED   NULL,
+	wh_etl_exec_id       	bigint(20)   NULL,
 	PRIMARY KEY(dataset_id,db_id,version_sort_id)
 )
 
@@ -323,25 +349,37 @@ CREATE INDEX server_cluster USING BTREE
 	ON dict_dataset_instance(server_cluster, deployment_tier, data_center, slice);
 CREATE INDEX native_name USING BTREE
 	ON dict_dataset_instance(native_name);
+	COMMENT ON COLUMN dict_dataset_instance.db_id IS 'FK to cfg_database';
+	COMMENT ON COLUMN dict_dataset_instance.data_center IS 'data center code: lva1, ltx1, dc2, dc3...';
+	COMMENT ON COLUMN dict_dataset_instance.server_cluster IS 'sfo1-bigserver, jfk3-sqlserver03';
+	COMMENT ON COLUMN dict_dataset_instance.slice IS 'virtual group/tenant id/instance tag';
+	COMMENT ON COLUMN dict_dataset_instance.is_active IS 'is the dataset active / exist ?';
+	COMMENT ON COLUMN dict_dataset_instance.is_deprecated IS 'is the dataset deprecated by user ?';
+	COMMENT ON COLUMN dict_dataset_instance.version IS '1.2.3 or 0.3.131';
+	COMMENT ON COLUMN dict_dataset_instance.version_sort_id IS '4-digit for each version number: 000100020003, 000000030131';
+	COMMENT ON COLUMN dict_dataset_instance.instance_created_time IS 'source instance created time';
+	COMMENT ON COLUMN dict_dataset_instance.created_time IS 'wherehows created time';
+	COMMENT ON COLUMN dict_dataset_instance.modified_time IS 'latest wherehows modified';
+	COMMENT ON COLUMN dict_dataset_instance.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
 
 
 CREATE TABLE stg_dict_dataset_instance  (
 	dataset_urn          	varchar(200) NOT NULL,
 	db_id                	smallint(6) UNSIGNED NOT NULL DEFAULT '0',
 	deployment_tier      	enum('local','grid','dev','int','ei','ei2','ei3','qa','stg','prod') NOT NULL DEFAULT 'dev',
-	data_center          	varchar(30) COMMENT 'data center code: lva1, ltx1, dc2, dc3...'  NULL DEFAULT '*',
-	server_cluster       	varchar(150) COMMENT 'sfo1-bigserver'  NULL DEFAULT '*',
-	slice                	varchar(50) COMMENT 'virtual group/tenant id/instance tag'  NOT NULL DEFAULT '*',
-  is_active             BOOLEAN NULL COMMENT 'is the dataset active / exist ?',
-  is_deprecated         BOOLEAN NULL COMMENT 'is the dataset deprecated by user ?',
+	data_center          	varchar(30)   NULL DEFAULT '*',
+	server_cluster       	varchar(150)   NULL DEFAULT '*',
+	slice                	varchar(50)   NOT NULL DEFAULT '*',
+  is_active             BOOLEAN NULL ,
+  is_deprecated         BOOLEAN NULL ,
 	native_name          	varchar(250) NOT NULL,
 	logical_name         	varchar(250) NOT NULL,
-	version              	varchar(30) COMMENT '1.2.3 or 0.3.131'  NULL,
+	version              	varchar(30)   NULL,
 	schema_text           MEDIUMTEXT CHARACTER SET utf8 NULL,
 	ddl_text              MEDIUMTEXT CHARACTER SET utf8 NULL,
-	instance_created_time	int(10) UNSIGNED COMMENT 'source instance created time'  NULL,
-	created_time         	int(10) UNSIGNED COMMENT 'wherehows created time'  NULL,
-	wh_etl_exec_id       	bigint(20) COMMENT 'wherehows etl execution id that modified this record'  NULL,
+	instance_created_time	int(10) UNSIGNED   NULL,
+	created_time         	int(10) UNSIGNED   NULL,
+	wh_etl_exec_id       	bigint(20)   NULL,
 	dataset_id           	int(11) UNSIGNED NULL,
 	abstract_dataset_urn 	varchar(200) NULL,
 	PRIMARY KEY(dataset_urn,db_id)
@@ -361,4 +399,13 @@ AUTO_INCREMENT = 0
 	PARTITION p7);
 CREATE INDEX server_cluster USING BTREE
 	ON stg_dict_dataset_instance(server_cluster, deployment_tier, data_center, slice);
+	COMMENT ON COLUMN stg_dict_dataset_instance.data_center IS 'data center code: lva1, ltx1, dc2, dc3...';
+	COMMENT ON COLUMN stg_dict_dataset_instance.server_cluster IS 'sfo1-bigserver';
+	COMMENT ON COLUMN stg_dict_dataset_instance.slice IS 'virtual group/tenant id/instance tag';
+	COMMENT ON COLUMN stg_dict_dataset_instance.is_active IS 'is the dataset active / exist ?';
+	COMMENT ON COLUMN stg_dict_dataset_instance.is_deprecated IS 'is the dataset deprecated by user ?';
+	COMMENT ON COLUMN stg_dict_dataset_instance.version IS '1.2.3 or 0.3.131';
+	COMMENT ON COLUMN stg_dict_dataset_instance.instance_created_time IS 'source instance created time';
+	COMMENT ON COLUMN stg_dict_dataset_instance.created_time IS 'wherehows created time';
+	COMMENT ON COLUMN stg_dict_dataset_instance.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
 
