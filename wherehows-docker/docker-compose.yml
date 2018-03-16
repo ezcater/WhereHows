@@ -1,14 +1,5 @@
 version: "3"
 services:
-#  wherehows-mysql:
-#    image: "linkedin/wherehows-mysql:latest"
-#    ports:
-#      - 3306:3306
-#    environment:
-#      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
-#      MYSQL_DATABASE: ${WHZ_DB_NAME}
-#      MYSQL_USER: ${WHZ_DB_USERNAME}
-#      MYSQL_PASSWORD: ${WHZ_DB_PASSWORD}
   wherehows-postgres:
     image: "wherehows-postgres:latest"
     ports:
