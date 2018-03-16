@@ -15,42 +15,54 @@
 -- configuration tables
 CREATE TABLE "wh_etl_job_schedule" (
   "wh_etl_job_name" VARCHAR(127)  NOT NULL
-  COMMENT 'etl job name',
+  ,
   "enabled"         BOOLEAN       DEFAULT NULL
-  COMMENT 'job currently enabled or disabled',
+  ,
   "next_run"        INT(10) UNSIGNED     DEFAULT NULL
-  COMMENT 'next run time',
+  ,
   PRIMARY KEY ("wh_etl_job_name"),
   UNIQUE "etl_unique" ("wh_etl_job_name")
 )
 
 
   COMMENT='WhereHows ETL job scheduling table';
+  COMMENT ON COLUMN wh_etl_job_schedule.wh_etl_job_name IS 'etl job name';
+  COMMENT ON COLUMN wh_etl_job_schedule.enabled IS 'job currently enabled or disabled';
+  COMMENT ON COLUMN wh_etl_job_schedule.next_run IS 'next run time';
 
 CREATE TABLE "wh_etl_job_history" (
   "wh_etl_exec_id"  BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT
-  COMMENT 'job execution id',
+  ,
   "wh_etl_job_name" VARCHAR(127)                 NOT NULL
-  COMMENT 'name of the etl job',
+  ,
   "status"          VARCHAR(31)                  DEFAULT NULL
-  COMMENT 'status of etl job execution',
+  ,
   "request_time"    INT(10) UNSIGNED             DEFAULT NULL
-  COMMENT 'request time of the execution',
+  ,
   "start_time"      INT(10) UNSIGNED             DEFAULT NULL
-  COMMENT 'start time of the execution',
+  ,
   "end_time"        INT(10) UNSIGNED             DEFAULT NULL
-  COMMENT 'end time of the execution',
+  ,
   "message"         VARCHAR(1024)                DEFAULT NULL
-  COMMENT 'debug information message',
+  ,
   "host_name"       VARCHAR(200)                 DEFAULT NULL
-  COMMENT 'host machine name of the job execution',
+  ,
   "process_id"      BIGINT                 DEFAULT NULL
-  COMMENT 'job execution process id',
+  ,
   PRIMARY KEY ("wh_etl_exec_id")
 )
 
 
   COMMENT = 'WhereHows ETL execution history table';
+  COMMENT ON COLUMN wh_etl_job_history.wh_etl_exec_id IS 'job execution id';
+  COMMENT ON COLUMN wh_etl_job_history.wh_etl_job_name IS 'name of the etl job';
+  COMMENT ON COLUMN wh_etl_job_history.status IS 'status of etl job execution';
+  COMMENT ON COLUMN wh_etl_job_history.request_time IS 'request time of the execution';
+  COMMENT ON COLUMN wh_etl_job_history.start_time IS 'start time of the execution';
+  COMMENT ON COLUMN wh_etl_job_history.end_time IS 'end time of the execution';
+  COMMENT ON COLUMN wh_etl_job_history.message IS 'debug information message';
+  COMMENT ON COLUMN wh_etl_job_history.host_name IS 'host machine name of the job execution';
+  COMMENT ON COLUMN wh_etl_job_history.process_id IS 'job execution process id';
 
 CREATE TABLE "cfg_application" (
   "app_id"                  SMALLINT    UNSIGNED NOT NULL,
@@ -74,22 +86,22 @@ CREATE TABLE "cfg_application" (
 
 CREATE TABLE cfg_database  (
 	db_id                  	smallint(6) UNSIGNED NOT NULL,
-	db_code                	varchar(30) COMMENT 'Unique string without space'  NOT NULL,
-	primary_dataset_type    varchar(30) COMMENT 'What type of dataset this DB supports' NOT NULL DEFAULT '*',
+	db_code                	varchar(30)   NOT NULL,
+	primary_dataset_type    varchar(30)  NOT NULL DEFAULT '*',
 	description            	varchar(128) NOT NULL,
-	is_logical             	char(1) COMMENT 'Is a group, which contains multiple physical DB(s)'  NOT NULL DEFAULT 'N',
-	deployment_tier        	varchar(20) COMMENT 'Lifecycle/FabricGroup: local,dev,sit,ei,qa,canary,preprod,pr'  NULL DEFAULT 'prod',
-	data_center            	varchar(200) COMMENT 'Code name of its primary data center. Put * for all data cen'  NULL DEFAULT '*',
-	associated_dc_num      	tinyint(4) UNSIGNED COMMENT 'Number of associated data centers'  NOT NULL DEFAULT '1',
-	cluster                	varchar(200) COMMENT 'Name of Fleet, Group of Servers or a Server'  NULL DEFAULT '*',
-	cluster_size           	smallint(6) COMMENT 'Num of servers in the cluster'  NOT NULL DEFAULT '1',
-	extra_deployment_tag1  	varchar(50) COMMENT 'Additional tag. Such as container_group:HIGH'  NULL,
-	extra_deployment_tag2  	varchar(50) COMMENT 'Additional tag. Such as slice:i0001'  NULL,
-	extra_deployment_tag3  	varchar(50) COMMENT 'Additional tag. Such as region:eu-west-1'  NULL,
-	replication_role       	varchar(10) COMMENT 'master or slave or broker'  NULL,
+	is_logical             	char(1)   NOT NULL DEFAULT 'N',
+	deployment_tier        	varchar(20)   NULL DEFAULT 'prod',
+	data_center            	varchar(200)   NULL DEFAULT '*',
+	associated_dc_num      	tinyint(4) UNSIGNED   NOT NULL DEFAULT '1',
+	cluster                	varchar(200)   NULL DEFAULT '*',
+	cluster_size           	smallint(6)   NOT NULL DEFAULT '1',
+	extra_deployment_tag1  	varchar(50)   NULL,
+	extra_deployment_tag2  	varchar(50)   NULL,
+	extra_deployment_tag3  	varchar(50)   NULL,
+	replication_role       	varchar(10)   NULL,
 	jdbc_url               	varchar(1000) NULL,
 	uri                    	varchar(1000) NULL,
-	short_connection_string	varchar(50) COMMENT 'Oracle TNS Name, ODBC DSN, TDPID...' NULL,
+	short_connection_string	varchar(50)  NULL,
   last_modified          	timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY(db_id),
   UNIQUE "uix_cfg_database__dbcode" (db_code) USING HASH
@@ -97,6 +109,19 @@ CREATE TABLE cfg_database  (
 
 DEFAULT CHARSET = utf8
 COMMENT = 'Abstract different storage instances as databases' ;
+COMMENT ON COLUMN cfg_database.db_code IS 'Unique string without space';
+COMMENT ON COLUMN cfg_database.primary_dataset_type IS 'What type of dataset this DB supports';
+COMMENT ON COLUMN cfg_database.is_logical IS 'Is a group, which contains multiple physical DB(s)';
+COMMENT ON COLUMN cfg_database.deployment_tier IS 'Lifecycle/FabricGroup: local,dev,sit,ei,qa,canary,preprod,pr';
+COMMENT ON COLUMN cfg_database.data_center IS 'Code name of its primary data center. Put * for all data cen';
+COMMENT ON COLUMN cfg_database.associated_dc_num IS 'Number of associated data centers';
+COMMENT ON COLUMN cfg_database.cluster IS 'Name of Fleet, Group of Servers or a Server';
+COMMENT ON COLUMN cfg_database.cluster_size IS 'Num of servers in the cluster';
+COMMENT ON COLUMN cfg_database.extra_deployment_tag1 IS 'Additional tag. Such as container_group:HIGH';
+COMMENT ON COLUMN cfg_database.extra_deployment_tag2 IS 'Additional tag. Such as slice:i0001';
+COMMENT ON COLUMN cfg_database.extra_deployment_tag3 IS 'Additional tag. Such as region:eu-west-1';
+COMMENT ON COLUMN cfg_database.replication_role IS 'master or slave or broker';
+COMMENT ON COLUMN cfg_database.short_connection_string IS 'Oracle TNS Name, ODBC DSN, TDPID...';
 
 
 CREATE TABLE stg_cfg_object_name_map  (
@@ -126,14 +151,14 @@ CREATE TABLE cfg_object_name_map  (
   obj_name_map_id         int(11) AUTO_INCREMENT NOT NULL,
   object_type             varchar(100) NOT NULL,
   object_sub_type         varchar(100) NULL,
-  object_name             varchar(350) NOT NULL COMMENT 'this is the derived/child object',
+  object_name             varchar(350) NOT NULL ,
   map_phrase              varchar(100) NULL,
-  object_dataset_id       int(11) UNSIGNED NULL COMMENT 'can be the abstract dataset id for versioned objects',
-  is_identical_map        char(1) NOT NULL DEFAULT 'N' COMMENT 'Y/N',
+  object_dataset_id       int(11) UNSIGNED NULL ,
+  is_identical_map        char(1) NOT NULL DEFAULT 'N' ,
   mapped_object_type      varchar(100) NOT NULL,
   mapped_object_sub_type  varchar(100) NULL,
-  mapped_object_name      varchar(350) NOT NULL COMMENT 'this is the original/parent object',
-  mapped_object_dataset_id	int(11) UNSIGNED NULL COMMENT 'can be the abstract dataset id for versioned objects',
+  mapped_object_name      varchar(350) NOT NULL ,
+  mapped_object_dataset_id	int(11) UNSIGNED NULL ,
   description             varchar(500) NULL,
   last_modified           timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY(obj_name_map_id),
@@ -144,13 +169,18 @@ CREATE TABLE cfg_object_name_map  (
 CHARACTER SET latin1
 AUTO_INCREMENT = 1
 COMMENT = 'Map alias (when is_identical_map=Y) and view dependency. Always map from Derived/Child (object) back to its Original/Parent (mapped_object)' ;
+COMMENT ON COLUMN cfg_object_name_map.object_name IS 'this is the derived/child object';
+COMMENT ON COLUMN cfg_object_name_map.object_dataset_id IS 'can be the abstract dataset id for versioned objects';
+COMMENT ON COLUMN cfg_object_name_map.is_identical_map IS 'Y/N';
+COMMENT ON COLUMN cfg_object_name_map.mapped_object_name IS 'this is the original/parent object';
+COMMENT ON COLUMN cfg_object_name_map.mapped_object_dataset_id IS 'can be the abstract dataset id for versioned objects';
 
 
 CREATE TABLE cfg_deployment_tier  (
   tier_id      	tinyint(4) NOT NULL,
-  tier_code    	varchar(25) COMMENT 'local,dev,test,qa,stg,prod' NOT NULL,
-  tier_label    varchar(50) COMMENT 'display full name' NULL,
-  sort_id       smallint(6) COMMENT '3-digit for group, 3-digit within group' NOT NULL,
+  tier_code    	varchar(25)  NOT NULL,
+  tier_label    varchar(50)  NULL,
+  sort_id       smallint(6)  NOT NULL,
   last_modified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY(tier_id),
   UNIQUE uix_cfg_deployment_tier__tiercode (tier_code)
@@ -158,6 +188,9 @@ CREATE TABLE cfg_deployment_tier  (
 
 AUTO_INCREMENT = 0
 COMMENT = 'http://en.wikipedia.org/wiki/Deployment_environment';
+COMMENT ON COLUMN cfg_deployment_tier.tier_code IS 'local,dev,test,qa,stg,prod';
+COMMENT ON COLUMN cfg_deployment_tier.tier_label IS 'display full name';
+COMMENT ON COLUMN cfg_deployment_tier.sort_id IS '3-digit for group, 3-digit within group';
 
 
 CREATE TABLE cfg_data_center  (
@@ -170,7 +203,7 @@ CREATE TABLE cfg_data_center  (
 	country           	varchar(50) NOT NULL,
 	longtitude        	decimal(10,6) NULL,
 	latitude          	decimal(10,6) NULL,
-	data_center_status	char(1) COMMENT 'A,D,U' NULL,
+	data_center_status	char(1)  NULL,
 	last_modified     	timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY(data_center_id),
   UNIQUE uix_cfg_data_center__datacentercode (data_center_code)
@@ -178,6 +211,7 @@ CREATE TABLE cfg_data_center  (
 
 AUTO_INCREMENT = 0
 COMMENT = 'https://en.wikipedia.org/wiki/Data_center' ;
+COMMENT ON COLUMN cfg_data_center.data_center_status IS 'A,D,U';
 
 
 CREATE TABLE cfg_cluster  (
@@ -196,7 +230,10 @@ COMMENT = 'https://en.wikipedia.org/wiki/Computer_cluster' ;
 
 
 CREATE TABLE IF NOT EXISTS cfg_search_score_boost (
-  "id" INT COMMENT 'dataset id',
-  "static_boosting_score" INT COMMENT 'static boosting score for elastic search',
+  "id" INT ,
+  "static_boosting_score" INT ,
   PRIMARY KEY ("id")
 );
+COMMENT ON COLUMN cfg_search_score_boost.id IS 'dataset id';
+COMMENT ON COLUMN cfg_search_score_boost.static_boosting_score IS 'static boosting score for elastic search';
+

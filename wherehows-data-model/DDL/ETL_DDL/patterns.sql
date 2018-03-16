@@ -41,17 +41,17 @@ CREATE TABLE "dataset_partition_layout_pattern" (
 CREATE TABLE "log_lineage_pattern" (
   "pattern_id"          INT(11)      NOT NULL AUTO_INCREMENT,
   "pattern_type"        VARCHAR(20)              DEFAULT NULL
-  COMMENT 'type of job that have this log pattern',
+  ,
   "regex"               VARCHAR(200) NOT NULL,
   "database_type"       VARCHAR(20)              DEFAULT NULL
-  COMMENT 'database type input by user, e.g. hdfs, voldermont...',
+  ,
   "database_name_index" INT(11)                  DEFAULT NULL,
   "dataset_index"       INT(11)      NOT NULL
-  COMMENT 'the group id of dataset part in the regex',
+  ,
   "operation_type"      VARCHAR(20)              DEFAULT NULL
-  COMMENT 'read/write, input by user',
+  ,
   "record_count_index"  INT(20)                  DEFAULT NULL
-  COMMENT 'all operations count',
+  ,
   "record_byte_index"   INT(20)                  DEFAULT NULL,
   "insert_count_index"  INT(20)                  DEFAULT NULL,
   "insert_byte_index"   INT(20)                  DEFAULT NULL,
@@ -65,12 +65,17 @@ CREATE TABLE "log_lineage_pattern" (
 )
 
 ;
+COMMENT ON COLUMN log_lineage_pattern.record_count_index IS 'all operations count';
+COMMENT ON COLUMN log_lineage_pattern.operation_type IS 'read/write, input by user';
+COMMENT ON COLUMN log_lineage_pattern.dataset_index IS 'the group id of dataset part in the regex';
+COMMENT ON COLUMN log_lineage_pattern.database_type IS 'database type input by user, e.g. hdfs, voldermont...';
+COMMENT ON COLUMN log_lineage_pattern.pattern_type IS 'type of job that have this log pattern';
 
 -- patterns used to discover the hadoop id inside log
 CREATE TABLE "log_reference_job_id_pattern" (
   "pattern_id"             INT(11)      NOT NULL AUTO_INCREMENT,
   "pattern_type"           VARCHAR(20)  DEFAULT NULL
-  COMMENT 'type of job that have this log pattern',
+  ,
   "regex"                  VARCHAR(200) NOT NULL,
   "reference_job_id_index" INT(11)      NOT NULL,
   "is_active"              TINYINT(1)   DEFAULT '0',
@@ -79,5 +84,6 @@ CREATE TABLE "log_reference_job_id_pattern" (
 )
 
 ;
+COMMENT ON COLUMN log_reference_job_id_pattern.pattern_type IS 'type of job that have this log pattern';
 
 

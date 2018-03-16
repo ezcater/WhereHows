@@ -33,9 +33,9 @@ CREATE TABLE IF NOT EXISTS "stg_job_execution_data_lineage" (
 
   "source_target_type"     ENUM('source', 'target', 'lookup', 'temp') NOT NULL,
   "srl_no"                 SMALLINT(5) UNSIGNED                       NOT NULL DEFAULT '1'
-  COMMENT 'the sorted number of this record in all records of this job related operation',
+  ,
   "source_srl_no"          SMALLINT(5) UNSIGNED                                NULL
-  COMMENT 'the related record of this record',
+  ,
   "operation"              VARCHAR(64)                                         NULL,
   "record_count"           BIGINT(20) UNSIGNED                                 NULL,
   "insert_count"           BIGINT(20) UNSIGNED                                 NULL,
@@ -47,14 +47,16 @@ CREATE TABLE IF NOT EXISTS "stg_job_execution_data_lineage" (
 )
 
 ;
+COMMENT ON COLUMN stg_job_execution_data_lineage.source_srl_no IS 'the related record of this record';
+COMMENT ON COLUMN stg_job_execution_data_lineage.srl_no IS 'the sorted number of this record in all records of this job related operation';
 
 CREATE TABLE IF NOT EXISTS "job_execution_data_lineage" (
   "app_id"                 SMALLINT(5) UNSIGNED                       NOT NULL,
   "flow_exec_id"           BIGINT(20) UNSIGNED                                 NOT NULL,
   "job_exec_id"            BIGINT(20) UNSIGNED                                 NOT NULL
-  COMMENT 'in azkaban this is a smart key combined execution id and sort id of the job',
+  ,
   "job_exec_uuid"          VARCHAR(100)                                        NULL
-  COMMENT 'some scheduler do not have this value, e.g. Azkaban',
+  ,
   "job_name"               VARCHAR(255)                                        NOT NULL,
   "job_start_unixtime"     BIGINT(20)                                          NOT NULL,
   "job_finished_unixtime"  BIGINT(20)                                          NOT NULL,
@@ -66,14 +68,14 @@ CREATE TABLE IF NOT EXISTS "job_execution_data_lineage" (
   "partition_end"          VARCHAR(50)                                         NULL,
   "partition_type"         VARCHAR(20)                                         NULL,
   "layout_id"              SMALLINT(5) UNSIGNED                                NULL
-  COMMENT 'layout of the dataset',
+  ,
   "storage_type"           VARCHAR(16)                                         NULL,
 
   "source_target_type"     ENUM('source', 'target', 'lookup', 'temp') NOT NULL,
   "srl_no"                 SMALLINT(5) UNSIGNED                       NOT NULL DEFAULT '1'
-  COMMENT 'the sorted number of this record in all records of this job related operation',
+  ,
   "source_srl_no"          SMALLINT(5) UNSIGNED                                NULL
-  COMMENT 'the related record of this record',
+  ,
   "operation"              VARCHAR(64)                                         NULL,
   "record_count"           BIGINT(20) UNSIGNED                                 NULL,
   "insert_count"           BIGINT(20) UNSIGNED                                 NULL,
@@ -90,6 +92,11 @@ CREATE TABLE IF NOT EXISTS "job_execution_data_lineage" (
 
 
   COMMENT = 'Lineage table' PARTITION BY HASH (app_id) PARTITIONS 8;
+  COMMENT ON COLUMN job_execution_data_lineage.source_srl_no IS 'the related record of this record';
+  COMMENT ON COLUMN job_execution_data_lineage.srl_no IS 'the sorted number of this record in all records of this job related operation';
+  COMMENT ON COLUMN job_execution_data_lineage.layout_id IS 'layout of the dataset';
+  COMMENT ON COLUMN job_execution_data_lineage.job_exec_uuid IS 'some scheduler do not have this value, e.g. Azkaban';
+  COMMENT ON COLUMN job_execution_data_lineage.job_exec_id IS 'in azkaban this is a smart key combined execution id and sort id of the job';
 
 CREATE TABLE job_attempt_source_code  (
 	application_id	int(11) NOT NULL,
