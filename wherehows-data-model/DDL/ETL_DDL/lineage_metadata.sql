@@ -48,8 +48,8 @@ CREATE TABLE IF NOT EXISTS "stg_job_execution_data_lineage" (
 )
 
 ;
-COMMENT ON COLUMN IF.source_srl_no IS 'the related record of this record';
-COMMENT ON COLUMN IF.srl_no IS 'the sorted number of this record in all records of this job related operation';
+COMMENT ON COLUMN stg_job_execution_data_lineage.source_srl_no IS 'the related record of this record';
+COMMENT ON COLUMN stg_job_execution_data_lineage.srl_no IS 'the sorted number of this record in all records of this job related operation';
 
 CREATE TABLE IF NOT EXISTS "job_execution_data_lineage" (
   "app_id"                 SMALLINT                       NOT NULL,
@@ -93,11 +93,11 @@ CREATE TABLE IF NOT EXISTS "job_execution_data_lineage" (
 
 
   COMMENT = 'Lineage table' PARTITION BY HASH (app_id) PARTITIONS 8;
-  COMMENT ON COLUMN IF.source_srl_no IS 'the related record of this record';
-  COMMENT ON COLUMN IF.srl_no IS 'the sorted number of this record in all records of this job related operation';
-  COMMENT ON COLUMN IF.layout_id IS 'layout of the dataset';
-  COMMENT ON COLUMN IF.job_exec_uuid IS 'some scheduler do not have this value, e.g. Azkaban';
-  COMMENT ON COLUMN IF.job_exec_id IS 'in azkaban this is a smart key combined execution id and sort id of the job';
+  COMMENT ON COLUMN job_execution_data_lineage.source_srl_no IS 'the related record of this record';
+  COMMENT ON COLUMN job_execution_data_lineage.srl_no IS 'the sorted number of this record in all records of this job related operation';
+  COMMENT ON COLUMN job_execution_data_lineage.layout_id IS 'layout of the dataset';
+  COMMENT ON COLUMN job_execution_data_lineage.job_exec_uuid IS 'some scheduler do not have this value, e.g. Azkaban';
+  COMMENT ON COLUMN job_execution_data_lineage.job_exec_id IS 'in azkaban this is a smart key combined execution id and sort id of the job';
 
 CREATE TABLE job_attempt_source_code  (
 	application_id	INT NOT NULL,
