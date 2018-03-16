@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS "stg_job_execution_data_lineage" (
   "created_date"           INT UNSIGNED,
   "wh_etl_exec_id"              INT(11)                                        NULL
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8;
 
 CREATE TABLE IF NOT EXISTS "job_execution_data_lineage" (
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS "job_execution_data_lineage" (
   KEY "idx_flow_path" ("app_id", "flow_path"(300)),
   KEY "idx_job_execution_data_lineage__object_name" ("abstracted_object_name", "source_target_type") USING BTREE
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = latin1
   COMMENT = 'Lineage table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
@@ -102,7 +102,7 @@ CREATE TABLE job_attempt_source_code  (
 	created_date  	datetime NOT NULL,
 	PRIMARY KEY(application_id,job_id,attempt_number)
 )
-ENGINE = InnoDB
+
 DEFAULT CHARSET = utf8;
 
 CREATE TABLE "job_execution_script" (

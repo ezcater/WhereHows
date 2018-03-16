@@ -37,7 +37,7 @@ CREATE TABLE dataset_owner (
   PRIMARY KEY ("dataset_id", "owner_id", "app_id", "owner_source"),
   UNIQUE KEY "with_urn" ("dataset_urn", "owner_id", "app_id", "owner_source")
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = latin1;
 
 CREATE TABLE stg_dataset_owner (
@@ -61,7 +61,7 @@ CREATE TABLE stg_dataset_owner (
   KEY dataset_index (dataset_urn),
   KEY db_name_index (db_name)
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = latin1;
 
 CREATE TABLE stg_dataset_owner_unmatched (
