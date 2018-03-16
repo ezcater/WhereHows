@@ -44,7 +44,7 @@ CREATE TABLE "wh_etl_job_history" (
   COMMENT 'debug information message',
   "host_name"       VARCHAR(200)                 DEFAULT NULL
   COMMENT 'host machine name of the job execution',
-  "process_id"      INT UNSIGNED                 DEFAULT NULL
+  "process_id"      BIGINT                 DEFAULT NULL
   COMMENT 'job execution process id',
   PRIMARY KEY ("wh_etl_exec_id")
 )

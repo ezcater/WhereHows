@@ -14,7 +14,7 @@
 
 
 CREATE TABLE dataset_owner (
-  "dataset_id"    INT UNSIGNED NOT NULL,
+  "dataset_id"    BIGINT NOT NULL,
   "dataset_urn"   VARCHAR(500) NOT NULL,
   "owner_id"      VARCHAR(127) NOT NULL,
   "app_id"        SMALLINT NOT NULL COMMENT 'application id of the namespace',
@@ -28,11 +28,11 @@ CREATE TABLE dataset_owner (
   "is_active"     CHAR(1) COMMENT 'if owner is active',
   "is_deleted"    CHAR(1) COMMENT 'if owner has been removed from the dataset',
   "sort_id"       SMALLINT COMMENT '0 = primary owner, order by priority/importance',
-  "source_time"   INT UNSIGNED COMMENT 'the source time in epoch',
-  "created_time"  INT UNSIGNED COMMENT 'the create time in epoch',
-  "modified_time" INT UNSIGNED COMMENT 'the modified time in epoch',
+  "source_time"   BIGINT COMMENT 'the source time in epoch',
+  "created_time"  BIGINT COMMENT 'the create time in epoch',
+  "modified_time" BIGINT COMMENT 'the modified time in epoch',
   "confirmed_by"  VARCHAR(127) NULL,
-  "confirmed_on"  INT UNSIGNED,
+  "confirmed_on"  BIGINT,
   wh_etl_exec_id  BIGINT COMMENT 'wherehows etl execution id that modified this record',
   PRIMARY KEY ("dataset_id", "owner_id", "app_id", "owner_source"),
   UNIQUE KEY "with_urn" ("dataset_urn", "owner_id", "app_id", "owner_source")
@@ -55,7 +55,7 @@ CREATE TABLE stg_dataset_owner (
   "db_name" VARCHAR(127) COMMENT 'database name',
   "db_id" INT COMMENT 'database id',
   "is_active" CHAR(1) COMMENT 'if owner is active',
-  "source_time" INT UNSIGNED COMMENT 'the source event time in epoch',
+  "source_time" BIGINT COMMENT 'the source event time in epoch',
   "is_parent_urn" CHAR(1) DEFAULT 'N' COMMENT 'if the urn is a directory for datasets',
   KEY (dataset_urn, owner_id, namespace, db_name),
   KEY dataset_index (dataset_urn),
@@ -78,7 +78,7 @@ CREATE TABLE stg_dataset_owner_unmatched (
   "db_name" VARCHAR(127) COMMENT 'database name',
   "db_id" INT COMMENT 'database id',
   "is_active" CHAR(1) COMMENT 'if owner is active',
-  "source_time" INT UNSIGNED COMMENT 'the source event time in epoch',
+  "source_time" BIGINT COMMENT 'the source event time in epoch',
   KEY (dataset_urn, owner_id, namespace, db_name),
   KEY dataset_index (dataset_urn),
   KEY db_name_index (db_name)

@@ -15,21 +15,21 @@
 CREATE TABLE flow (
   app_id               SMALLINT UNSIGNED NOT NULL
   COMMENT 'application id of the flow',
-  flow_id              INT UNSIGNED      NOT NULL
+  flow_id              BIGINT      NOT NULL
   COMMENT 'flow id either inherit from source or generated',
   flow_name            VARCHAR(255) COMMENT 'name of the flow',
   flow_group           VARCHAR(255) COMMENT 'flow group or project name',
   flow_path            VARCHAR(1024) COMMENT 'flow path from top level',
   flow_level           SMALLINT COMMENT 'flow level, 0 for top level flow',
-  source_created_time  INT UNSIGNED COMMENT 'source created time of the flow',
-  source_modified_time INT UNSIGNED COMMENT 'latest source modified time of the flow',
+  source_created_time  BIGINT COMMENT 'source created time of the flow',
+  source_modified_time BIGINT COMMENT 'latest source modified time of the flow',
   source_version       VARCHAR(255) COMMENT 'latest source version of the flow',
   is_active            CHAR(1) COMMENT 'determine if it is an active flow',
   is_scheduled         CHAR(1) COMMENT 'determine if it is a scheduled flow',
   pre_flows            VARCHAR(2048) COMMENT 'comma separated flow ids that run before this flow',
   main_tag_id          INT COMMENT 'main tag id',
-  created_time         INT UNSIGNED COMMENT 'wherehows created time of the flow',
-  modified_time        INT UNSIGNED COMMENT 'latest wherehows modified time of the flow',
+  created_time         BIGINT COMMENT 'wherehows created time of the flow',
+  modified_time        BIGINT COMMENT 'latest wherehows modified time of the flow',
   wh_etl_exec_id       BIGINT COMMENT 'wherehows etl execution id that modified this record',
   PRIMARY KEY (app_id, flow_id),
   INDEX flow_path_idx (app_id, flow_path(255)),
@@ -42,20 +42,20 @@ CREATE TABLE flow (
 CREATE TABLE stg_flow (
   app_id               SMALLINT UNSIGNED NOT NULL
   COMMENT 'application id of the flow',
-  flow_id              INT UNSIGNED COMMENT 'flow id either inherit from source or generated',
+  flow_id              BIGINT COMMENT 'flow id either inherit from source or generated',
   flow_name            VARCHAR(255) COMMENT 'name of the flow',
   flow_group           VARCHAR(255) COMMENT 'flow group or project name',
   flow_path            VARCHAR(1024) COMMENT 'flow path from top level',
   flow_level           SMALLINT COMMENT 'flow level, 0 for top level flow',
-  source_created_time  INT UNSIGNED COMMENT 'source created time of the flow',
-  source_modified_time INT UNSIGNED COMMENT 'latest source modified time of the flow',
+  source_created_time  BIGINT COMMENT 'source created time of the flow',
+  source_modified_time BIGINT COMMENT 'latest source modified time of the flow',
   source_version       VARCHAR(255) COMMENT 'latest source version of the flow',
   is_active            CHAR(1) COMMENT 'determine if it is an active flow',
   is_scheduled         CHAR(1) COMMENT 'determine if it is a scheduled flow',
   pre_flows            VARCHAR(2048) COMMENT 'comma separated flow ids that run before this flow',
   main_tag_id          INT COMMENT 'main tag id',
-  created_time         INT UNSIGNED COMMENT 'wherehows created time of the flow',
-  modified_time        INT UNSIGNED COMMENT 'latest wherehows modified time of the flow',
+  created_time         BIGINT COMMENT 'wherehows created time of the flow',
+  modified_time        BIGINT COMMENT 'latest wherehows modified time of the flow',
   wh_etl_exec_id       BIGINT COMMENT 'wherehows etl execution id that modified this record',
   INDEX flow_id_idx (app_id, flow_id),
   INDEX flow_path_idx (app_id, flow_path(255))
@@ -67,7 +67,7 @@ CREATE TABLE stg_flow (
 CREATE TABLE flow_source_id_map (
   app_id           SMALLINT UNSIGNED NOT NULL
   COMMENT 'application id of the flow',
-  flow_id          INT UNSIGNED      NOT NULL AUTO_INCREMENT
+  flow_id          BIGINT      NOT NULL AUTO_INCREMENT
   COMMENT 'flow id generated ',
   source_id_string VARCHAR(1024) COMMENT 'source string id of the flow',
   source_id_uuid   VARCHAR(255) COMMENT 'source uuid id of the flow',
@@ -82,26 +82,26 @@ CREATE TABLE flow_source_id_map (
 CREATE TABLE flow_job (
   app_id               SMALLINT UNSIGNED NOT NULL
   COMMENT 'application id of the flow',
-  flow_id              INT UNSIGNED      NOT NULL
+  flow_id              BIGINT      NOT NULL
   COMMENT 'flow id',
   first_source_version VARCHAR(255) COMMENT 'first source version of the flow under this dag version',
   last_source_version  VARCHAR(255) COMMENT 'last source version of the flow under this dag version',
   dag_version          INT               NOT NULL
   COMMENT 'derived dag version of the flow',
-  job_id               INT UNSIGNED      NOT NULL
+  job_id               BIGINT      NOT NULL
   COMMENT 'job id either inherit from source or generated',
   job_name             VARCHAR(255) COMMENT 'job name',
   job_path             VARCHAR(1024) COMMENT 'job path from top level',
   job_type_id          SMALLINT COMMENT 'type id of the job',
   job_type             VARCHAR(63) COMMENT 'type of the job',
-  ref_flow_id          INT UNSIGNED NULL COMMENT 'the reference flow id of the job if the job is a subflow',
+  ref_flow_id          BIGINT NULL COMMENT 'the reference flow id of the job if the job is a subflow',
   pre_jobs             VARCHAR(20000) CHAR SET latin1 COMMENT 'comma separated job ids that run before this job',
   post_jobs            VARCHAR(20000) CHAR SET latin1 COMMENT 'comma separated job ids that run after this job',
   is_current           CHAR(1) COMMENT 'determine if it is a current job',
   is_first             CHAR(1) COMMENT 'determine if it is the first job',
   is_last              CHAR(1) COMMENT 'determine if it is the last job',
-  created_time         INT UNSIGNED COMMENT 'wherehows created time of the flow',
-  modified_time        INT UNSIGNED COMMENT 'latest wherehows modified time of the flow',
+  created_time         BIGINT COMMENT 'wherehows created time of the flow',
+  modified_time        BIGINT COMMENT 'latest wherehows modified time of the flow',
   wh_etl_exec_id       BIGINT COMMENT 'wherehows etl execution id that create this record',
   PRIMARY KEY (app_id, job_id, dag_version),
   INDEX flow_id_idx (app_id, flow_id),
@@ -115,16 +115,16 @@ CREATE TABLE flow_job (
 CREATE TABLE stg_flow_job (
   app_id         SMALLINT UNSIGNED NOT NULL
   COMMENT 'application id of the flow',
-  flow_id        INT UNSIGNED COMMENT 'flow id',
+  flow_id        BIGINT COMMENT 'flow id',
   flow_path      VARCHAR(1024) COMMENT 'flow path from top level',
   source_version VARCHAR(255) COMMENT 'last source version of the flow under this dag version',
   dag_version    INT COMMENT 'derived dag version of the flow',
-  job_id         INT UNSIGNED COMMENT 'job id either inherit from source or generated',
+  job_id         BIGINT COMMENT 'job id either inherit from source or generated',
   job_name       VARCHAR(255) COMMENT 'job name',
   job_path       VARCHAR(1024) COMMENT 'job path from top level',
   job_type_id    SMALLINT COMMENT 'type id of the job',
   job_type       VARCHAR(63) COMMENT 'type of the job',
-  ref_flow_id    INT UNSIGNED  NULL COMMENT 'the reference flow id of the job if the job is a subflow',
+  ref_flow_id    BIGINT  NULL COMMENT 'the reference flow id of the job if the job is a subflow',
   ref_flow_path  VARCHAR(1024) COMMENT 'the reference flow path of the job if the job is a subflow',
   pre_jobs       VARCHAR(20000) CHAR SET latin1 COMMENT 'comma separated job ids that run before this job',
   post_jobs      VARCHAR(20000) CHAR SET latin1 COMMENT 'comma separated job ids that run after this job',
@@ -146,7 +146,7 @@ CREATE TABLE stg_flow_job (
 CREATE TABLE job_source_id_map (
   app_id           SMALLINT UNSIGNED NOT NULL
   COMMENT 'application id of the flow',
-  job_id           INT UNSIGNED      NOT NULL AUTO_INCREMENT
+  job_id           BIGINT      NOT NULL AUTO_INCREMENT
   COMMENT 'job id generated',
   source_id_string VARCHAR(1024) COMMENT 'job full path string',
   source_id_uuid   VARCHAR(255) COMMENT 'source uuid id of the flow',
@@ -161,7 +161,7 @@ CREATE TABLE job_source_id_map (
 CREATE TABLE flow_dag (
   app_id         SMALLINT UNSIGNED NOT NULL
   COMMENT 'application id of the flow',
-  flow_id        INT UNSIGNED NOT NULL
+  flow_id        BIGINT NOT NULL
   COMMENT 'flow id',
   source_version VARCHAR(255) COMMENT 'last source version of the flow under this dag version',
   dag_version    INT COMMENT 'derived dag version of the flow',
@@ -179,7 +179,7 @@ CREATE TABLE flow_dag (
 CREATE TABLE stg_flow_dag (
   app_id         SMALLINT UNSIGNED NOT NULL
   COMMENT 'application id of the flow',
-  flow_id        INT UNSIGNED NOT NULL
+  flow_id        BIGINT NOT NULL
   COMMENT 'flow id',
   source_version VARCHAR(255) COMMENT 'last source version of the flow under this dag version',
   dag_version    INT COMMENT 'derived dag version of the flow',
@@ -196,12 +196,12 @@ CREATE TABLE stg_flow_dag (
 CREATE TABLE stg_flow_dag_edge (
   app_id          SMALLINT UNSIGNED NOT NULL
   COMMENT 'application id of the flow',
-  flow_id         INT UNSIGNED COMMENT 'flow id',
+  flow_id         BIGINT COMMENT 'flow id',
   flow_path       VARCHAR(1024) COMMENT 'flow path from top level',
   source_version  VARCHAR(255) COMMENT 'last source version of the flow under this dag version',
-  source_job_id   INT UNSIGNED COMMENT 'job id either inherit from source or generated',
+  source_job_id   BIGINT COMMENT 'job id either inherit from source or generated',
   source_job_path VARCHAR(1024) COMMENT 'source job path from top level',
-  target_job_id   INT UNSIGNED COMMENT 'job id either inherit from source or generated',
+  target_job_id   BIGINT COMMENT 'job id either inherit from source or generated',
   target_job_path VARCHAR(1024) COMMENT 'target job path from top level',
   wh_etl_exec_id  BIGINT COMMENT 'wherehows etl execution id that create this record',
   INDEX flow_version_idx (app_id, flow_id, source_version),
@@ -220,19 +220,19 @@ CREATE TABLE flow_execution (
   flow_exec_id     BIGINT UNSIGNED   NOT NULL
   COMMENT 'flow execution id either from the source or generated',
   flow_exec_uuid   VARCHAR(255) COMMENT 'source flow execution uuid',
-  flow_id          INT UNSIGNED      NOT NULL
+  flow_id          BIGINT      NOT NULL
   COMMENT 'flow id',
   flow_name        VARCHAR(255) COMMENT 'name of the flow',
   source_version   VARCHAR(255) COMMENT 'source version of the flow',
   flow_exec_status VARCHAR(31) COMMENT 'status of flow execution',
   attempt_id       SMALLINT COMMENT 'attempt id',
   executed_by      VARCHAR(127) COMMENT 'people who executed the flow',
-  start_time       INT UNSIGNED COMMENT 'start time of the flow execution',
-  end_time         INT UNSIGNED COMMENT 'end time of the flow execution',
+  start_time       BIGINT COMMENT 'start time of the flow execution',
+  end_time         BIGINT COMMENT 'end time of the flow execution',
   is_adhoc         CHAR(1) COMMENT 'determine if it is a ad-hoc execution',
   is_backfill      CHAR(1) COMMENT 'determine if it is a back-fill execution',
-  created_time     INT UNSIGNED COMMENT 'etl create time',
-  modified_time    INT UNSIGNED COMMENT 'etl modified time',
+  created_time     BIGINT COMMENT 'etl create time',
+  modified_time    BIGINT COMMENT 'etl modified time',
   wh_etl_exec_id   BIGINT COMMENT 'wherehows etl execution id that create this record',
   PRIMARY KEY (app_id, flow_exec_id),
   INDEX flow_id_idx (app_id, flow_id),
@@ -262,15 +262,15 @@ CREATE TABLE stg_flow_execution (
   COMMENT 'application id of the flow',
   flow_exec_id     BIGINT UNSIGNED COMMENT 'flow execution id',
   flow_exec_uuid   VARCHAR(255) COMMENT 'source flow execution uuid',
-  flow_id          INT UNSIGNED COMMENT 'flow id',
+  flow_id          BIGINT COMMENT 'flow id',
   flow_name        VARCHAR(255) COMMENT 'name of the flow',
   flow_path        VARCHAR(1024) COMMENT 'flow path from top level',
   source_version   VARCHAR(255) COMMENT 'source version of the flow',
   flow_exec_status VARCHAR(31) COMMENT 'status of flow execution',
   attempt_id       SMALLINT COMMENT 'attempt id',
   executed_by      VARCHAR(127) COMMENT 'people who executed the flow',
-  start_time       INT UNSIGNED COMMENT 'start time of the flow execution',
-  end_time         INT UNSIGNED COMMENT 'end time of the flow execution',
+  start_time       BIGINT COMMENT 'start time of the flow execution',
+  end_time         BIGINT COMMENT 'end time of the flow execution',
   is_adhoc         CHAR(1) COMMENT 'determine if it is a ad-hoc execution',
   is_backfill      CHAR(1) COMMENT 'determine if it is a back-fill execution',
   wh_etl_exec_id   BIGINT COMMENT 'wherehows etl execution id that create this record',
@@ -289,20 +289,20 @@ CREATE TABLE job_execution (
   job_exec_id     BIGINT UNSIGNED   NOT NULL
   COMMENT 'job execution id either inherit or generated',
   job_exec_uuid   VARCHAR(255) COMMENT 'job execution uuid',
-  flow_id         INT UNSIGNED      NOT NULL
+  flow_id         BIGINT      NOT NULL
   COMMENT 'flow id',
   source_version  VARCHAR(255) COMMENT 'source version of the flow',
-  job_id          INT UNSIGNED      NOT NULL
+  job_id          BIGINT      NOT NULL
   COMMENT 'job id',
   job_name        VARCHAR(255) COMMENT 'job name',
   job_exec_status VARCHAR(31) COMMENT 'status of flow execution',
   attempt_id      SMALLINT COMMENT 'attempt id',
-  start_time      INT UNSIGNED COMMENT 'start time of the execution',
-  end_time        INT UNSIGNED COMMENT 'end time of the execution',
+  start_time      BIGINT COMMENT 'start time of the execution',
+  end_time        BIGINT COMMENT 'end time of the execution',
   is_adhoc        CHAR(1) COMMENT 'determine if it is a ad-hoc execution',
   is_backfill     CHAR(1) COMMENT 'determine if it is a back-fill execution',
-  created_time    INT UNSIGNED COMMENT 'etl create time',
-  modified_time   INT UNSIGNED COMMENT 'etl modified time',
+  created_time    BIGINT COMMENT 'etl create time',
+  modified_time   BIGINT COMMENT 'etl modified time',
   wh_etl_exec_id  BIGINT COMMENT 'wherehows etl execution id that create this record',
   PRIMARY KEY (app_id, job_exec_id),
   INDEX flow_exec_id_idx (app_id, flow_exec_id),
@@ -332,20 +332,20 @@ CREATE TABLE job_execution_id_map (
 CREATE TABLE stg_job_execution (
   app_id          SMALLINT UNSIGNED NOT NULL
   COMMENT 'application id of the flow',
-  flow_id         INT UNSIGNED COMMENT 'flow id',
+  flow_id         BIGINT COMMENT 'flow id',
   flow_path       VARCHAR(1024) COMMENT 'flow path from top level',
   source_version  VARCHAR(255) COMMENT 'source version of the flow',
   flow_exec_id    BIGINT UNSIGNED COMMENT 'flow execution id',
   flow_exec_uuid  VARCHAR(255) COMMENT 'flow execution uuid',
-  job_id          INT UNSIGNED COMMENT 'job id',
+  job_id          BIGINT COMMENT 'job id',
   job_name        VARCHAR(255) COMMENT 'job name',
   job_path        VARCHAR(1024) COMMENT 'job path from top level',
   job_exec_id     BIGINT UNSIGNED COMMENT 'job execution id either inherit or generated',
   job_exec_uuid   VARCHAR(255) COMMENT 'job execution uuid',
   job_exec_status VARCHAR(31) COMMENT 'status of flow execution',
   attempt_id      SMALLINT COMMENT 'attempt id',
-  start_time      INT UNSIGNED COMMENT 'start time of the execution',
-  end_time        INT UNSIGNED COMMENT 'end time of the execution',
+  start_time      BIGINT COMMENT 'start time of the execution',
+  end_time        BIGINT COMMENT 'end time of the execution',
   is_adhoc        CHAR(1) COMMENT 'determine if it is a ad-hoc execution',
   is_backfill     CHAR(1) COMMENT 'determine if it is a back-fill execution',
   wh_etl_exec_id  BIGINT COMMENT 'wherehows etl execution id that create this record',
@@ -362,7 +362,7 @@ CREATE TABLE stg_job_execution (
 CREATE TABLE flow_schedule (
   app_id               SMALLINT UNSIGNED NOT NULL
   COMMENT 'application id of the flow',
-  flow_id              INT UNSIGNED      NOT NULL
+  flow_id              BIGINT      NOT NULL
   COMMENT 'flow id',
   unit                 VARCHAR(31) COMMENT 'unit of time',
   frequency            INT COMMENT 'frequency of the unit',
@@ -370,10 +370,10 @@ CREATE TABLE flow_schedule (
   is_active            CHAR(1) COMMENT 'determine if it is an active schedule',
   included_instances   VARCHAR(127) COMMENT 'included instance',
   excluded_instances   VARCHAR(127) COMMENT 'excluded instance',
-  effective_start_time INT UNSIGNED COMMENT 'effective start time of the flow execution',
-  effective_end_time   INT UNSIGNED COMMENT 'effective end time of the flow execution',
-  created_time         INT UNSIGNED COMMENT 'etl create time',
-  modified_time        INT UNSIGNED COMMENT 'etl modified time',
+  effective_start_time BIGINT COMMENT 'effective start time of the flow execution',
+  effective_end_time   BIGINT COMMENT 'effective end time of the flow execution',
+  created_time         BIGINT COMMENT 'etl create time',
+  modified_time        BIGINT COMMENT 'etl modified time',
   ref_id               VARCHAR(255) COMMENT 'reference id of this schedule',
   wh_etl_exec_id       BIGINT COMMENT 'wherehows etl execution id that create this record',
   PRIMARY KEY (app_id, flow_id, ref_id),
@@ -386,15 +386,15 @@ CREATE TABLE flow_schedule (
 CREATE TABLE stg_flow_schedule (
   app_id               SMALLINT UNSIGNED NOT NULL
   COMMENT 'application id of the flow',
-  flow_id              INT UNSIGNED COMMENT 'flow id',
+  flow_id              BIGINT COMMENT 'flow id',
   flow_path            VARCHAR(1024) COMMENT 'flow path from top level',
   unit                 VARCHAR(31) COMMENT 'unit of time',
   frequency            INT COMMENT 'frequency of the unit',
   cron_expression      VARCHAR(127) COMMENT 'cron expression',
   included_instances   VARCHAR(127) COMMENT 'included instance',
   excluded_instances   VARCHAR(127) COMMENT 'excluded instance',
-  effective_start_time INT UNSIGNED COMMENT 'effective start time of the flow execution',
-  effective_end_time   INT UNSIGNED COMMENT 'effective end time of the flow execution',
+  effective_start_time BIGINT COMMENT 'effective start time of the flow execution',
+  effective_end_time   BIGINT COMMENT 'effective end time of the flow execution',
   ref_id               VARCHAR(255) COMMENT 'reference id of this schedule',
   wh_etl_exec_id       BIGINT COMMENT 'wherehows etl execution id that create this record',
   INDEX (app_id, flow_id),
@@ -407,13 +407,13 @@ CREATE TABLE stg_flow_schedule (
 CREATE TABLE flow_owner_permission (
   app_id         SMALLINT UNSIGNED NOT NULL
   COMMENT 'application id of the flow',
-  flow_id        INT UNSIGNED      NOT NULL
+  flow_id        BIGINT      NOT NULL
   COMMENT 'flow id',
   owner_id       VARCHAR(63) COMMENT 'identifier of the owner',
   permissions    VARCHAR(255) COMMENT 'permissions of the owner',
   owner_type     VARCHAR(31) COMMENT 'whether is a group owner or not',
-  created_time   INT UNSIGNED COMMENT 'etl create time',
-  modified_time  INT UNSIGNED COMMENT 'etl modified time',
+  created_time   BIGINT COMMENT 'etl create time',
+  modified_time  BIGINT COMMENT 'etl modified time',
   wh_etl_exec_id BIGINT COMMENT 'wherehows etl execution id that create this record',
   PRIMARY KEY (app_id, flow_id, owner_id),
   INDEX flow_index (app_id, flow_id),
@@ -426,7 +426,7 @@ CREATE TABLE flow_owner_permission (
 CREATE TABLE stg_flow_owner_permission (
   app_id         SMALLINT UNSIGNED NOT NULL
   COMMENT 'application id of the flow',
-  flow_id        INT UNSIGNED COMMENT 'flow id',
+  flow_id        BIGINT COMMENT 'flow id',
   flow_path      VARCHAR(1024) COMMENT 'flow path from top level',
   owner_id       VARCHAR(63) COMMENT 'identifier of the owner',
   permissions    VARCHAR(255) COMMENT 'permissions of the owner',
