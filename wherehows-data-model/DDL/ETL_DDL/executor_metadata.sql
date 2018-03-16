@@ -217,7 +217,7 @@ CREATE TABLE stg_flow_dag_edge (
 CREATE TABLE flow_execution (
   app_id           SMALLINT UNSIGNED NOT NULL
   COMMENT 'application id of the flow',
-  flow_exec_id     BIGINT UNSIGNED   NOT NULL
+  flow_exec_id     BIGINT   NOT NULL
   COMMENT 'flow execution id either from the source or generated',
   flow_exec_uuid   VARCHAR(255) COMMENT 'source flow execution uuid',
   flow_id          BIGINT      NOT NULL
@@ -245,7 +245,7 @@ CREATE TABLE flow_execution (
 CREATE TABLE flow_execution_id_map (
   app_id             SMALLINT UNSIGNED NOT NULL
   COMMENT 'application id of the flow',
-  flow_exec_id       BIGINT UNSIGNED   NOT NULL AUTO_INCREMENT
+  flow_exec_id       BIGINT   NOT NULL AUTO_INCREMENT
   COMMENT 'generated flow execution id',
   source_exec_string VARCHAR(1024) COMMENT 'source flow execution string',
   source_exec_uuid   VARCHAR(255) COMMENT 'source uuid id of the flow execution',
@@ -260,7 +260,7 @@ CREATE TABLE flow_execution_id_map (
 CREATE TABLE stg_flow_execution (
   app_id           SMALLINT UNSIGNED NOT NULL
   COMMENT 'application id of the flow',
-  flow_exec_id     BIGINT UNSIGNED COMMENT 'flow execution id',
+  flow_exec_id     BIGINT COMMENT 'flow execution id',
   flow_exec_uuid   VARCHAR(255) COMMENT 'source flow execution uuid',
   flow_id          BIGINT COMMENT 'flow id',
   flow_name        VARCHAR(255) COMMENT 'name of the flow',
@@ -285,8 +285,8 @@ CREATE TABLE stg_flow_execution (
 CREATE TABLE job_execution (
   app_id          SMALLINT UNSIGNED NOT NULL
   COMMENT 'application id of the flow',
-  flow_exec_id    BIGINT UNSIGNED COMMENT 'flow execution id',
-  job_exec_id     BIGINT UNSIGNED   NOT NULL
+  flow_exec_id    BIGINT COMMENT 'flow execution id',
+  job_exec_id     BIGINT   NOT NULL
   COMMENT 'job execution id either inherit or generated',
   job_exec_uuid   VARCHAR(255) COMMENT 'job execution uuid',
   flow_id         BIGINT      NOT NULL
@@ -317,7 +317,7 @@ CREATE TABLE job_execution (
 CREATE TABLE job_execution_id_map (
   app_id             SMALLINT UNSIGNED NOT NULL
   COMMENT 'application id of the job',
-  job_exec_id        BIGINT UNSIGNED   NOT NULL AUTO_INCREMENT
+  job_exec_id        BIGINT   NOT NULL AUTO_INCREMENT
   COMMENT 'generated job execution id',
   source_exec_string VARCHAR(1024) COMMENT 'source job execution string',
   source_exec_uuid   VARCHAR(255) COMMENT 'source uuid id of the job execution',
@@ -335,12 +335,12 @@ CREATE TABLE stg_job_execution (
   flow_id         BIGINT COMMENT 'flow id',
   flow_path       VARCHAR(1024) COMMENT 'flow path from top level',
   source_version  VARCHAR(255) COMMENT 'source version of the flow',
-  flow_exec_id    BIGINT UNSIGNED COMMENT 'flow execution id',
+  flow_exec_id    BIGINT COMMENT 'flow execution id',
   flow_exec_uuid  VARCHAR(255) COMMENT 'flow execution uuid',
   job_id          BIGINT COMMENT 'job id',
   job_name        VARCHAR(255) COMMENT 'job name',
   job_path        VARCHAR(1024) COMMENT 'job path from top level',
-  job_exec_id     BIGINT UNSIGNED COMMENT 'job execution id either inherit or generated',
+  job_exec_id     BIGINT COMMENT 'job execution id either inherit or generated',
   job_exec_uuid   VARCHAR(255) COMMENT 'job execution uuid',
   job_exec_status VARCHAR(31) COMMENT 'status of flow execution',
   attempt_id      SMALLINT COMMENT 'attempt id',
