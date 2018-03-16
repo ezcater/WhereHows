@@ -7,7 +7,7 @@ if [ -z "$VERSION" ]; then
 fi
 
 # Build a single init SQL script from multiple DDLs.
-echo 'use wherehows;' > init.sql
+echo '-- use wherehows;' > init.sql
 cat ../../wherehows-data-model/DDL/ETL_DDL/*.sql >> init.sql
 cat ../../wherehows-data-model/DDL/WEB_DDL/*.sql >> init.sql
 
