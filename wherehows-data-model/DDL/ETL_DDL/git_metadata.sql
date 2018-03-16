@@ -30,7 +30,7 @@ CREATE TABLE "source_code_commit_info" (
   PRIMARY KEY (repository_urn, file_path, commit_id),
   KEY (commit_id),
   KEY (repository_urn, file_name, committer_email)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+)  DEFAULT CHARSET = utf8;
 
 CREATE TABLE "stg_source_code_commit_info" (
   "app_id"          SMALLINT(5) UNSIGNED DEFAULT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE "stg_source_code_commit_info" (
   PRIMARY KEY (repository_urn, file_path, commit_id),
   KEY (commit_id),
   KEY (repository_urn, file_name, committer_email)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+)  DEFAULT CHARSET = utf8;
 
 
 CREATE TABLE "stg_git_project" (
@@ -64,7 +64,7 @@ CREATE TABLE "stg_git_project" (
   "license"         VARCHAR(100) DEFAULT NULL,
   "description"     MEDIUMTEXT CHAR SET utf8 DEFAULT NULL,
   PRIMARY KEY ("project_name", "scm_type", "app_id")
-) ENGINE = InnoDB DEFAULT CHARSET = latin1;
+)  DEFAULT CHARSET = latin1;
 
 CREATE TABLE "stg_product_repo" (
   "app_id"          SMALLINT(5) UNSIGNED NOT NULL,
@@ -81,7 +81,7 @@ CREATE TABLE "stg_product_repo" (
   "product_version" VARCHAR(50) DEFAULT NULL,
   "namespace"       VARCHAR(100) DEFAULT NULL,
   PRIMARY KEY ("scm_repo_fullname", "scm_type", "app_id")
-) ENGINE = InnoDB DEFAULT CHARSET = latin1;
+)  DEFAULT CHARSET = latin1;
 
 CREATE TABLE "stg_repo_owner" (
   "app_id"          SMALLINT(5) UNSIGNED NOT NULL,
@@ -96,7 +96,7 @@ CREATE TABLE "stg_repo_owner" (
   "is_active"       CHAR(1) COMMENT 'if owner is active',
   "paths"           TEXT CHAR SET utf8 DEFAULT NULL COMMENT 'covered paths by this acl',
   PRIMARY KEY ("scm_repo_fullname", "scm_type", "owner_type", "owner_name", "app_id")
-) ENGINE = InnoDB DEFAULT CHARSET = latin1;
+)  DEFAULT CHARSET = latin1;
 
 CREATE TABLE stg_database_scm_map (
   "database_name"   VARCHAR(100) NOT NULL COMMENT 'database name',
@@ -109,4 +109,4 @@ CREATE TABLE stg_database_scm_map (
   "app_id"          SMALLINT(5) UNSIGNED COMMENT 'application id of the namesapce',
   "wh_etl_exec_id"  BIGINT COMMENT 'wherehows etl execution id that modified this record',
   PRIMARY KEY ("database_type","database_name","scm_type","app_name")
-) ENGINE = InnoDB DEFAULT CHARSET = latin1;
+)  DEFAULT CHARSET = latin1;

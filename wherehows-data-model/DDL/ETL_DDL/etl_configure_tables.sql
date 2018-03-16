@@ -23,7 +23,7 @@ CREATE TABLE "wh_etl_job_schedule" (
   PRIMARY KEY ("wh_etl_job_name"),
   UNIQUE KEY "etl_unique" ("wh_etl_job_name")
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET=utf8
   COMMENT='WhereHows ETL job scheduling table';
 
@@ -48,7 +48,7 @@ CREATE TABLE "wh_etl_job_history" (
   COMMENT 'job execution process id',
   PRIMARY KEY ("wh_etl_exec_id")
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8
   COMMENT = 'WhereHows ETL execution history table';
 
@@ -69,7 +69,7 @@ CREATE TABLE "cfg_application" (
   PRIMARY KEY ("app_id"),
   UNIQUE KEY "idx_cfg_application__appcode" ("app_code") USING HASH
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8;
 
 CREATE TABLE cfg_database  (
@@ -94,7 +94,7 @@ CREATE TABLE cfg_database  (
 	PRIMARY KEY(db_id),
   UNIQUE KEY "uix_cfg_database__dbcode" (db_code) USING HASH
 )
-ENGINE = InnoDB
+
 DEFAULT CHARSET = utf8
 COMMENT = 'Abstract different storage instances as databases' ;
 
@@ -117,7 +117,7 @@ CREATE TABLE stg_cfg_object_name_map  (
 	PRIMARY KEY(object_name, mapped_object_name),
   KEY idx_stg_cfg_object_name_map__mappedobjectname (mapped_object_name) USING BTREE
 )
-ENGINE = InnoDB
+
 CHARACTER SET latin1
 COLLATE latin1_swedish_ci
 COMMENT = 'Map alias (when is_identical_map=Y) and view dependency' ;
@@ -140,7 +140,7 @@ CREATE TABLE cfg_object_name_map  (
   KEY idx_cfg_object_name_map__mappedobjectname (mapped_object_name) USING BTREE,
   CONSTRAINT uix_cfg_object_name_map__objectname_mappedobjectname UNIQUE (object_name, mapped_object_name)
 )
-ENGINE = InnoDB
+
 CHARACTER SET latin1
 AUTO_INCREMENT = 1
 COMMENT = 'Map alias (when is_identical_map=Y) and view dependency. Always map from Derived/Child (object) back to its Original/Parent (mapped_object)' ;
@@ -155,7 +155,7 @@ CREATE TABLE cfg_deployment_tier  (
   PRIMARY KEY(tier_id),
   UNIQUE KEY uix_cfg_deployment_tier__tiercode (tier_code)
 )
-ENGINE = InnoDB
+
 AUTO_INCREMENT = 0
 COMMENT = 'http://en.wikipedia.org/wiki/Deployment_environment';
 
@@ -175,7 +175,7 @@ CREATE TABLE cfg_data_center  (
 	PRIMARY KEY(data_center_id),
   UNIQUE KEY uix_cfg_data_center__datacentercode (data_center_code)
 )
-ENGINE = InnoDB
+
 AUTO_INCREMENT = 0
 COMMENT = 'https://en.wikipedia.org/wiki/Data_center' ;
 
@@ -199,4 +199,4 @@ CREATE TABLE IF NOT EXISTS cfg_search_score_boost (
   "id" INT COMMENT 'dataset id',
   "static_boosting_score" INT COMMENT 'static boosting score for elastic search',
   PRIMARY KEY ("id")
-) ENGINE = InnoDB DEFAULT CHARSET = latin1;
+)  DEFAULT CHARSET = latin1;

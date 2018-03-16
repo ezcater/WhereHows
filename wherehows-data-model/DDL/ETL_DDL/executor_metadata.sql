@@ -35,7 +35,7 @@ CREATE TABLE flow (
   INDEX flow_path_idx (app_id, flow_path(255)),
   INDEX flow_name_idx (app_id, flow_group(127), flow_name(127))
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8
   COMMENT = 'Scheduler flow table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
@@ -60,7 +60,7 @@ CREATE TABLE stg_flow (
   INDEX flow_id_idx (app_id, flow_id),
   INDEX flow_path_idx (app_id, flow_path(255))
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8
   COMMENT = 'Scheduler flow table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
@@ -108,7 +108,7 @@ CREATE TABLE flow_job (
   INDEX ref_flow_id_idx (app_id, ref_flow_id),
   INDEX job_path_idx (app_id, job_path(255))
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8
   COMMENT = 'Scheduler job table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
@@ -139,7 +139,7 @@ CREATE TABLE stg_flow_job (
   INDEX job_path_idx (app_id, job_path(255)),
   INDEX job_type_idx (job_type)
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8
   COMMENT = 'Scheduler job table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
@@ -172,7 +172,7 @@ CREATE TABLE flow_dag (
   INDEX flow_dag_md5_idx (app_id, flow_id, dag_md5),
   INDEX flow_id_idx (app_id, flow_id)
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8
   COMMENT = 'Flow dag reference table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
@@ -189,7 +189,7 @@ CREATE TABLE stg_flow_dag (
   INDEX flow_dag_md5_idx (app_id, flow_id, dag_md5),
   INDEX flow_id_idx (app_id, flow_id)
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8
   COMMENT = 'Flow dag reference table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
@@ -210,7 +210,7 @@ CREATE TABLE stg_flow_dag_edge (
   INDEX source_job_path_idx (app_id, source_job_path(255)),
   INDEX target_job_path_idx (app_id, target_job_path(255))
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8
   COMMENT = 'Flow dag table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
@@ -238,7 +238,7 @@ CREATE TABLE flow_execution (
   INDEX flow_id_idx (app_id, flow_id),
   INDEX flow_name_idx (app_id, flow_name)
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8
   COMMENT = 'Scheduler flow execution table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
@@ -278,7 +278,7 @@ CREATE TABLE stg_flow_execution (
   INDEX flow_id_idx (app_id, flow_id),
   INDEX flow_path_idx (app_id, flow_path(255))
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8
   COMMENT = 'Scheduler flow execution table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
@@ -310,7 +310,7 @@ CREATE TABLE job_execution (
   INDEX flow_id_idx (app_id, flow_id),
   INDEX job_name_idx (app_id, flow_id, job_name)
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8
   COMMENT = 'Scheduler job execution table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
@@ -355,7 +355,7 @@ CREATE TABLE stg_job_execution (
   INDEX flow_exec_idx (app_id, flow_exec_id),
   INDEX job_exec_idx (app_id, job_exec_id)
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8
   COMMENT = 'Scheduler job execution table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
@@ -379,7 +379,7 @@ CREATE TABLE flow_schedule (
   PRIMARY KEY (app_id, flow_id, ref_id),
   INDEX (app_id, flow_id)
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8
   COMMENT = 'Scheduler flow schedule table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
@@ -400,7 +400,7 @@ CREATE TABLE stg_flow_schedule (
   INDEX (app_id, flow_id),
   INDEX (app_id, flow_path(255))
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8
   COMMENT = 'Scheduler flow schedule table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
@@ -419,7 +419,7 @@ CREATE TABLE flow_owner_permission (
   INDEX flow_index (app_id, flow_id),
   INDEX owner_index (app_id, owner_id)
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8
   COMMENT = 'Scheduler owner table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
@@ -436,7 +436,7 @@ CREATE TABLE stg_flow_owner_permission (
   INDEX owner_index (app_id, owner_id),
   INDEX flow_path_idx (app_id, flow_path(255))
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8
   COMMENT = 'Scheduler owner table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
@@ -451,7 +451,7 @@ CREATE TABLE job_execution_ext_reference (
 	wh_etl_exec_id 	bigint(20) COMMENT 'wherehows etl execution id that create this record'  NULL,
 	PRIMARY KEY(app_id,job_exec_id,attempt_id,ext_ref_type,ext_ref_sort_id)
 )
-ENGINE = InnoDB
+
 DEFAULT CHARSET = latin1
 COMMENT = 'External reference ids for the job execution'
 PARTITION BY HASH(app_id)
@@ -480,7 +480,7 @@ CREATE TABLE stg_job_execution_ext_reference (
 	wh_etl_exec_id 	bigint(20) COMMENT 'wherehows etl execution id that create this record'  NULL,
 	PRIMARY KEY(app_id,job_exec_id,attempt_id,ext_ref_type,ext_ref_sort_id)
 )
-ENGINE = InnoDB
+
 DEFAULT CHARSET = latin1
 COMMENT = 'staging table for job_execution_ext_reference'
 PARTITION BY HASH(app_id)
@@ -501,7 +501,7 @@ CREATE TABLE "cfg_job_type" (
   PRIMARY KEY ("job_type_id"),
   UNIQUE KEY "ak_cfg_job_type__job_type" ("job_type")
 )
-  ENGINE = InnoDB
+
   AUTO_INCREMENT = 55
   DEFAULT CHARSET = utf8
   COMMENT = 'job types used in mutliple schedulers';
@@ -516,6 +516,6 @@ CREATE TABLE "cfg_job_type_reverse_map" (
   UNIQUE KEY "cfg_job_type_reverse_map_uk" ("job_type_actual"),
   KEY "cfg_job_type_reverse_map_job_type_id_fk" ("job_type_id")
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8
   COMMENT = 'The reverse map of the actual job type to standard job type';

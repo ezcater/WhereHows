@@ -27,7 +27,7 @@ CREATE TABLE users (
   authentication_type      VARCHAR(20),
   PRIMARY KEY (id)
 )
-  ENGINE = InnoDB
+
   AUTO_INCREMENT = 0
   DEFAULT CHARSET = utf8;
 
@@ -39,7 +39,7 @@ CREATE TABLE user_settings (
   default_watch       ENUM('monthly', 'weekly', 'daily', 'hourly') NULL DEFAULT 'weekly',
   PRIMARY KEY (user_id)
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8;
 
 CREATE TABLE watch (
@@ -52,7 +52,7 @@ CREATE TABLE watch (
   created           TIMESTAMP                                                 NULL     DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id)
 )
-  ENGINE = InnoDB
+
   AUTO_INCREMENT = 0
   DEFAULT CHARSET = utf8;
 
@@ -62,7 +62,7 @@ CREATE TABLE favorites (
   created    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (user_id, dataset_id)
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8;
 
 CREATE TABLE user_login_history (
@@ -74,5 +74,5 @@ CREATE TABLE user_login_history (
   login_time          TIMESTAMP              NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (log_id)
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8;

@@ -47,7 +47,7 @@ CREATE TABLE dict_business_metric  (
   KEY "idx_dict_business_metric__ref_id" ("metric_ref_id") USING BTREE,
   FULLTEXT KEY "fti_dict_business_metric_all" ("metric_name", "metric_description", "metric_category", "metric_group", "dashboard_name")
 )
-  ENGINE = InnoDB
+
   AUTO_INCREMENT = 0
 ;
 
