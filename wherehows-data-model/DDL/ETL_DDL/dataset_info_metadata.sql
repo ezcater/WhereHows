@@ -27,7 +27,7 @@ CREATE TABLE dataset_deployment (
   "modified_time"   BIGINT       DEFAULT NULL
   COMMENT 'the modified time in epoch',
   PRIMARY KEY ("dataset_id", "deployment_tier", "datacenter"),
-  UNIQUE KEY ("dataset_urn", "deployment_tier", "datacenter")
+  UNIQUE ("dataset_urn", "deployment_tier", "datacenter")
 )
   DEFAULT CHARSET = latin1;
 
@@ -42,7 +42,7 @@ CREATE TABLE dataset_capacity (
   "modified_time" BIGINT DEFAULT NULL
   COMMENT 'the modified time in epoch',
   PRIMARY KEY ("dataset_id", "capacity_name"),
-  UNIQUE KEY ("dataset_urn", "capacity_name")
+  UNIQUE ("dataset_urn", "capacity_name")
 )
   DEFAULT CHARSET = latin1;
 
@@ -53,7 +53,7 @@ CREATE TABLE dataset_tag (
   "modified_time" BIGINT DEFAULT NULL
   COMMENT 'the modified time in epoch',
   PRIMARY KEY ("dataset_id", "tag"),
-  UNIQUE KEY ("dataset_urn", "tag")
+  UNIQUE ("dataset_urn", "tag")
 )
   DEFAULT CHARSET = latin1;
 
@@ -66,7 +66,7 @@ CREATE TABLE dataset_case_sensitivity (
   "modified_time" BIGINT DEFAULT NULL
   COMMENT 'the modified time in epoch',
   PRIMARY KEY ("dataset_id"),
-  UNIQUE KEY ("dataset_urn")
+  UNIQUE ("dataset_urn")
 )
   DEFAULT CHARSET = latin1;
 
@@ -79,7 +79,7 @@ CREATE TABLE dataset_reference (
   "modified_time"    BIGINT       DEFAULT NULL
   COMMENT 'the modified time in epoch',
   PRIMARY KEY ("dataset_id", "reference_type", "reference_format"),
-  UNIQUE KEY ("dataset_urn", "reference_type", "reference_format")
+  UNIQUE ("dataset_urn", "reference_type", "reference_format")
 )
   DEFAULT CHARSET = latin1;
 
@@ -95,7 +95,7 @@ CREATE TABLE dataset_partition (
   "modified_time"             BIGINT       DEFAULT NULL
   COMMENT 'the modified time in epoch',
   PRIMARY KEY ("dataset_id"),
-  UNIQUE KEY ("dataset_urn")
+  UNIQUE ("dataset_urn")
 )
   DEFAULT CHARSET = latin1;
 
@@ -117,7 +117,7 @@ CREATE TABLE "dataset_compliance" (
   "modified_time"             BIGINT DEFAULT NULL
   COMMENT 'the modified time in epoch',
   PRIMARY KEY ("dataset_id"),
-  UNIQUE KEY "dataset_urn" ("dataset_urn")
+  UNIQUE "dataset_urn" ("dataset_urn")
 )
   DEFAULT CHARSET = latin1;
 
@@ -134,7 +134,7 @@ CREATE TABLE dataset_constraint (
   "modified_time"         BIGINT       DEFAULT NULL
   COMMENT 'the modified time in epoch',
   PRIMARY KEY ("dataset_id", "constraint_type", "constraint_sub_type", "constraint_expression"),
-  UNIQUE KEY ("dataset_urn", "constraint_type", "constraint_sub_type", "constraint_expression")
+  UNIQUE ("dataset_urn", "constraint_type", "constraint_sub_type", "constraint_expression")
 )
   DEFAULT CHARSET = latin1;
 
@@ -148,7 +148,7 @@ CREATE TABLE dataset_index (
   "modified_time"  BIGINT DEFAULT NULL
   COMMENT 'the modified time in epoch',
   PRIMARY KEY ("dataset_id", "index_name"),
-  UNIQUE KEY ("dataset_urn", "index_name")
+  UNIQUE ("dataset_urn", "index_name")
 )
   DEFAULT CHARSET = latin1;
 
@@ -170,7 +170,7 @@ CREATE TABLE dataset_schema_info (
   "modified_time"                BIGINT             DEFAULT NULL
   COMMENT 'the modified time in epoch',
   PRIMARY KEY ("dataset_id"),
-  UNIQUE KEY ("dataset_urn")
+  UNIQUE ("dataset_urn")
 )
   DEFAULT CHARSET = latin1;
 

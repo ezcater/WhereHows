@@ -21,7 +21,7 @@ CREATE TABLE "wh_etl_job_schedule" (
   "next_run"        INT(10) UNSIGNED     DEFAULT NULL
   COMMENT 'next run time',
   PRIMARY KEY ("wh_etl_job_name"),
-  UNIQUE KEY "etl_unique" ("wh_etl_job_name")
+  UNIQUE "etl_unique" ("wh_etl_job_name")
 )
 
   DEFAULT CHARSET=utf8
@@ -67,7 +67,7 @@ CREATE TABLE "cfg_application" (
   "lifecycle_layer_id"      TINYINT(4) UNSIGNED           DEFAULT NULL,
   "short_connection_string" VARCHAR(50)                   DEFAULT NULL,
   PRIMARY KEY ("app_id"),
-  UNIQUE KEY "idx_cfg_application__appcode" ("app_code") USING HASH
+  UNIQUE "idx_cfg_application__appcode" ("app_code") USING HASH
 )
 
   DEFAULT CHARSET = utf8;
@@ -92,7 +92,7 @@ CREATE TABLE cfg_database  (
 	short_connection_string	varchar(50) COMMENT 'Oracle TNS Name, ODBC DSN, TDPID...' NULL,
   last_modified          	timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY(db_id),
-  UNIQUE KEY "uix_cfg_database__dbcode" (db_code) USING HASH
+  UNIQUE "uix_cfg_database__dbcode" (db_code) USING HASH
 )
 
 DEFAULT CHARSET = utf8
@@ -153,7 +153,7 @@ CREATE TABLE cfg_deployment_tier  (
   sort_id       smallint(6) COMMENT '3-digit for group, 3-digit within group' NOT NULL,
   last_modified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY(tier_id),
-  UNIQUE KEY uix_cfg_deployment_tier__tiercode (tier_code)
+  UNIQUE uix_cfg_deployment_tier__tiercode (tier_code)
 )
 
 AUTO_INCREMENT = 0
@@ -173,7 +173,7 @@ CREATE TABLE cfg_data_center  (
 	data_center_status	char(1) COMMENT 'A,D,U' NULL,
 	last_modified     	timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY(data_center_id),
-  UNIQUE KEY uix_cfg_data_center__datacentercode (data_center_code)
+  UNIQUE uix_cfg_data_center__datacentercode (data_center_code)
 )
 
 AUTO_INCREMENT = 0
@@ -190,7 +190,7 @@ CREATE TABLE cfg_cluster  (
 	description             varchar(200) NULL,
 	last_modified     	timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY(cluster_id),
-  UNIQUE KEY uix_cfg_cluster__clustercode (cluster_code)
+  UNIQUE uix_cfg_cluster__clustercode (cluster_code)
 )
 COMMENT = 'https://en.wikipedia.org/wiki/Computer_cluster' ;
 

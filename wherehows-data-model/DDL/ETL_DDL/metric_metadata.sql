@@ -43,7 +43,7 @@ CREATE TABLE dict_business_metric  (
   "scm_url"               	VARCHAR(300) CHAR SET latin1 NULL,
   "wh_etl_exec_id"              BIGINT COMMENT 'wherehows etl execution id that modified this record',
   PRIMARY KEY(metric_id),
-  UNIQUE KEY "uq_dataset_urn" ("urn"),
+  UNIQUE "uq_dataset_urn" ("urn"),
   KEY "idx_dict_business_metric__ref_id" ("metric_ref_id") USING BTREE,
   FULLTEXT KEY "fti_dict_business_metric_all" ("metric_name", "metric_description", "metric_category", "metric_group", "dashboard_name")
 )

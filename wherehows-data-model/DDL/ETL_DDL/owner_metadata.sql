@@ -35,7 +35,7 @@ CREATE TABLE dataset_owner (
   "confirmed_on"  BIGINT,
   wh_etl_exec_id  BIGINT COMMENT 'wherehows etl execution id that modified this record',
   PRIMARY KEY ("dataset_id", "owner_id", "app_id", "owner_source"),
-  UNIQUE KEY "with_urn" ("dataset_urn", "owner_id", "app_id", "owner_source")
+  UNIQUE "with_urn" ("dataset_urn", "owner_id", "app_id", "owner_source")
 )
 
   DEFAULT CHARSET = latin1;
