@@ -124,7 +124,7 @@ CREATE TABLE "stg_repo_owner" (
   "owner_type"      VARCHAR(50) NOT NULL,
   "owner_name"      VARCHAR(50) NOT NULL,
   "sort_id"         BIGINT DEFAULT NULL,
-  "is_active"       CHAR(1) ,
+  "is_active"       CHAR(1),
   "paths"           TEXT DEFAULT NULL,
   PRIMARY KEY ("scm_repo_fullname", "scm_type", "owner_type", "owner_name", "app_id")
 );

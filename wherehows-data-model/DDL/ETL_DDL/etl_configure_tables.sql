@@ -154,7 +154,7 @@ CREATE TABLE cfg_object_name_map  (
   object_name             VARCHAR(350) NOT NULL,
   map_phrase              VARCHAR(100) NULL,
   object_dataset_id       INT NULL,
-  is_identical_map        CHAR(1) NOT NULL DEFAULT 'N' ,
+  is_identical_map        CHAR(1) NOT NULL DEFAULT 'N',
   mapped_object_type      VARCHAR(100) NOT NULL,
   mapped_object_sub_type  VARCHAR(100) NULL,
   mapped_object_name      VARCHAR(350) NOT NULL,
