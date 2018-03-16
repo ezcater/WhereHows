@@ -48,7 +48,7 @@ CREATE TABLE "stg_dict_dataset" (
   PRIMARY KEY ("urn", "db_id")
 )
 
-  DEFAULT CHARSET = latin1
+
   PARTITION BY HASH(db_id)
   PARTITIONS 8;
 
@@ -90,7 +90,7 @@ CREATE TABLE "dict_dataset" (
   UNIQUE "uq_dataset_urn" ("urn")
 )
 
-  DEFAULT CHARSET = latin1;
+;
 
 -- stagging table for sample data
 CREATE TABLE "stg_dict_dataset_sample" (
@@ -104,7 +104,7 @@ CREATE TABLE "stg_dict_dataset_sample" (
   KEY "ref_urn_key" ("ref_urn")
 )
 
-  DEFAULT CHARSET = utf8;
+;
 
 -- sample data table
 CREATE TABLE "dict_dataset_sample" (
@@ -121,7 +121,7 @@ CREATE TABLE "dict_dataset_sample" (
 )
 
   AUTO_INCREMENT = 0
-  DEFAULT CHARSET = utf8;
+;
 
 -- stagging table for field detail
 CREATE TABLE "stg_dict_field_detail" (
@@ -149,7 +149,7 @@ CREATE TABLE "stg_dict_field_detail" (
   PRIMARY KEY ("urn", "sort_id", "db_id")
 )
 
-  DEFAULT CHARSET = latin1
+
   PARTITION BY HASH(db_id)
   PARTITIONS 8;
 
@@ -198,7 +198,7 @@ CREATE TABLE "dict_field_detail" (
 )
 
   AUTO_INCREMENT = 0
-  DEFAULT CHARSET = latin1
+
   COMMENT = 'Flattened Fields/Columns';
 
 -- schema history
@@ -222,7 +222,7 @@ CREATE TABLE "stg_dict_dataset_field_comment" (
   "db_id" smallint(6) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY ("field_id","comment_id", "db_id")
 )
-  DEFAULT CHARSET=utf8
+
   PARTITION BY HASH(db_id)
   PARTITIONS 8
 ;
@@ -271,7 +271,7 @@ CREATE TABLE "field_comments" (
 )
 
   AUTO_INCREMENT = 0
-  DEFAULT CHARSET = utf8;
+;
 
 -- dict_dataset_instance
 CREATE TABLE dict_dataset_instance  (

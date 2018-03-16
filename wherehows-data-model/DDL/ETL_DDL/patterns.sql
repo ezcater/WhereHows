@@ -35,7 +35,7 @@ CREATE TABLE "dataset_partition_layout_pattern" (
   PRIMARY KEY ("layout_id")
 )
 
-  DEFAULT CHARSET = utf8;
+;
 
 -- log lineage pattern to extract lineage from logs
 CREATE TABLE "log_lineage_pattern" (
@@ -64,7 +64,7 @@ CREATE TABLE "log_lineage_pattern" (
   PRIMARY KEY ("pattern_id")
 )
 
-  DEFAULT CHARSET = utf8;
+;
 
 -- patterns used to discover the hadoop id inside log
 CREATE TABLE "log_reference_job_id_pattern" (
@@ -78,6 +78,6 @@ CREATE TABLE "log_reference_job_id_pattern" (
   PRIMARY KEY ("pattern_id")
 )
 
-  DEFAULT CHARSET = utf8;
+;
 
 

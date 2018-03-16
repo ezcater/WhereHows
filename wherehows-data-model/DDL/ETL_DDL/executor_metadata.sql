@@ -36,7 +36,7 @@ CREATE TABLE flow (
   INDEX flow_name_idx (app_id, flow_group(127), flow_name(127))
 )
 
-  DEFAULT CHARSET = utf8
+
   COMMENT = 'Scheduler flow table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
 CREATE TABLE stg_flow (
@@ -61,7 +61,7 @@ CREATE TABLE stg_flow (
   INDEX flow_path_idx (app_id, flow_path(255))
 )
 
-  DEFAULT CHARSET = utf8
+
   COMMENT = 'Scheduler flow table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
 CREATE TABLE flow_source_id_map (
@@ -76,7 +76,7 @@ CREATE TABLE flow_source_id_map (
   INDEX flow_path_idx (app_id, source_id_string(255))
 )
   ENGINE = MyISAM
-  DEFAULT CHARSET = utf8
+
   COMMENT = 'Scheduler flow id mapping table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
 CREATE TABLE flow_job (
@@ -95,8 +95,8 @@ CREATE TABLE flow_job (
   job_type_id          SMALLINT COMMENT 'type id of the job',
   job_type             VARCHAR(63) COMMENT 'type of the job',
   ref_flow_id          BIGINT NULL COMMENT 'the reference flow id of the job if the job is a subflow',
-  pre_jobs             VARCHAR(20000) CHAR SET latin1 COMMENT 'comma separated job ids that run before this job',
-  post_jobs            VARCHAR(20000) CHAR SET latin1 COMMENT 'comma separated job ids that run after this job',
+  pre_jobs             VARCHAR(20000) COMMENT 'comma separated job ids that run before this job',
+  post_jobs            VARCHAR(20000) COMMENT 'comma separated job ids that run after this job',
   is_current           CHAR(1) COMMENT 'determine if it is a current job',
   is_first             CHAR(1) COMMENT 'determine if it is the first job',
   is_last              CHAR(1) COMMENT 'determine if it is the last job',
@@ -109,7 +109,7 @@ CREATE TABLE flow_job (
   INDEX job_path_idx (app_id, job_path(255))
 )
 
-  DEFAULT CHARSET = utf8
+
   COMMENT = 'Scheduler job table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
 CREATE TABLE stg_flow_job (
@@ -126,8 +126,8 @@ CREATE TABLE stg_flow_job (
   job_type       VARCHAR(63) COMMENT 'type of the job',
   ref_flow_id    BIGINT  NULL COMMENT 'the reference flow id of the job if the job is a subflow',
   ref_flow_path  VARCHAR(1024) COMMENT 'the reference flow path of the job if the job is a subflow',
-  pre_jobs       VARCHAR(20000) CHAR SET latin1 COMMENT 'comma separated job ids that run before this job',
-  post_jobs      VARCHAR(20000) CHAR SET latin1 COMMENT 'comma separated job ids that run after this job',
+  pre_jobs       VARCHAR(20000) COMMENT 'comma separated job ids that run before this job',
+  post_jobs      VARCHAR(20000) COMMENT 'comma separated job ids that run after this job',
   is_current     CHAR(1) COMMENT 'determine if it is a current job',
   is_first       CHAR(1) COMMENT 'determine if it is the first job',
   is_last        CHAR(1) COMMENT 'determine if it is the last job',
@@ -140,7 +140,7 @@ CREATE TABLE stg_flow_job (
   INDEX job_type_idx (job_type)
 )
 
-  DEFAULT CHARSET = utf8
+
   COMMENT = 'Scheduler job table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
 CREATE TABLE job_source_id_map (
@@ -155,7 +155,7 @@ CREATE TABLE job_source_id_map (
   INDEX job_path_idx (app_id, source_id_string(255))
 )
   ENGINE = MyISAM
-  DEFAULT CHARSET = utf8
+
   COMMENT = 'Scheduler flow id mapping table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
 CREATE TABLE flow_dag (
@@ -173,7 +173,7 @@ CREATE TABLE flow_dag (
   INDEX flow_id_idx (app_id, flow_id)
 )
 
-  DEFAULT CHARSET = utf8
+
   COMMENT = 'Flow dag reference table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
 CREATE TABLE stg_flow_dag (
@@ -190,7 +190,7 @@ CREATE TABLE stg_flow_dag (
   INDEX flow_id_idx (app_id, flow_id)
 )
 
-  DEFAULT CHARSET = utf8
+
   COMMENT = 'Flow dag reference table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
 CREATE TABLE stg_flow_dag_edge (
@@ -211,7 +211,7 @@ CREATE TABLE stg_flow_dag_edge (
   INDEX target_job_path_idx (app_id, target_job_path(255))
 )
 
-  DEFAULT CHARSET = utf8
+
   COMMENT = 'Flow dag table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
 CREATE TABLE flow_execution (
@@ -239,7 +239,7 @@ CREATE TABLE flow_execution (
   INDEX flow_name_idx (app_id, flow_name)
 )
 
-  DEFAULT CHARSET = utf8
+
   COMMENT = 'Scheduler flow execution table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
 CREATE TABLE flow_execution_id_map (
@@ -254,7 +254,7 @@ CREATE TABLE flow_execution_id_map (
   INDEX flow_exec_uuid_idx (app_id, source_exec_uuid)
 )
   ENGINE = MyISAM
-  DEFAULT CHARSET = utf8
+
   COMMENT = 'Scheduler flow execution id mapping table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
 CREATE TABLE stg_flow_execution (
@@ -279,7 +279,7 @@ CREATE TABLE stg_flow_execution (
   INDEX flow_path_idx (app_id, flow_path(255))
 )
 
-  DEFAULT CHARSET = utf8
+
   COMMENT = 'Scheduler flow execution table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
 CREATE TABLE job_execution (
@@ -311,7 +311,7 @@ CREATE TABLE job_execution (
   INDEX job_name_idx (app_id, flow_id, job_name)
 )
 
-  DEFAULT CHARSET = utf8
+
   COMMENT = 'Scheduler job execution table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
 CREATE TABLE job_execution_id_map (
@@ -326,7 +326,7 @@ CREATE TABLE job_execution_id_map (
   INDEX job_exec_uuid_idx (app_id, source_exec_uuid)
 )
   ENGINE = MyISAM
-  DEFAULT CHARSET = utf8
+
   COMMENT = 'Scheduler job execution id mapping table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
 CREATE TABLE stg_job_execution (
@@ -356,7 +356,7 @@ CREATE TABLE stg_job_execution (
   INDEX job_exec_idx (app_id, job_exec_id)
 )
 
-  DEFAULT CHARSET = utf8
+
   COMMENT = 'Scheduler job execution table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
 CREATE TABLE flow_schedule (
@@ -380,7 +380,7 @@ CREATE TABLE flow_schedule (
   INDEX (app_id, flow_id)
 )
 
-  DEFAULT CHARSET = utf8
+
   COMMENT = 'Scheduler flow schedule table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
 CREATE TABLE stg_flow_schedule (
@@ -401,7 +401,7 @@ CREATE TABLE stg_flow_schedule (
   INDEX (app_id, flow_path(255))
 )
 
-  DEFAULT CHARSET = utf8
+
   COMMENT = 'Scheduler flow schedule table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
 CREATE TABLE flow_owner_permission (
@@ -420,7 +420,7 @@ CREATE TABLE flow_owner_permission (
   INDEX owner_index (app_id, owner_id)
 )
 
-  DEFAULT CHARSET = utf8
+
   COMMENT = 'Scheduler owner table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
 CREATE TABLE stg_flow_owner_permission (
@@ -437,7 +437,7 @@ CREATE TABLE stg_flow_owner_permission (
   INDEX flow_path_idx (app_id, flow_path(255))
 )
 
-  DEFAULT CHARSET = utf8
+
   COMMENT = 'Scheduler owner table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
 CREATE TABLE job_execution_ext_reference (
@@ -503,7 +503,7 @@ CREATE TABLE "cfg_job_type" (
 )
 
   AUTO_INCREMENT = 55
-  DEFAULT CHARSET = utf8
+
   COMMENT = 'job types used in mutliple schedulers';
 
 CREATE TABLE "cfg_job_type_reverse_map" (
@@ -517,5 +517,5 @@ CREATE TABLE "cfg_job_type_reverse_map" (
   KEY "cfg_job_type_reverse_map_job_type_id_fk" ("job_type_id")
 )
 
-  DEFAULT CHARSET = utf8
+
   COMMENT = 'The reverse map of the actual job type to standard job type';

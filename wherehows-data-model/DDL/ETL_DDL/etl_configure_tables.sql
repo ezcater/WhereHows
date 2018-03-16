@@ -24,7 +24,7 @@ CREATE TABLE "wh_etl_job_schedule" (
   UNIQUE "etl_unique" ("wh_etl_job_name")
 )
 
-  DEFAULT CHARSET=utf8
+
   COMMENT='WhereHows ETL job scheduling table';
 
 CREATE TABLE "wh_etl_job_history" (
@@ -49,7 +49,7 @@ CREATE TABLE "wh_etl_job_history" (
   PRIMARY KEY ("wh_etl_exec_id")
 )
 
-  DEFAULT CHARSET = utf8
+
   COMMENT = 'WhereHows ETL execution history table';
 
 CREATE TABLE "cfg_application" (
@@ -70,7 +70,7 @@ CREATE TABLE "cfg_application" (
   UNIQUE "idx_cfg_application__appcode" ("app_code") USING HASH
 )
 
-  DEFAULT CHARSET = utf8;
+;
 
 CREATE TABLE cfg_database  (
 	db_id                  	smallint(6) UNSIGNED NOT NULL,
@@ -199,4 +199,4 @@ CREATE TABLE IF NOT EXISTS cfg_search_score_boost (
   "id" INT COMMENT 'dataset id',
   "static_boosting_score" INT COMMENT 'static boosting score for elastic search',
   PRIMARY KEY ("id")
-)  DEFAULT CHARSET = latin1;
+);
