@@ -35,7 +35,7 @@ CREATE TABLE flow (
 );
 
 
-  COMMENT = 'Scheduler flow table' PARTITION BY HASH (app_id) PARTITIONS 8;
+  COMMENT = 'Scheduler flow table';
   COMMENT ON COLUMN flow.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
   COMMENT ON COLUMN flow.modified_time IS 'latest wherehows modified time of the flow';
   COMMENT ON COLUMN flow.created_time IS 'wherehows created time of the flow';
@@ -77,7 +77,7 @@ CREATE TABLE stg_flow (
 );
 
 
-  COMMENT = 'Scheduler flow table' PARTITION BY HASH (app_id) PARTITIONS 8;
+  COMMENT = 'Scheduler flow table';
   COMMENT ON COLUMN stg_flow.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
   COMMENT ON COLUMN stg_flow.modified_time IS 'latest wherehows modified time of the flow';
   COMMENT ON COLUMN stg_flow.created_time IS 'wherehows created time of the flow';
@@ -109,7 +109,7 @@ CREATE TABLE flow_source_id_map (
 );
   ENGINE = MyISAM
 
-  COMMENT = 'Scheduler flow id mapping table' PARTITION BY HASH (app_id) PARTITIONS 8;
+  COMMENT = 'Scheduler flow id mapping table';
   COMMENT ON COLUMN flow_source_id_map.source_id_uri IS 'source uri id of the flow';
   COMMENT ON COLUMN flow_source_id_map.source_id_uuid IS 'source uuid id of the flow';
   COMMENT ON COLUMN flow_source_id_map.source_id_string IS 'source string id of the flow';
@@ -146,7 +146,7 @@ CREATE TABLE flow_job (
 );
 
 
-  COMMENT = 'Scheduler job table' PARTITION BY HASH (app_id) PARTITIONS 8;
+  COMMENT = 'Scheduler job table';
   COMMENT ON COLUMN flow_job.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN flow_job.modified_time IS 'latest wherehows modified time of the flow';
   COMMENT ON COLUMN flow_job.created_time IS 'wherehows created time of the flow';
@@ -193,7 +193,7 @@ CREATE TABLE stg_flow_job (
 );
 
 
-  COMMENT = 'Scheduler job table' PARTITION BY HASH (app_id) PARTITIONS 8;
+  COMMENT = 'Scheduler job table';
   COMMENT ON COLUMN stg_flow_job.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN stg_flow_job.is_last IS 'determine if it is the last job';
   COMMENT ON COLUMN stg_flow_job.is_first IS 'determine if it is the first job';
@@ -231,7 +231,7 @@ CREATE TABLE job_source_id_map (
 );
   ENGINE = MyISAM
 
-  COMMENT = 'Scheduler flow id mapping table' PARTITION BY HASH (app_id) PARTITIONS 8;
+  COMMENT = 'Scheduler flow id mapping table';
   COMMENT ON COLUMN job_source_id_map.source_id_uri IS 'source uri id of the flow';
   COMMENT ON COLUMN job_source_id_map.source_id_uuid IS 'source uuid id of the flow';
   COMMENT ON COLUMN job_source_id_map.source_id_string IS 'job full path string';
@@ -253,7 +253,7 @@ CREATE TABLE flow_dag (
 );
 
 
-  COMMENT = 'Flow dag reference table' PARTITION BY HASH (app_id) PARTITIONS 8;
+  COMMENT = 'Flow dag reference table';
   COMMENT ON COLUMN flow_dag.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN flow_dag.is_current IS 'if this source version of the flow is current';
   COMMENT ON COLUMN flow_dag.dag_md5 IS 'md5 checksum for this dag version';
@@ -278,7 +278,7 @@ CREATE TABLE stg_flow_dag (
 );
 
 
-  COMMENT = 'Flow dag reference table' PARTITION BY HASH (app_id) PARTITIONS 8;
+  COMMENT = 'Flow dag reference table';
   COMMENT ON COLUMN stg_flow_dag.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN stg_flow_dag.dag_md5 IS 'md5 checksum for this dag version';
   COMMENT ON COLUMN stg_flow_dag.dag_version IS 'derived dag version of the flow';
@@ -302,7 +302,7 @@ CREATE TABLE stg_flow_dag_edge (
 );
 
 
-  COMMENT = 'Flow dag table' PARTITION BY HASH (app_id) PARTITIONS 8;
+  COMMENT = 'Flow dag table';
   COMMENT ON COLUMN stg_flow_dag_edge.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN stg_flow_dag_edge.target_job_path IS 'target job path from top level';
   COMMENT ON COLUMN stg_flow_dag_edge.target_job_id IS 'job id either inherit from source or generated';
@@ -342,7 +342,7 @@ CREATE TABLE flow_execution (
 );
 
 
-  COMMENT = 'Scheduler flow execution table' PARTITION BY HASH (app_id) PARTITIONS 8;
+  COMMENT = 'Scheduler flow execution table';
   COMMENT ON COLUMN flow_execution.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN flow_execution.modified_time IS 'etl modified time';
   COMMENT ON COLUMN flow_execution.created_time IS 'etl create time';
@@ -372,7 +372,7 @@ CREATE TABLE flow_execution_id_map (
 );
   ENGINE = MyISAM
 
-  COMMENT = 'Scheduler flow execution id mapping table' PARTITION BY HASH (app_id) PARTITIONS 8;
+  COMMENT = 'Scheduler flow execution id mapping table';
   COMMENT ON COLUMN flow_execution_id_map.source_exec_uri IS 'source uri id of the flow execution';
   COMMENT ON COLUMN flow_execution_id_map.source_exec_uuid IS 'source uuid id of the flow execution';
   COMMENT ON COLUMN flow_execution_id_map.source_exec_string IS 'source flow execution string';
@@ -400,7 +400,7 @@ CREATE TABLE stg_flow_execution (
 );
 
 
-  COMMENT = 'Scheduler flow execution table' PARTITION BY HASH (app_id) PARTITIONS 8;
+  COMMENT = 'Scheduler flow execution table';
   COMMENT ON COLUMN stg_flow_execution.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN stg_flow_execution.is_backfill IS 'determine if it is a back-fill execution';
   COMMENT ON COLUMN stg_flow_execution.is_adhoc IS 'determine if it is a ad-hoc execution';
@@ -446,7 +446,7 @@ CREATE TABLE job_execution (
 );
 
 
-  COMMENT = 'Scheduler job execution table' PARTITION BY HASH (app_id) PARTITIONS 8;
+  COMMENT = 'Scheduler job execution table';
   COMMENT ON COLUMN job_execution.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN job_execution.modified_time IS 'etl modified time';
   COMMENT ON COLUMN job_execution.created_time IS 'etl create time';
@@ -479,7 +479,7 @@ CREATE TABLE job_execution_id_map (
 );
   ENGINE = MyISAM
 
-  COMMENT = 'Scheduler job execution id mapping table' PARTITION BY HASH (app_id) PARTITIONS 8;
+  COMMENT = 'Scheduler job execution id mapping table';
   COMMENT ON COLUMN job_execution_id_map.source_exec_uri IS 'source uri id of the job execution';
   COMMENT ON COLUMN job_execution_id_map.source_exec_uuid IS 'source uuid id of the job execution';
   COMMENT ON COLUMN job_execution_id_map.source_exec_string IS 'source job execution string';
@@ -510,7 +510,7 @@ CREATE TABLE stg_job_execution (
 );
 
 
-  COMMENT = 'Scheduler job execution table' PARTITION BY HASH (app_id) PARTITIONS 8;
+  COMMENT = 'Scheduler job execution table';
   COMMENT ON COLUMN stg_job_execution.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN stg_job_execution.is_backfill IS 'determine if it is a back-fill execution';
   COMMENT ON COLUMN stg_job_execution.is_adhoc IS 'determine if it is a ad-hoc execution';
@@ -556,7 +556,7 @@ CREATE TABLE flow_schedule (
 );
 
 
-  COMMENT = 'Scheduler flow schedule table' PARTITION BY HASH (app_id) PARTITIONS 8;
+  COMMENT = 'Scheduler flow schedule table';
   COMMENT ON COLUMN flow_schedule.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN flow_schedule.ref_id IS 'reference id of this schedule';
   COMMENT ON COLUMN flow_schedule.modified_time IS 'etl modified time';
@@ -590,7 +590,7 @@ CREATE TABLE stg_flow_schedule (
 );
 
 
-  COMMENT = 'Scheduler flow schedule table' PARTITION BY HASH (app_id) PARTITIONS 8;
+  COMMENT = 'Scheduler flow schedule table';
   COMMENT ON COLUMN stg_flow_schedule.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN stg_flow_schedule.ref_id IS 'reference id of this schedule';
   COMMENT ON COLUMN stg_flow_schedule.effective_end_time IS 'effective end time of the flow execution';
@@ -621,7 +621,7 @@ CREATE TABLE flow_owner_permission (
 );
 
 
-  COMMENT = 'Scheduler owner table' PARTITION BY HASH (app_id) PARTITIONS 8;
+  COMMENT = 'Scheduler owner table';
   COMMENT ON COLUMN flow_owner_permission.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN flow_owner_permission.modified_time IS 'etl modified time';
   COMMENT ON COLUMN flow_owner_permission.created_time IS 'etl create time';
@@ -645,7 +645,7 @@ CREATE TABLE stg_flow_owner_permission (
 );
 
 
-  COMMENT = 'Scheduler owner table' PARTITION BY HASH (app_id) PARTITIONS 8;
+  COMMENT = 'Scheduler owner table';
   COMMENT ON COLUMN stg_flow_owner_permission.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN stg_flow_owner_permission.owner_type IS 'whether is a group owner or not';
   COMMENT ON COLUMN stg_flow_owner_permission.permissions IS 'permissions of the owner';
@@ -671,15 +671,6 @@ CREATE TABLE job_execution_ext_reference (
 
 DEFAULT CHARSET = latin1
 COMMENT = 'External reference ids for the job execution'
-PARTITION BY HASH(app_id)
-   (	PARTITION p0,
-	PARTITION p1,
-	PARTITION p2,
-	PARTITION p3,
-	PARTITION p4,
-	PARTITION p5,
-	PARTITION p6,
-	PARTITION p7)
 ;
 COMMENT ON COLUMN job_execution_ext_reference.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
 COMMENT ON COLUMN job_execution_ext_reference.created_time IS 'etl create time';
@@ -708,15 +699,6 @@ CREATE TABLE stg_job_execution_ext_reference (
 
 DEFAULT CHARSET = latin1
 COMMENT = 'staging table for job_execution_ext_reference'
-PARTITION BY HASH(app_id)
-   (	PARTITION p0,
-	PARTITION p1,
-	PARTITION p2,
-	PARTITION p3,
-	PARTITION p4,
-	PARTITION p5,
-	PARTITION p6,
-	PARTITION p7)
 ;
 COMMENT ON COLUMN stg_job_execution_ext_reference.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
 COMMENT ON COLUMN stg_job_execution_ext_reference.created_time IS 'etl create time';

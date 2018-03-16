@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS "job_execution_data_lineage" (
 )
 
 
-  COMMENT = 'Lineage table' PARTITION BY HASH (app_id) PARTITIONS 8;
+  COMMENT = 'Lineage table';
   COMMENT ON COLUMN job_execution_data_lineage.source_srl_no IS 'the related record of this record';
   COMMENT ON COLUMN job_execution_data_lineage.srl_no IS 'the sorted number of this record in all records of this job related operation';
   COMMENT ON COLUMN job_execution_data_lineage.layout_id IS 'layout of the dataset';
