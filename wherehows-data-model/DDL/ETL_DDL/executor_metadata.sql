@@ -499,7 +499,7 @@ CREATE TABLE "cfg_job_type" (
   "job_type"    VARCHAR(50)          NOT NULL,
   "description" VARCHAR(200)         NULL,
   PRIMARY KEY ("job_type_id"),
-  UNIQUE KEY "ak_cfg_job_type__job_type" ("job_type")
+  UNIQUE "ak_cfg_job_type__job_type" ("job_type")
 )
 
   AUTO_INCREMENT = 55
@@ -513,7 +513,7 @@ CREATE TABLE "cfg_job_type_reverse_map" (
   "description"       VARCHAR(200)         NULL,
   "job_type_standard" VARCHAR(50)          NOT NULL,
   PRIMARY KEY ("job_type_actual"),
-  UNIQUE KEY "cfg_job_type_reverse_map_uk" ("job_type_actual"),
+  UNIQUE "cfg_job_type_reverse_map_uk" ("job_type_actual"),
   KEY "cfg_job_type_reverse_map_job_type_id_fk" ("job_type_id")
 )
 

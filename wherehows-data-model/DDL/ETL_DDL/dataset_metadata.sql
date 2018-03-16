@@ -87,7 +87,7 @@ CREATE TABLE "dict_dataset" (
   "modified_time"               BIGINT COMMENT 'latest wherehows modified',
   "wh_etl_exec_id"              BIGINT COMMENT 'wherehows etl execution id that modified this record',
   PRIMARY KEY ("id"),
-  UNIQUE KEY "uq_dataset_urn" ("urn")
+  UNIQUE "uq_dataset_urn" ("urn")
 )
 
   DEFAULT CHARSET = latin1;
@@ -117,7 +117,7 @@ CREATE TABLE "dict_dataset_sample" (
   "modified"   DATETIME         NULL,
   "created"    DATETIME         NULL,
   PRIMARY KEY ("id"),
-  UNIQUE KEY "ak_dict_dataset_sample__datasetid" ("dataset_id")
+  UNIQUE "ak_dict_dataset_sample__datasetid" ("dataset_id")
 )
 
   AUTO_INCREMENT = 0
@@ -193,8 +193,8 @@ CREATE TABLE "dict_field_detail" (
   COMMENT 'correspond type in hcatalog',
   "modified"           TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY ("field_id"),
-  UNIQUE KEY "uix_dict_field__datasetid_parentpath_fieldname" ("dataset_id", "parent_path", "field_name") USING BTREE,
-  UNIQUE KEY "uix_dict_field__datasetid_sortid" ("dataset_id", "sort_id") USING BTREE
+  UNIQUE "uix_dict_field__datasetid_parentpath_fieldname" ("dataset_id", "parent_path", "field_name") USING BTREE,
+  UNIQUE "uix_dict_field__datasetid_sortid" ("dataset_id", "sort_id") USING BTREE
 )
 
   AUTO_INCREMENT = 0
@@ -209,7 +209,7 @@ CREATE TABLE "dict_dataset_schema_history" (
   "modified_date" DATE                   NULL,
   "schema"        MEDIUMTEXT CHARACTER SET utf8 NULL,
   PRIMARY KEY (id),
-  UNIQUE KEY "uk_dict_dataset_schema_history__urn_modified" ("urn", "modified_date")
+  UNIQUE "uk_dict_dataset_schema_history__urn_modified" ("urn", "modified_date")
 )
 
   AUTO_INCREMENT = 0;
