@@ -38,7 +38,7 @@ CREATE TABLE dataset_owner (
   UNIQUE "with_urn" ("dataset_urn", "owner_id", "app_id", "owner_source")
 )
 
-  DEFAULT CHARSET = latin1;
+;
 
 CREATE TABLE stg_dataset_owner (
   "dataset_id" INT COMMENT 'dataset_id',
@@ -62,7 +62,7 @@ CREATE TABLE stg_dataset_owner (
   KEY db_name_index (db_name)
 )
 
-  DEFAULT CHARSET = latin1;
+;
 
 CREATE TABLE stg_dataset_owner_unmatched (
   "dataset_urn" VARCHAR(200) NOT NULL,
@@ -109,7 +109,7 @@ CREATE TABLE "dir_external_user_info" (
   "wh_etl_exec_id" bigint(20) DEFAULT NULL COMMENT 'wherehows etl execution id that modified this record',
   PRIMARY KEY ("user_id","app_id"),
   KEY "email" ("email")
-)  DEFAULT CHARSET=utf8;
+);
 
 CREATE TABLE "stg_dir_external_user_info" (
   "app_id" smallint(5) unsigned NOT NULL,
@@ -136,7 +136,7 @@ CREATE TABLE "stg_dir_external_user_info" (
   KEY "email" ("email"),
   KEY "app_id" ("app_id","urn"),
   KEY "app_id_2" ("app_id","manager_urn")
-)  DEFAULT CHARSET=utf8;
+);
 
 CREATE TABLE "dir_external_group_user_map" (
   "app_id" smallint(5) unsigned NOT NULL,
@@ -148,7 +148,7 @@ CREATE TABLE "dir_external_group_user_map" (
   "modified_time" int(10) unsigned DEFAULT NULL COMMENT 'the modified time in epoch',
   "wh_etl_exec_id" bigint(20) DEFAULT NULL COMMENT 'wherehows etl execution id that modified this record',
   PRIMARY KEY ("app_id","group_id","user_app_id","user_id")
-)  DEFAULT CHARSET=utf8;
+);
 
 CREATE TABLE "stg_dir_external_group_user_map" (
   "app_id" smallint(5) unsigned NOT NULL,
@@ -158,7 +158,7 @@ CREATE TABLE "stg_dir_external_group_user_map" (
   "user_id" varchar(50) NOT NULL,
   "wh_etl_exec_id" bigint(20) DEFAULT NULL COMMENT 'wherehows etl execution id that modified this record',
   PRIMARY KEY ("app_id","group_id","user_app_id","user_id")
-)  DEFAULT CHARSET=utf8;
+);
 
 CREATE TABLE "dir_external_group_user_map_flatten" (
   "app_id" smallint(5) unsigned NOT NULL,
@@ -170,7 +170,7 @@ CREATE TABLE "dir_external_group_user_map_flatten" (
   "modified_time" int(10) unsigned DEFAULT NULL COMMENT 'the modified time in epoch',
   "wh_etl_exec_id" bigint(20) DEFAULT NULL COMMENT 'wherehows etl execution id that modified this record',
   PRIMARY KEY ("app_id","group_id","user_app_id","user_id")
-)  DEFAULT CHARSET=utf8;
+);
 
 CREATE TABLE "stg_dir_external_group_user_map_flatten" (
   "app_id" smallint(5) unsigned NOT NULL,
@@ -180,4 +180,4 @@ CREATE TABLE "stg_dir_external_group_user_map_flatten" (
   "user_app_id" smallint(5) unsigned NOT NULL,
   "wh_etl_exec_id" bigint(20) DEFAULT NULL COMMENT 'wherehows etl execution id that modified this record',
   PRIMARY KEY ("app_id","group_id","user_app_id","user_id")
-)  DEFAULT CHARSET=utf8;
+);

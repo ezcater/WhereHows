@@ -29,7 +29,7 @@ CREATE TABLE users (
 )
 
   AUTO_INCREMENT = 0
-  DEFAULT CHARSET = utf8;
+;
 
 CREATE INDEX idx_users__username USING BTREE ON users(username);
 
@@ -40,7 +40,7 @@ CREATE TABLE user_settings (
   PRIMARY KEY (user_id)
 )
 
-  DEFAULT CHARSET = utf8;
+;
 
 CREATE TABLE watch (
   id                BIGINT(20) AUTO_INCREMENT                                 NOT NULL,
@@ -54,7 +54,7 @@ CREATE TABLE watch (
 )
 
   AUTO_INCREMENT = 0
-  DEFAULT CHARSET = utf8;
+;
 
 CREATE TABLE favorites (
   user_id    INT(11)   NOT NULL,
@@ -63,7 +63,7 @@ CREATE TABLE favorites (
   PRIMARY KEY (user_id, dataset_id)
 )
 
-  DEFAULT CHARSET = utf8;
+;
 
 CREATE TABLE user_login_history (
   log_id              INT(11) AUTO_INCREMENT NOT NULL,
@@ -75,4 +75,4 @@ CREATE TABLE user_login_history (
   PRIMARY KEY (log_id)
 )
 
-  DEFAULT CHARSET = utf8;
+;

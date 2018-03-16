@@ -23,13 +23,13 @@ CREATE TABLE dataset_deployment (
   "cluster"         VARCHAR(100)       DEFAULT NULL,
   "container"       VARCHAR(100)       DEFAULT NULL,
   "enabled"         BOOLEAN      NOT NULL,
-  "additional_info" TEXT CHAR SET utf8 DEFAULT NULL,
+  "additional_info" TEXT DEFAULT NULL,
   "modified_time"   BIGINT       DEFAULT NULL
   COMMENT 'the modified time in epoch',
   PRIMARY KEY ("dataset_id", "deployment_tier", "datacenter"),
   UNIQUE ("dataset_urn", "deployment_tier", "datacenter")
 )
-  DEFAULT CHARSET = latin1;
+;
 
 CREATE TABLE dataset_capacity (
   "dataset_id"    BIGINT NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE dataset_capacity (
   PRIMARY KEY ("dataset_id", "capacity_name"),
   UNIQUE ("dataset_urn", "capacity_name")
 )
-  DEFAULT CHARSET = latin1;
+;
 
 CREATE TABLE dataset_tag (
   "dataset_id"    BIGINT NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE dataset_tag (
   PRIMARY KEY ("dataset_id", "tag"),
   UNIQUE ("dataset_urn", "tag")
 )
-  DEFAULT CHARSET = latin1;
+;
 
 CREATE TABLE dataset_case_sensitivity (
   "dataset_id"    BIGINT NOT NULL,
@@ -68,36 +68,36 @@ CREATE TABLE dataset_case_sensitivity (
   PRIMARY KEY ("dataset_id"),
   UNIQUE ("dataset_urn")
 )
-  DEFAULT CHARSET = latin1;
+;
 
 CREATE TABLE dataset_reference (
   "dataset_id"       BIGINT NOT NULL,
   "dataset_urn"      VARCHAR(200) NOT NULL,
   "reference_type"   VARCHAR(20)  NOT NULL,
   "reference_format" VARCHAR(50)  NOT NULL,
-  "reference_list"   TEXT CHAR SET utf8 DEFAULT NULL,
+  "reference_list"   TEXT DEFAULT NULL,
   "modified_time"    BIGINT       DEFAULT NULL
   COMMENT 'the modified time in epoch',
   PRIMARY KEY ("dataset_id", "reference_type", "reference_format"),
   UNIQUE ("dataset_urn", "reference_type", "reference_format")
 )
-  DEFAULT CHARSET = latin1;
+;
 
 CREATE TABLE dataset_partition (
   "dataset_id"                BIGINT NOT NULL,
   "dataset_urn"               VARCHAR(200) NOT NULL,
   "total_partition_level"     SMALLINT UNSIGNED  DEFAULT NULL,
-  "partition_spec_text"       TEXT CHAR SET utf8 DEFAULT NULL,
+  "partition_spec_text"       TEXT DEFAULT NULL,
   "has_time_partition"        BOOLEAN            DEFAULT NULL,
   "has_hash_partition"        BOOLEAN            DEFAULT NULL,
-  "partition_keys"            TEXT CHAR SET utf8 DEFAULT NULL,
+  "partition_keys"            TEXT DEFAULT NULL,
   "time_partition_expression" VARCHAR(100)       DEFAULT NULL,
   "modified_time"             BIGINT       DEFAULT NULL
   COMMENT 'the modified time in epoch',
   PRIMARY KEY ("dataset_id"),
   UNIQUE ("dataset_urn")
 )
-  DEFAULT CHARSET = latin1;
+;
 
 CREATE TABLE "dataset_compliance" (
   "dataset_id"                INT(10) UNSIGNED NOT NULL,
@@ -119,7 +119,7 @@ CREATE TABLE "dataset_compliance" (
   PRIMARY KEY ("dataset_id"),
   UNIQUE "dataset_urn" ("dataset_urn")
 )
-  DEFAULT CHARSET = latin1;
+;
 
 CREATE TABLE dataset_constraint (
   "dataset_id"            BIGINT NOT NULL,
@@ -130,13 +130,13 @@ CREATE TABLE dataset_constraint (
   "constraint_expression" VARCHAR(200) NOT NULL,
   "enabled"               BOOLEAN      NOT NULL,
   "referred_fields"       TEXT               DEFAULT NULL,
-  "additional_reference"  TEXT CHAR SET utf8 DEFAULT NULL,
+  "additional_reference"  TEXT DEFAULT NULL,
   "modified_time"         BIGINT       DEFAULT NULL
   COMMENT 'the modified time in epoch',
   PRIMARY KEY ("dataset_id", "constraint_type", "constraint_sub_type", "constraint_expression"),
   UNIQUE ("dataset_urn", "constraint_type", "constraint_sub_type", "constraint_expression")
 )
-  DEFAULT CHARSET = latin1;
+;
 
 CREATE TABLE dataset_index (
   "dataset_id"     BIGINT NOT NULL,
@@ -150,7 +150,7 @@ CREATE TABLE dataset_index (
   PRIMARY KEY ("dataset_id", "index_name"),
   UNIQUE ("dataset_urn", "index_name")
 )
-  DEFAULT CHARSET = latin1;
+;
 
 CREATE TABLE dataset_schema_info (
   "dataset_id"                   BIGINT NOT NULL,
@@ -160,11 +160,11 @@ CREATE TABLE dataset_schema_info (
   "revision"                     BIGINT             DEFAULT NULL,
   "version"                      VARCHAR(20)              DEFAULT NULL,
   "name"                         VARCHAR(100)             DEFAULT NULL,
-  "description"                  TEXT CHAR SET utf8       DEFAULT NULL,
-  "original_schema"              MEDIUMTEXT CHAR SET utf8 DEFAULT NULL,
-  "key_schema"                   MEDIUMTEXT CHAR SET utf8 DEFAULT NULL,
+  "description"                  TEXT       DEFAULT NULL,
+  "original_schema"              MEDIUMTEXT DEFAULT NULL,
+  "key_schema"                   MEDIUMTEXT DEFAULT NULL,
   "is_field_name_case_sensitive" BOOLEAN                  DEFAULT NULL,
-  "field_schema"                 MEDIUMTEXT CHAR SET utf8 DEFAULT NULL,
+  "field_schema"                 MEDIUMTEXT DEFAULT NULL,
   "change_data_capture_fields"   TEXT                     DEFAULT NULL,
   "audit_fields"                 TEXT                     DEFAULT NULL,
   "modified_time"                BIGINT             DEFAULT NULL
@@ -172,7 +172,7 @@ CREATE TABLE dataset_schema_info (
   PRIMARY KEY ("dataset_id"),
   UNIQUE ("dataset_urn")
 )
-  DEFAULT CHARSET = latin1;
+;
 
 CREATE TABLE dataset_inventory (
   "event_date"                    DATE         NOT NULL,
@@ -182,7 +182,7 @@ CREATE TABLE dataset_inventory (
   "change_actor_urn"              VARCHAR(200)       DEFAULT NULL,
   "change_type"                   VARCHAR(20)        DEFAULT NULL,
   "change_time"                   BIGINT UNSIGNED    DEFAULT NULL,
-  "change_note"                   TEXT CHAR SET utf8 DEFAULT NULL,
+  "change_note"                   TEXT DEFAULT NULL,
   "native_type"                   VARCHAR(20)        DEFAULT NULL,
   "uri"                           VARCHAR(200)       DEFAULT NULL,
   "dataset_name_case_sensitivity" BOOLEAN            DEFAULT NULL,
@@ -190,4 +190,4 @@ CREATE TABLE dataset_inventory (
   "data_content_case_sensitivity" BOOLEAN            DEFAULT NULL,
   PRIMARY KEY ("data_platform", "native_name", "data_origin", "event_date")
 )
-  DEFAULT CHARSET = latin1;
+;

@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS "stg_job_execution_data_lineage" (
   "wh_etl_exec_id"              INT(11)                                        NULL
 )
 
-  DEFAULT CHARSET = utf8;
+;
 
 CREATE TABLE IF NOT EXISTS "job_execution_data_lineage" (
   "app_id"                 SMALLINT(5) UNSIGNED                       NOT NULL,
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS "job_execution_data_lineage" (
   KEY "idx_job_execution_data_lineage__object_name" ("abstracted_object_name", "source_target_type") USING BTREE
 )
 
-  DEFAULT CHARSET = latin1
+
   COMMENT = 'Lineage table' PARTITION BY HASH (app_id) PARTITIONS 8;
 
 CREATE TABLE job_attempt_source_code  (
@@ -119,4 +119,4 @@ CREATE TABLE "job_execution_script" (
   "commit_time" datetime DEFAULT NULL,
   "script_url" varchar(512) DEFAULT NULL,
   PRIMARY KEY ("app_id","job_id","script_name"(100),"committer_name")
-)  DEFAULT CHARSET=utf8;
+);

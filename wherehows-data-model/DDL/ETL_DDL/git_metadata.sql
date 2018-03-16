@@ -14,9 +14,9 @@
 
 CREATE TABLE "source_code_commit_info" (
   "app_id"          SMALLINT(5) UNSIGNED DEFAULT NULL,
-  "repository_urn"  VARCHAR(300) CHAR SET latin1 NOT NULL COMMENT 'the git repo urn',
-  "commit_id"       VARCHAR(50) CHAR SET latin1  NOT NULL COMMENT 'the sha-1 hash of the commit',
-  "file_path"       VARCHAR(600) CHAR SET latin1 NOT NULL COMMENT 'the path to the file',
+  "repository_urn"  VARCHAR(300) NOT NULL COMMENT 'the git repo urn',
+  "commit_id"       VARCHAR(50)  NOT NULL COMMENT 'the sha-1 hash of the commit',
+  "file_path"       VARCHAR(600) NOT NULL COMMENT 'the path to the file',
   "file_name"       VARCHAR(127)                 NOT NULL COMMENT 'the file name',
   "commit_time"     BIGINT COMMENT 'the commit time',
   "committer_name"  VARCHAR(128)                 NOT NULL COMMENT 'name of the committer',
@@ -30,13 +30,13 @@ CREATE TABLE "source_code_commit_info" (
   PRIMARY KEY (repository_urn, file_path, commit_id),
   KEY (commit_id),
   KEY (repository_urn, file_name, committer_email)
-)  DEFAULT CHARSET = utf8;
+);
 
 CREATE TABLE "stg_source_code_commit_info" (
   "app_id"          SMALLINT(5) UNSIGNED DEFAULT NULL,
-  "repository_urn"  VARCHAR(300) CHAR SET latin1 NOT NULL COMMENT 'the git repo urn',
-  "commit_id"       VARCHAR(50) CHAR SET latin1  NOT NULL COMMENT 'the sha-1 hash of the commit',
-  "file_path"       VARCHAR(600) CHAR SET latin1 NOT NULL COMMENT 'the path to the file',
+  "repository_urn"  VARCHAR(300) NOT NULL COMMENT 'the git repo urn',
+  "commit_id"       VARCHAR(50)  NOT NULL COMMENT 'the sha-1 hash of the commit',
+  "file_path"       VARCHAR(600) NOT NULL COMMENT 'the path to the file',
   "file_name"       VARCHAR(127)                 NOT NULL COMMENT 'the file name',
   "commit_time"     BIGINT COMMENT 'the commit time',
   "committer_name"  VARCHAR(128)                 NOT NULL COMMENT 'name of the committer',
@@ -48,7 +48,7 @@ CREATE TABLE "stg_source_code_commit_info" (
   PRIMARY KEY (repository_urn, file_path, commit_id),
   KEY (commit_id),
   KEY (repository_urn, file_name, committer_email)
-)  DEFAULT CHARSET = utf8;
+);
 
 
 CREATE TABLE "stg_git_project" (
@@ -62,9 +62,9 @@ CREATE TABLE "stg_git_project" (
   "num_of_repos"    BIGINT DEFAULT NULL,
   "repos"           MEDIUMTEXT DEFAULT NULL COMMENT 'repo names in comma separated list',
   "license"         VARCHAR(100) DEFAULT NULL,
-  "description"     MEDIUMTEXT CHAR SET utf8 DEFAULT NULL,
+  "description"     MEDIUMTEXT DEFAULT NULL,
   PRIMARY KEY ("project_name", "scm_type", "app_id")
-)  DEFAULT CHARSET = latin1;
+);
 
 CREATE TABLE "stg_product_repo" (
   "app_id"          SMALLINT(5) UNSIGNED NOT NULL,
@@ -81,7 +81,7 @@ CREATE TABLE "stg_product_repo" (
   "product_version" VARCHAR(50) DEFAULT NULL,
   "namespace"       VARCHAR(100) DEFAULT NULL,
   PRIMARY KEY ("scm_repo_fullname", "scm_type", "app_id")
-)  DEFAULT CHARSET = latin1;
+);
 
 CREATE TABLE "stg_repo_owner" (
   "app_id"          SMALLINT(5) UNSIGNED NOT NULL,
@@ -94,9 +94,9 @@ CREATE TABLE "stg_repo_owner" (
   "owner_name"      VARCHAR(50) NOT NULL COMMENT 'one owner name',
   "sort_id"         BIGINT DEFAULT NULL,
   "is_active"       CHAR(1) COMMENT 'if owner is active',
-  "paths"           TEXT CHAR SET utf8 DEFAULT NULL COMMENT 'covered paths by this acl',
+  "paths"           TEXT DEFAULT NULL COMMENT 'covered paths by this acl',
   PRIMARY KEY ("scm_repo_fullname", "scm_type", "owner_type", "owner_name", "app_id")
-)  DEFAULT CHARSET = latin1;
+);
 
 CREATE TABLE stg_database_scm_map (
   "database_name"   VARCHAR(100) NOT NULL COMMENT 'database name',
@@ -109,4 +109,4 @@ CREATE TABLE stg_database_scm_map (
   "app_id"          SMALLINT(5) UNSIGNED COMMENT 'application id of the namesapce',
   "wh_etl_exec_id"  BIGINT COMMENT 'wherehows etl execution id that modified this record',
   PRIMARY KEY ("database_type","database_name","scm_type","app_name")
-)  DEFAULT CHARSET = latin1;
+);
