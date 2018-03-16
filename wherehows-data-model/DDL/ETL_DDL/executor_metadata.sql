@@ -494,27 +494,27 @@ PARTITION BY HASH(app_id)
 	PARTITION p7)
 ;
 
-CREATE TABLE `cfg_job_type` (
-  `job_type_id` SMALLINT(6) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `job_type`    VARCHAR(50)          NOT NULL,
-  `description` VARCHAR(200)         NULL,
-  PRIMARY KEY (`job_type_id`),
-  UNIQUE KEY `ak_cfg_job_type__job_type` (`job_type`)
+CREATE TABLE "cfg_job_type" (
+  "job_type_id" SMALLINT(6) UNSIGNED NOT NULL AUTO_INCREMENT,
+  "job_type"    VARCHAR(50)          NOT NULL,
+  "description" VARCHAR(200)         NULL,
+  PRIMARY KEY ("job_type_id"),
+  UNIQUE KEY "ak_cfg_job_type__job_type" ("job_type")
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 55
   DEFAULT CHARSET = utf8
   COMMENT = 'job types used in mutliple schedulers';
 
-CREATE TABLE `cfg_job_type_reverse_map` (
-  `job_type_actual`   VARCHAR(50)
+CREATE TABLE "cfg_job_type_reverse_map" (
+  "job_type_actual"   VARCHAR(50)
                       CHARACTER SET ascii NOT NULL,
-  `job_type_id`       SMALLINT(6) UNSIGNED NOT NULL,
-  `description`       VARCHAR(200)         NULL,
-  `job_type_standard` VARCHAR(50)          NOT NULL,
-  PRIMARY KEY (`job_type_actual`),
-  UNIQUE KEY `cfg_job_type_reverse_map_uk` (`job_type_actual`),
-  KEY `cfg_job_type_reverse_map_job_type_id_fk` (`job_type_id`)
+  "job_type_id"       SMALLINT(6) UNSIGNED NOT NULL,
+  "description"       VARCHAR(200)         NULL,
+  "job_type_standard" VARCHAR(50)          NOT NULL,
+  PRIMARY KEY ("job_type_actual"),
+  UNIQUE KEY "cfg_job_type_reverse_map_uk" ("job_type_actual"),
+  KEY "cfg_job_type_reverse_map_job_type_id_fk" ("job_type_id")
 )
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8
