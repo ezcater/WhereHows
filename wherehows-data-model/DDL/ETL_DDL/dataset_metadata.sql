@@ -38,12 +38,12 @@ CREATE TABLE "stg_dict_dataset" (
   "is_partitioned"              CHAR(1)                                                                                     NULL,
   "partition_layout_pattern_id" SMALLINT(6)                                                                                 NULL,
   "sample_partition_full_path"  VARCHAR(256) COMMENT 'sample partition full path of the dataset',
-  "source_created_time"         INT UNSIGNED                                                                                NULL
+  "source_created_time"         BIGINT                                                                                NULL
   COMMENT 'source created time of the flow',
-  "source_modified_time"        INT UNSIGNED                                                                                NULL
+  "source_modified_time"        BIGINT                                                                                NULL
   COMMENT 'latest source modified time of the flow',
-  "created_time"                INT UNSIGNED COMMENT 'wherehows created time',
-  "modified_time"               INT UNSIGNED COMMENT 'latest wherehows modified',
+  "created_time"                BIGINT COMMENT 'wherehows created time',
+  "modified_time"               BIGINT COMMENT 'latest wherehows modified',
   "wh_etl_exec_id"              BIGINT COMMENT 'wherehows etl execution id that modified this record',
   PRIMARY KEY ("urn", "db_id")
 )
@@ -79,12 +79,12 @@ CREATE TABLE "dict_dataset" (
   "partition_layout_pattern_id" SMALLINT(6)                                                                                 NULL,
   "sample_partition_full_path"  VARCHAR(256)
   COMMENT 'sample partition full path of the dataset',
-  "source_created_time"         INT UNSIGNED                                                                                NULL
+  "source_created_time"         BIGINT                                                                                NULL
   COMMENT 'source created time of the flow',
-  "source_modified_time"        INT UNSIGNED                                                                                NULL
+  "source_modified_time"        BIGINT                                                                                NULL
   COMMENT 'latest source modified time of the flow',
-  "created_time"                INT UNSIGNED COMMENT 'wherehows created time',
-  "modified_time"               INT UNSIGNED COMMENT 'latest wherehows modified',
+  "created_time"                BIGINT COMMENT 'wherehows created time',
+  "modified_time"               BIGINT COMMENT 'latest wherehows modified',
   "wh_etl_exec_id"              BIGINT COMMENT 'wherehows etl execution id that modified this record',
   PRIMARY KEY ("id"),
   UNIQUE KEY "uq_dataset_urn" ("urn")
@@ -144,7 +144,7 @@ CREATE TABLE "stg_dict_field_detail" (
   "namespace"      VARCHAR(200)                  NULL,
   "description"    VARCHAR(1000)                 NULL,
   "last_modified"  TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  "dataset_id"     INT UNSIGNED         NULL COMMENT 'used to opitimize metadata ETL performance',
+  "dataset_id"     BIGINT         NULL COMMENT 'used to opitimize metadata ETL performance',
   KEY "idx_stg_dict_field_detail__description" ("description"(100)),
   PRIMARY KEY ("urn", "sort_id", "db_id")
 )

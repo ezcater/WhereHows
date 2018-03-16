@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS "stg_job_execution_data_lineage" (
   "delete_count"           BIGINT(20) UNSIGNED                                 NULL,
   "update_count"           BIGINT(20) UNSIGNED                                 NULL,
   "flow_path"              VARCHAR(1024)                                       NULL,
-  "created_date"           INT UNSIGNED,
+  "created_date"           BIGINT,
   "wh_etl_exec_id"              INT(11)                                        NULL
 )
 
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS "job_execution_data_lineage" (
   "delete_count"           BIGINT(20) UNSIGNED                                 NULL,
   "update_count"           BIGINT(20) UNSIGNED                                 NULL,
   "flow_path"              VARCHAR(1024)                                       NULL,
-  "created_date"           INT UNSIGNED,
+  "created_date"           BIGINT,
   "wh_etl_exec_id"              INT(11)                                        NULL,
 
   PRIMARY KEY ("app_id", "job_exec_id", "srl_no"),
