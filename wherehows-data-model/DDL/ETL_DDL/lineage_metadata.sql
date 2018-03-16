@@ -14,36 +14,36 @@
 
 -- created statements for lineage related tables
 CREATE TABLE IF NOT EXISTS "stg_job_execution_data_lineage" (
-  "app_id"                 SMALLINT(5) UNSIGNED                                ,
-  "flow_exec_id"           BIGINT(20) UNSIGNED                                 ,
-  "job_exec_id"            BIGINT(20) UNSIGNED                                 ,
+  "app_id"                 SMALLINT                                ,
+  "flow_exec_id"           BIGINT                                 ,
+  "job_exec_id"            BIGINT                                 ,
   "job_exec_uuid"          VARCHAR(100)                                        NULL,
   "job_name"               VARCHAR(255)                                        NULL,
-  "job_start_unixtime"     BIGINT(20)                                          NOT NULL,
-  "job_finished_unixtime"  BIGINT(20)                                          NOT NULL,
+  "job_start_unixtime"     BIGINT                                          NOT NULL,
+  "job_finished_unixtime"  BIGINT                                          NOT NULL,
 
-  "db_id"                  SMALLINT(5) UNSIGNED                                NULL,
+  "db_id"                  SMALLINT                                NULL,
   "abstracted_object_name" VARCHAR(255)                                        NOT NULL,
   "full_object_name"       VARCHAR(1000)                                       NOT NULL,
   "partition_start"        VARCHAR(50)                                         NULL,
   "partition_end"          VARCHAR(50)                                         NULL,
   "partition_type"         VARCHAR(20)                                         NULL,
-  "layout_id"              SMALLINT(5) UNSIGNED                                NULL,
+  "layout_id"              SMALLINT                                NULL,
   "storage_type"           VARCHAR(16)                                         NULL,
 
   "source_target_type"     ENUM('source', 'target', 'lookup', 'temp') NOT NULL,
-  "srl_no"                 SMALLINT(5) UNSIGNED                       NOT NULL DEFAULT '1'
+  "srl_no"                 SMALLINT                       NOT NULL DEFAULT '1'
   ,
-  "source_srl_no"          SMALLINT(5) UNSIGNED                                NULL
+  "source_srl_no"          SMALLINT                                NULL
   ,
   "operation"              VARCHAR(64)                                         NULL,
-  "record_count"           BIGINT(20) UNSIGNED                                 NULL,
-  "insert_count"           BIGINT(20) UNSIGNED                                 NULL,
-  "delete_count"           BIGINT(20) UNSIGNED                                 NULL,
-  "update_count"           BIGINT(20) UNSIGNED                                 NULL,
+  "record_count"           BIGINT                                 NULL,
+  "insert_count"           BIGINT                                 NULL,
+  "delete_count"           BIGINT                                 NULL,
+  "update_count"           BIGINT                                 NULL,
   "flow_path"              VARCHAR(1024)                                       NULL,
   "created_date"           BIGINT,
-  "wh_etl_exec_id"              INT(11)                                        NULL
+  "wh_etl_exec_id"              INT                                        NULL
 )
 
 ;
@@ -51,39 +51,39 @@ COMMENT ON COLUMN IF.source_srl_no IS 'the related record of this record';
 COMMENT ON COLUMN IF.srl_no IS 'the sorted number of this record in all records of this job related operation';
 
 CREATE TABLE IF NOT EXISTS "job_execution_data_lineage" (
-  "app_id"                 SMALLINT(5) UNSIGNED                       NOT NULL,
-  "flow_exec_id"           BIGINT(20) UNSIGNED                                 NOT NULL,
-  "job_exec_id"            BIGINT(20) UNSIGNED                                 NOT NULL
+  "app_id"                 SMALLINT                       NOT NULL,
+  "flow_exec_id"           BIGINT                                 NOT NULL,
+  "job_exec_id"            BIGINT                                 NOT NULL
   ,
   "job_exec_uuid"          VARCHAR(100)                                        NULL
   ,
   "job_name"               VARCHAR(255)                                        NOT NULL,
-  "job_start_unixtime"     BIGINT(20)                                          NOT NULL,
-  "job_finished_unixtime"  BIGINT(20)                                          NOT NULL,
+  "job_start_unixtime"     BIGINT                                          NOT NULL,
+  "job_finished_unixtime"  BIGINT                                          NOT NULL,
 
-  "db_id"                  SMALLINT(5) UNSIGNED                                NULL,
+  "db_id"                  SMALLINT                                NULL,
   "abstracted_object_name" VARCHAR(255)                               NOT NULL,
   "full_object_name"       VARCHAR(1000)                                       NULL,
   "partition_start"        VARCHAR(50)                                         NULL,
   "partition_end"          VARCHAR(50)                                         NULL,
   "partition_type"         VARCHAR(20)                                         NULL,
-  "layout_id"              SMALLINT(5) UNSIGNED                                NULL
+  "layout_id"              SMALLINT                                NULL
   ,
   "storage_type"           VARCHAR(16)                                         NULL,
 
   "source_target_type"     ENUM('source', 'target', 'lookup', 'temp') NOT NULL,
-  "srl_no"                 SMALLINT(5) UNSIGNED                       NOT NULL DEFAULT '1'
+  "srl_no"                 SMALLINT                       NOT NULL DEFAULT '1'
   ,
-  "source_srl_no"          SMALLINT(5) UNSIGNED                                NULL
+  "source_srl_no"          SMALLINT                                NULL
   ,
   "operation"              VARCHAR(64)                                         NULL,
-  "record_count"           BIGINT(20) UNSIGNED                                 NULL,
-  "insert_count"           BIGINT(20) UNSIGNED                                 NULL,
-  "delete_count"           BIGINT(20) UNSIGNED                                 NULL,
-  "update_count"           BIGINT(20) UNSIGNED                                 NULL,
+  "record_count"           BIGINT                                 NULL,
+  "insert_count"           BIGINT                                 NULL,
+  "delete_count"           BIGINT                                 NULL,
+  "update_count"           BIGINT                                 NULL,
   "flow_path"              VARCHAR(1024)                                       NULL,
   "created_date"           BIGINT,
-  "wh_etl_exec_id"              INT(11)                                        NULL,
+  "wh_etl_exec_id"              INT                                        NULL,
 
   PRIMARY KEY ("app_id", "job_exec_id", "srl_no"),
   KEY "idx_flow_path" ("app_id", "flow_path"(300)),
@@ -99,31 +99,31 @@ CREATE TABLE IF NOT EXISTS "job_execution_data_lineage" (
   COMMENT ON COLUMN IF.job_exec_id IS 'in azkaban this is a smart key combined execution id and sort id of the job';
 
 CREATE TABLE job_attempt_source_code  (
-	application_id	int(11) NOT NULL,
-	job_id        	int(11) NOT NULL,
-	attempt_number	tinyint(4) NOT NULL,
-	script_name   	varchar(256) NULL,
-	script_path   	varchar(128) NOT NULL,
-	script_type   	varchar(16) NOT NULL,
+	application_id	INT NOT NULL,
+	job_id        	INT NOT NULL,
+	attempt_number	SMALLINT NOT NULL,
+	script_name   	VARCHAR(256) NULL,
+	script_path   	VARCHAR(128) NOT NULL,
+	script_type   	VARCHAR(16) NOT NULL,
 	script_md5_sum	binary(16) NULL,
-	created_date  	datetime NOT NULL,
+	created_date  	TIMESTAMP NOT NULL,
 	PRIMARY KEY(application_id,job_id,attempt_number)
 )
 
 DEFAULT CHARSET = utf8;
 
 CREATE TABLE "job_execution_script" (
-  "app_id" int(11) NOT NULL,
-  "job_id" int(11) NOT NULL,
-  "script_name" varchar(512) NOT NULL DEFAULT '',
-  "script_path" varchar(128) DEFAULT NULL,
-  "script_type" varchar(16) NOT NULL,
-  "chain_name" varchar(30) DEFAULT NULL,
-  "job_name" varchar(30) DEFAULT NULL,
-  "committer_name" varchar(128) NOT NULL DEFAULT '',
-  "committer_email" varchar(128) DEFAULT NULL,
-  "committer_ldap" varchar(30) DEFAULT NULL,
-  "commit_time" datetime DEFAULT NULL,
-  "script_url" varchar(512) DEFAULT NULL,
+  "app_id" INT NOT NULL,
+  "job_id" INT NOT NULL,
+  "script_name" VARCHAR(512) NOT NULL DEFAULT '',
+  "script_path" VARCHAR(128) DEFAULT NULL,
+  "script_type" VARCHAR(16) NOT NULL,
+  "chain_name" VARCHAR(30) DEFAULT NULL,
+  "job_name" VARCHAR(30) DEFAULT NULL,
+  "committer_name" VARCHAR(128) NOT NULL DEFAULT '',
+  "committer_email" VARCHAR(128) DEFAULT NULL,
+  "committer_ldap" VARCHAR(30) DEFAULT NULL,
+  "commit_time" TIMESTAMP DEFAULT NULL,
+  "script_url" VARCHAR(512) DEFAULT NULL,
   PRIMARY KEY ("app_id","job_id","script_name"(100),"committer_name")
 );

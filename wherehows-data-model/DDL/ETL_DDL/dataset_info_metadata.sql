@@ -38,8 +38,8 @@ CREATE TABLE dataset_capacity (
   "capacity_name" VARCHAR(100) NOT NULL,
   "capacity_type" VARCHAR(50)  DEFAULT NULL,
   "capacity_unit" VARCHAR(20)  DEFAULT NULL,
-  "capacity_low"  DOUBLE       DEFAULT NULL,
-  "capacity_high" DOUBLE       DEFAULT NULL,
+  "capacity_low"  DOUBLE PRECISION       DEFAULT NULL,
+  "capacity_high" DOUBLE PRECISION       DEFAULT NULL,
   "modified_time" BIGINT DEFAULT NULL,
   PRIMARY KEY ("dataset_id", "capacity_name"),
   UNIQUE ("dataset_urn", "capacity_name")
@@ -91,7 +91,7 @@ COMMENT ON COLUMN dataset_reference.modified_time IS 'the modified time in epoch
 CREATE TABLE dataset_partition (
   "dataset_id"                BIGINT NOT NULL,
   "dataset_urn"               VARCHAR(200) NOT NULL,
-  "total_partition_level"     SMALLINT UNSIGNED  DEFAULT NULL,
+  "total_partition_level"     INTEGER  DEFAULT NULL,
   "partition_spec_text"       TEXT DEFAULT NULL,
   "has_time_partition"        BOOLEAN            DEFAULT NULL,
   "has_hash_partition"        BOOLEAN            DEFAULT NULL,
@@ -106,11 +106,11 @@ COMMENT ON COLUMN dataset_partition.modified_time IS 'the modified time in epoch
 
 
 CREATE TABLE "dataset_compliance" (
-  "dataset_id"                INT(10) UNSIGNED NOT NULL,
+  "dataset_id"                INT NOT NULL,
   "dataset_urn"               VARCHAR(500)     NOT NULL,
   "compliance_purge_type"     VARCHAR(30)      DEFAULT NULL,
-  "compliance_purge_note"     MEDIUMTEXT       DEFAULT NULL,
-  "compliance_entities"       MEDIUMTEXT       DEFAULT NULL,
+  "compliance_purge_note"     TEXT       DEFAULT NULL,
+  "compliance_entities"       TEXT       DEFAULT NULL,
   "confidentiality"           VARCHAR(50)      DEFAULT NULL,
   "dataset_classification"    VARCHAR(1000)    DEFAULT NULL,
   "modified_by"               VARCHAR(50)      DEFAULT NULL,
@@ -170,10 +170,10 @@ CREATE TABLE dataset_schema_info (
   "version"                      VARCHAR(20)              DEFAULT NULL,
   "name"                         VARCHAR(100)             DEFAULT NULL,
   "description"                  TEXT       DEFAULT NULL,
-  "original_schema"              MEDIUMTEXT DEFAULT NULL,
-  "key_schema"                   MEDIUMTEXT DEFAULT NULL,
+  "original_schema"              TEXT DEFAULT NULL,
+  "key_schema"                   TEXT DEFAULT NULL,
   "is_field_name_case_sensitive" BOOLEAN                  DEFAULT NULL,
-  "field_schema"                 MEDIUMTEXT DEFAULT NULL,
+  "field_schema"                 TEXT DEFAULT NULL,
   "change_data_capture_fields"   TEXT                     DEFAULT NULL,
   "audit_fields"                 TEXT                     DEFAULT NULL,
   "modified_time"                BIGINT             DEFAULT NULL,

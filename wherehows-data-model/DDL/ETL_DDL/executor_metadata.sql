@@ -13,7 +13,7 @@
 --
 
 CREATE TABLE flow (
-  app_id               SMALLINT UNSIGNED NOT NULL
+  app_id               INTEGER NOT NULL
   ,
   flow_id              BIGINT      NOT NULL
   ,
@@ -56,7 +56,7 @@ CREATE TABLE flow (
   COMMENT ON COLUMN flow.app_id IS 'application id of the flow';
 
 CREATE TABLE stg_flow (
-  app_id               SMALLINT UNSIGNED NOT NULL
+  app_id               INTEGER NOT NULL
   ,
   flow_id              BIGINT,
   flow_name            VARCHAR(255) ,
@@ -97,7 +97,7 @@ CREATE TABLE stg_flow (
   COMMENT ON COLUMN stg_flow.app_id IS 'application id of the flow';
 
 CREATE TABLE flow_source_id_map (
-  app_id           SMALLINT UNSIGNED NOT NULL
+  app_id           INTEGER NOT NULL
   ,
   flow_id          BIGINT      NOT NULL AUTO_INCREMENT
   ,
@@ -117,7 +117,7 @@ CREATE TABLE flow_source_id_map (
   COMMENT ON COLUMN flow_source_id_map.app_id IS 'application id of the flow';
 
 CREATE TABLE flow_job (
-  app_id               SMALLINT UNSIGNED NOT NULL
+  app_id               INTEGER NOT NULL
   ,
   flow_id              BIGINT      NOT NULL
   ,
@@ -169,7 +169,7 @@ CREATE TABLE flow_job (
   COMMENT ON COLUMN flow_job.app_id IS 'application id of the flow';
 
 CREATE TABLE stg_flow_job (
-  app_id         SMALLINT UNSIGNED NOT NULL
+  app_id         INTEGER NOT NULL
   ,
   flow_id        BIGINT,
   flow_path      VARCHAR(1024) ,
@@ -218,7 +218,7 @@ CREATE TABLE stg_flow_job (
   COMMENT ON COLUMN stg_flow_job.app_id IS 'application id of the flow';
 
 CREATE TABLE job_source_id_map (
-  app_id           SMALLINT UNSIGNED NOT NULL
+  app_id           INTEGER NOT NULL
   ,
   job_id           BIGINT      NOT NULL AUTO_INCREMENT
   ,
@@ -238,7 +238,7 @@ CREATE TABLE job_source_id_map (
   COMMENT ON COLUMN job_source_id_map.app_id IS 'application id of the flow';
 
 CREATE TABLE flow_dag (
-  app_id         SMALLINT UNSIGNED NOT NULL
+  app_id         INTEGER NOT NULL
   ,
   flow_id        BIGINT NOT NULL
   ,
@@ -263,7 +263,7 @@ CREATE TABLE flow_dag (
   COMMENT ON COLUMN flow_dag.app_id IS 'application id of the flow';
 
 CREATE TABLE stg_flow_dag (
-  app_id         SMALLINT UNSIGNED NOT NULL
+  app_id         INTEGER NOT NULL
   ,
   flow_id        BIGINT NOT NULL
   ,
@@ -286,7 +286,7 @@ CREATE TABLE stg_flow_dag (
   COMMENT ON COLUMN stg_flow_dag.app_id IS 'application id of the flow';
 
 CREATE TABLE stg_flow_dag_edge (
-  app_id          SMALLINT UNSIGNED NOT NULL
+  app_id          INTEGER NOT NULL
   ,
   flow_id         BIGINT,
   flow_path       VARCHAR(1024) ,
@@ -316,7 +316,7 @@ CREATE TABLE stg_flow_dag_edge (
   COMMENT ON COLUMN stg_flow_dag_edge.app_id IS 'application id of the flow';
 
 CREATE TABLE flow_execution (
-  app_id           SMALLINT UNSIGNED NOT NULL
+  app_id           INTEGER NOT NULL
   ,
   flow_exec_id     BIGINT   NOT NULL
   ,
@@ -360,7 +360,7 @@ CREATE TABLE flow_execution (
   COMMENT ON COLUMN flow_execution.app_id IS 'application id of the flow';
 
 CREATE TABLE flow_execution_id_map (
-  app_id             SMALLINT UNSIGNED NOT NULL
+  app_id             INTEGER NOT NULL
   ,
   flow_exec_id       BIGINT   NOT NULL AUTO_INCREMENT
   ,
@@ -380,7 +380,7 @@ CREATE TABLE flow_execution_id_map (
   COMMENT ON COLUMN flow_execution_id_map.app_id IS 'application id of the flow';
 
 CREATE TABLE stg_flow_execution (
-  app_id           SMALLINT UNSIGNED NOT NULL
+  app_id           INTEGER NOT NULL
   ,
   flow_exec_id     BIGINT,
   flow_exec_uuid   VARCHAR(255) ,
@@ -420,7 +420,7 @@ CREATE TABLE stg_flow_execution (
   COMMENT ON COLUMN stg_flow_execution.app_id IS 'application id of the flow';
 
 CREATE TABLE job_execution (
-  app_id          SMALLINT UNSIGNED NOT NULL
+  app_id          INTEGER NOT NULL
   ,
   flow_exec_id    BIGINT,
   job_exec_id     BIGINT   NOT NULL
@@ -469,7 +469,7 @@ CREATE TABLE job_execution (
   COMMENT ON COLUMN job_execution.app_id IS 'application id of the flow';
 
 CREATE TABLE job_execution_id_map (
-  app_id             SMALLINT UNSIGNED NOT NULL
+  app_id             INTEGER NOT NULL
   ,
   job_exec_id        BIGINT   NOT NULL AUTO_INCREMENT
   ,
@@ -489,7 +489,7 @@ CREATE TABLE job_execution_id_map (
   COMMENT ON COLUMN job_execution_id_map.app_id IS 'application id of the job';
 
 CREATE TABLE stg_job_execution (
-  app_id          SMALLINT UNSIGNED NOT NULL
+  app_id          INTEGER NOT NULL
   ,
   flow_id         BIGINT,
   flow_path       VARCHAR(1024) ,
@@ -537,7 +537,7 @@ CREATE TABLE stg_job_execution (
   COMMENT ON COLUMN stg_job_execution.app_id IS 'application id of the flow';
 
 CREATE TABLE flow_schedule (
-  app_id               SMALLINT UNSIGNED NOT NULL
+  app_id               INTEGER NOT NULL
   ,
   flow_id              BIGINT      NOT NULL
   ,
@@ -575,7 +575,7 @@ CREATE TABLE flow_schedule (
   COMMENT ON COLUMN flow_schedule.app_id IS 'application id of the flow';
 
 CREATE TABLE stg_flow_schedule (
-  app_id               SMALLINT UNSIGNED NOT NULL
+  app_id               INTEGER NOT NULL
   ,
   flow_id              BIGINT,
   flow_path            VARCHAR(1024) ,
@@ -608,7 +608,7 @@ CREATE TABLE stg_flow_schedule (
   COMMENT ON COLUMN stg_flow_schedule.app_id IS 'application id of the flow';
 
 CREATE TABLE flow_owner_permission (
-  app_id         SMALLINT UNSIGNED NOT NULL
+  app_id         INTEGER NOT NULL
   ,
   flow_id        BIGINT      NOT NULL
   ,
@@ -635,7 +635,7 @@ CREATE TABLE flow_owner_permission (
   COMMENT ON COLUMN flow_owner_permission.app_id IS 'application id of the flow';
 
 CREATE TABLE stg_flow_owner_permission (
-  app_id         SMALLINT UNSIGNED NOT NULL
+  app_id         INTEGER NOT NULL
   ,
   flow_id        BIGINT,
   flow_path      VARCHAR(1024) ,
@@ -659,14 +659,14 @@ CREATE TABLE stg_flow_owner_permission (
   COMMENT ON COLUMN stg_flow_owner_permission.app_id IS 'application id of the flow';
 
 CREATE TABLE job_execution_ext_reference (
-	app_id         	smallint(5) UNSIGNED   NOT NULL,
-	job_exec_id    	bigint(20) UNSIGNED   NOT NULL,
-	attempt_id     	smallint(6)   DEFAULT '0',
-	ext_ref_type	varchar(50)   NOT NULL,
-    ext_ref_sort_id smallint(6)  NOT NULL DEFAULT '0',
-	ext_ref_id      varchar(100)  NOT NULL,
-	created_time   	int(10) UNSIGNED   NULL,
-	wh_etl_exec_id 	bigint(20)   NULL,
+	app_id         	smallINT   NOT NULL,
+	job_exec_id    	bigINT   NOT NULL,
+	attempt_id     	SMALLINT   DEFAULT '0',
+	ext_ref_type	VARCHAR(50)   NOT NULL,
+    ext_ref_sort_id SMALLINT  NOT NULL DEFAULT '0',
+	ext_ref_id      VARCHAR(100)  NOT NULL,
+	created_time   	INT   NULL,
+	wh_etl_exec_id 	bigINT   NULL,
 	PRIMARY KEY(app_id,job_exec_id,attempt_id,ext_ref_type,ext_ref_sort_id)
 )
 
@@ -696,14 +696,14 @@ CREATE INDEX idx_job_execution_ext_ref__ext_ref_id USING BTREE
 
 
 CREATE TABLE stg_job_execution_ext_reference (
-	app_id         	smallint(5) UNSIGNED   NOT NULL,
-	job_exec_id    	bigint(20) UNSIGNED   NOT NULL,
-	attempt_id     	smallint(6)   DEFAULT '0',
-	ext_ref_type	varchar(50)   NOT NULL,
-    ext_ref_sort_id smallint(6)  NOT NULL DEFAULT '0',
-	ext_ref_id      varchar(100)  NOT NULL,
-	created_time   	int(10) UNSIGNED   NULL,
-	wh_etl_exec_id 	bigint(20)   NULL,
+	app_id         	smallINT   NOT NULL,
+	job_exec_id    	bigINT   NOT NULL,
+	attempt_id     	SMALLINT   DEFAULT '0',
+	ext_ref_type	VARCHAR(50)   NOT NULL,
+    ext_ref_sort_id SMALLINT  NOT NULL DEFAULT '0',
+	ext_ref_id      VARCHAR(100)  NOT NULL,
+	created_time   	INT   NULL,
+	wh_etl_exec_id 	bigINT   NULL,
 	PRIMARY KEY(app_id,job_exec_id,attempt_id,ext_ref_type,ext_ref_sort_id)
 )
 
@@ -729,7 +729,7 @@ COMMENT ON COLUMN stg_job_execution_ext_reference.job_exec_id IS 'job execution 
 COMMENT ON COLUMN stg_job_execution_ext_reference.app_id IS 'application id of the flow';
 
 CREATE TABLE "cfg_job_type" (
-  "job_type_id" SMALLINT(6) UNSIGNED NOT NULL AUTO_INCREMENT,
+  "job_type_id" SMALLINT NOT NULL AUTO_INCREMENT,
   "job_type"    VARCHAR(50)          NOT NULL,
   "description" VARCHAR(200)         NULL,
   PRIMARY KEY ("job_type_id"),
@@ -743,7 +743,7 @@ CREATE TABLE "cfg_job_type" (
 CREATE TABLE "cfg_job_type_reverse_map" (
   "job_type_actual"   VARCHAR(50)
                       CHARACTER SET ascii NOT NULL,
-  "job_type_id"       SMALLINT(6) UNSIGNED NOT NULL,
+  "job_type_id"       SMALLINT NOT NULL,
   "description"       VARCHAR(200)         NULL,
   "job_type_standard" VARCHAR(50)          NOT NULL,
   PRIMARY KEY ("job_type_actual"),
