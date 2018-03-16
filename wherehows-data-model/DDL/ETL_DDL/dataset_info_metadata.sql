@@ -115,10 +115,10 @@ CREATE TABLE "dataset_compliance" (
   "dataset_classification"    VARCHAR(1000)    DEFAULT NULL,
   "modified_by"               VARCHAR(50)      DEFAULT NULL,
   "modified_time"             BIGINT DEFAULT NULL,
-  PRIMARY KEY ("dataset_id"),
-  UNIQUE "dataset_urn" ("dataset_urn")
+  PRIMARY KEY ("dataset_id")
 )
 ;
+CREATE UNIQUE INDEX "dataset_urn" ON "dataset_compliance" ("dataset_urn");
 COMMENT ON COLUMN dataset_compliance.compliance_purge_type IS 'AUTO_PURGE,CUSTOM_PURGE,LIMITED_RETENTION,PURGE_NOT_APPLICABLE,PURGE_EXEMPTED';
 COMMENT ON COLUMN dataset_compliance.compliance_purge_note IS 'The additional information about purging if the purge type is PURGE_EXEMPTED';
 COMMENT ON COLUMN dataset_compliance.compliance_entities IS 'JSON: compliance fields';

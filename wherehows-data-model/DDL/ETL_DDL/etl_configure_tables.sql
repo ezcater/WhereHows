@@ -20,12 +20,10 @@ CREATE TABLE "wh_etl_job_schedule" (
   ,
   "next_run"        INT     DEFAULT NULL
   ,
-  PRIMARY KEY ("wh_etl_job_name"),
-  UNIQUE "etl_unique" ("wh_etl_job_name")
+  PRIMARY KEY ("wh_etl_job_name")
 )
-
-
   COMMENT='WhereHows ETL job scheduling table';
+CREATE UNIQUE INDEX "etl_unique" ON "wh_etl_job_schedule" ("wh_etl_job_name");
   COMMENT ON COLUMN wh_etl_job_schedule.wh_etl_job_name IS 'etl job name';
   COMMENT ON COLUMN wh_etl_job_schedule.enabled IS 'job currently enabled or disabled';
   COMMENT ON COLUMN wh_etl_job_schedule.next_run IS 'next run time';
@@ -78,11 +76,11 @@ CREATE TABLE "cfg_application" (
   "uri"                     VARCHAR(1000)                 DEFAULT NULL,
   "lifecycle_layer_id"      SMALLINT           DEFAULT NULL,
   "short_connection_string" VARCHAR(50)                   DEFAULT NULL,
-  PRIMARY KEY ("app_id"),
-  UNIQUE "idx_cfg_application__appcode" ("app_code") USING HASH
+  PRIMARY KEY ("app_id")
 )
-
 ;
+CREATE UNIQUE INDEX "idx_cfg_application__appcode" ON "cfg_application" USING HASH ("app_code");
+
 
 CREATE TABLE cfg_database  (
 	db_id                  	SMALLINT NOT NULL,
@@ -103,12 +101,12 @@ CREATE TABLE cfg_database  (
 	uri                    	VARCHAR(1000) NULL,
 	short_connection_string	VARCHAR(50)  NULL,
   last_modified          	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-	PRIMARY KEY(db_id),
-  UNIQUE "uix_cfg_database__dbcode" (db_code) USING HASH
+	PRIMARY KEY(db_id)
 )
 
 DEFAULT CHARSET = utf8
 COMMENT = 'Abstract different storage instances as databases' ;
+CREATE UNIQUE INDEX "uix_cfg_database__dbcode" ON "cfg_database" USING HASH (db_code);
 COMMENT ON COLUMN cfg_database.db_code IS 'Unique string without space';
 COMMENT ON COLUMN cfg_database.primary_dataset_type IS 'What type of dataset this DB supports';
 COMMENT ON COLUMN cfg_database.is_logical IS 'Is a group, which contains multiple physical DB(s)';
@@ -182,12 +180,12 @@ CREATE TABLE cfg_deployment_tier  (
   tier_label    VARCHAR(50)  NULL,
   sort_id       SMALLINT  NOT NULL,
   last_modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY(tier_id),
-  UNIQUE uix_cfg_deployment_tier__tiercode (tier_code)
+  PRIMARY KEY(tier_id)
 )
 
 AUTO_INCREMENT = 0
 COMMENT = 'http://en.wikipedia.org/wiki/Deployment_environment';
+CREATE UNIQUE INDEX uix_cfg_deployment_tier__tiercode ON "cfg_deployment_tier" (tier_code);
 COMMENT ON COLUMN cfg_deployment_tier.tier_code IS 'local,dev,test,qa,stg,prod';
 COMMENT ON COLUMN cfg_deployment_tier.tier_label IS 'display full name';
 COMMENT ON COLUMN cfg_deployment_tier.sort_id IS '3-digit for group, 3-digit within group';
@@ -205,12 +203,12 @@ CREATE TABLE cfg_data_center  (
 	latitude          	decimal(10,6) NULL,
 	data_center_status	CHAR(1)  NULL,
 	last_modified     	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-	PRIMARY KEY(data_center_id),
-  UNIQUE uix_cfg_data_center__datacentercode (data_center_code)
+	PRIMARY KEY(data_center_id)
 )
 
 AUTO_INCREMENT = 0
 COMMENT = 'https://en.wikipedia.org/wiki/Data_center' ;
+CREATE UNIQUE INDEX uix_cfg_data_center__datacentercode ON "cfg_data_center" (data_center_code);
 COMMENT ON COLUMN cfg_data_center.data_center_status IS 'A,D,U';
 
 
@@ -223,10 +221,10 @@ CREATE TABLE cfg_cluster  (
 	data_center_code        VARCHAR(30) NULL,
 	description             VARCHAR(200) NULL,
 	last_modified     	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-	PRIMARY KEY(cluster_id),
-  UNIQUE uix_cfg_cluster__clustercode (cluster_code)
+	PRIMARY KEY(cluster_id)
 )
 COMMENT = 'https://en.wikipedia.org/wiki/Computer_cluster' ;
+CREATE UNIQUE INDEX uix_cfg_cluster__clustercode ON "cfg_cluster" (cluster_code);
 
 
 CREATE TABLE IF NOT EXISTS cfg_search_score_boost (

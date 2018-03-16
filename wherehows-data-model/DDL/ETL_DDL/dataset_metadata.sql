@@ -95,11 +95,10 @@ CREATE TABLE "dict_dataset" (
   "created_time"                BIGINT,
   "modified_time"               BIGINT,
   "wh_etl_exec_id"              BIGINT,
-  PRIMARY KEY ("id"),
-  UNIQUE "uq_dataset_urn" ("urn")
+  PRIMARY KEY ("id")
 )
-
 ;
+CREATE UNIQUE INDEX "uq_dataset_urn" ON "dict_dataset" ("urn");
 COMMENT ON COLUMN dict_dataset.schema_type IS 'JSON, Hive, DDL, XML, CSV';
 COMMENT ON COLUMN dict_dataset.source IS 'The original data source type (for dataset in data warehouse). Oracle, Kafka ...';
 COMMENT ON COLUMN dict_dataset.parent_name IS 'Schema Name for RDBMS, Group Name for Jobs/Projects/Tracking Datasets on HDFS ';
@@ -139,12 +138,12 @@ CREATE TABLE "dict_dataset_sample" (
   "data"       TEXT,
   "modified"   TIMESTAMP         NULL,
   "created"    TIMESTAMP         NULL,
-  PRIMARY KEY ("id"),
-  UNIQUE "ak_dict_dataset_sample__datasetid" ("dataset_id")
+  PRIMARY KEY ("id")
 )
 
   AUTO_INCREMENT = 0
 ;
+CREATE UNIQUE INDEX "ak_dict_dataset_sample__datasetid" ON "dict_dataset_sample" ("dataset_id");
 COMMENT ON COLUMN dict_dataset_sample.ref_id IS 'Reference dataset id of which dataset that we fetch sample from. e.g. for tables we do not have permission, fetch sample data from DWH_STG correspond tables';
 
 -- stagging table for field detail
@@ -218,14 +217,14 @@ CREATE TABLE "dict_field_detail" (
   "hcatalog_data_type" VARCHAR(50)                   NULL
   ,
   "modified"           TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY ("field_id"),
-  UNIQUE "uix_dict_field__datasetid_parentpath_fieldname" ("dataset_id", "parent_path", "field_name") USING BTREE,
-  UNIQUE "uix_dict_field__datasetid_sortid" ("dataset_id", "sort_id") USING BTREE
+  PRIMARY KEY ("field_id")
 )
 
   AUTO_INCREMENT = 0
 
   COMMENT = 'Flattened Fields/Columns';
+CREATE UNIQUE INDEX "uix_dict_field__datasetid_parentpath_fieldname" ON "dict_field_detail" ("dataset_id", "parent_path", "field_name");
+CREATE UNIQUE INDEX "uix_dict_field__datasetid_sortid" ON "dict_field_detail" ("dataset_id", "sort_id");
   COMMENT ON COLUMN dict_field_detail.data_precision IS 'only in decimal type';
   COMMENT ON COLUMN dict_field_detail.data_fraction IS 'only in decimal type';
   COMMENT ON COLUMN dict_field_detail.default_comment_id IS 'a list of comment_id';
@@ -244,11 +243,11 @@ CREATE TABLE "dict_dataset_schema_history" (
   "urn"           VARCHAR(200)           NOT NULL,
   "modified_date" DATE                   NULL,
   "schema"        TEXT NULL,
-  PRIMARY KEY (id),
-  UNIQUE "uk_dict_dataset_schema_history__urn_modified" ("urn", "modified_date")
+  PRIMARY KEY (id)
 )
 
   AUTO_INCREMENT = 0;
+CREATE UNIQUE INDEX "uk_dict_dataset_schema_history__urn_modified" ON "dict_dataset_schema_history" ("urn", "modified_date");
 
 -- staging table table of fields to comments mapping
 CREATE TABLE "stg_dict_dataset_field_comment" (
@@ -413,4 +412,3 @@ CREATE INDEX server_cluster USING BTREE
 	COMMENT ON COLUMN stg_dict_dataset_instance.instance_created_time IS 'source instance created time';
 	COMMENT ON COLUMN stg_dict_dataset_instance.created_time IS 'wherehows created time';
 	COMMENT ON COLUMN stg_dict_dataset_instance.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
-

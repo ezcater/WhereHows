@@ -43,13 +43,13 @@ CREATE TABLE dict_business_metric  (
   "scm_url"               	VARCHAR(300) NULL,
   "wh_etl_exec_id"              BIGINT,
   PRIMARY KEY(metric_id),
-  UNIQUE "uq_dataset_urn" ("urn"),
   KEY "idx_dict_business_metric__ref_id" ("metric_ref_id") USING BTREE,
   FULLTEXT KEY "fti_dict_business_metric_all" ("metric_name", "metric_description", "metric_category", "metric_group", "dashboard_name")
 )
 
   AUTO_INCREMENT = 0
 ;
+CREATE UNIQUE INDEX "uq_dataset_urn" ON "dict_business_metric" ("urn");
 COMMENT ON COLUMN dict_business_metric.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
 COMMENT ON COLUMN dict_business_metric.metric_formula IS 'Expression, Code Snippet or Calculation Logic';
 COMMENT ON COLUMN dict_business_metric.metric_good_direction IS 'UP, DOWN, ZERO, FLAT';

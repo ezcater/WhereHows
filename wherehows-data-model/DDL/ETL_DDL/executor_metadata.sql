@@ -727,13 +727,14 @@ CREATE TABLE "cfg_job_type" (
   "job_type_id" SMALLSERIAL NOT NULL,
   "job_type"    VARCHAR(50)          NOT NULL,
   "description" VARCHAR(200)         NULL,
-  PRIMARY KEY ("job_type_id"),
-  UNIQUE "ak_cfg_job_type__job_type" ("job_type")
+  PRIMARY KEY ("job_type_id")
 )
 
   AUTO_INCREMENT = 55
 
   COMMENT = 'job types used in mutliple schedulers';
+CREATE UNIQUE INDEX "ak_cfg_job_type__job_type" ON "cfg_job_type" ("job_type");
+
 
 CREATE TABLE "cfg_job_type_reverse_map" (
   "job_type_actual"   VARCHAR(50) NOT NULL,
@@ -741,9 +742,7 @@ CREATE TABLE "cfg_job_type_reverse_map" (
   "description"       VARCHAR(200)         NULL,
   "job_type_standard" VARCHAR(50)          NOT NULL,
   PRIMARY KEY ("job_type_actual"),
-  UNIQUE "cfg_job_type_reverse_map_uk" ("job_type_actual"),
   KEY "cfg_job_type_reverse_map_job_type_id_fk" ("job_type_id")
 )
-
-
   COMMENT = 'The reverse map of the actual job type to standard job type';
+CREATE UNIQUE INDEX "cfg_job_type_reverse_map_uk" ON "cfg_job_type_reverse_map" ("job_type_actual");,
