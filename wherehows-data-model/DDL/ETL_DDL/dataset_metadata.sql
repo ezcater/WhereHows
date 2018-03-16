@@ -139,9 +139,8 @@ CREATE TABLE "dict_dataset_sample" (
   "created"    TIMESTAMP         NULL,
   PRIMARY KEY ("id")
 )
-
-  AUTO_INCREMENT = 0
 ;
+ALTER SEQUENCE dict_dataset_sample_id_seq RESTART WITH 0;
 CREATE UNIQUE INDEX "ak_dict_dataset_sample__datasetid" ON "dict_dataset_sample" ("dataset_id");
 COMMENT ON COLUMN dict_dataset_sample.ref_id IS 'Reference dataset id of which dataset that we fetch sample from. e.g. for tables we do not have permission, fetch sample data from DWH_STG correspond tables';
 
@@ -214,10 +213,8 @@ CREATE TABLE "dict_field_detail" (
   ,
   "modified"           TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY ("field_id")
-)
-
-  AUTO_INCREMENT = 0
-
+);
+  ALTER SEQUENCE dict_field_detail_field_id_seq RESTART WITH 0;
   COMMENT = 'Flattened Fields/Columns';
 CREATE UNIQUE INDEX "uix_dict_field__datasetid_parentpath_fieldname" ON "dict_field_detail" ("dataset_id", "parent_path", "field_name");
 CREATE UNIQUE INDEX "uix_dict_field__datasetid_sortid" ON "dict_field_detail" ("dataset_id", "sort_id");
@@ -241,8 +238,8 @@ CREATE TABLE "dict_dataset_schema_history" (
   "schema"        TEXT NULL,
   PRIMARY KEY (id)
 )
-
-  AUTO_INCREMENT = 0;
+;
+ALTER SEQUENCE dict_dataset_schema_history_id_seq RESTART WITH 0;
 CREATE UNIQUE INDEX "uk_dict_dataset_schema_history__urn_modified" ON "dict_dataset_schema_history" ("urn", "modified_date");
 
 -- staging table table of fields to comments mapping
@@ -281,7 +278,8 @@ CREATE TABLE comments (
 
   CHARACTER SET latin1
   COLLATE latin1_swedish_ci
-  AUTO_INCREMENT = 0;
+;
+  ALTER SEQUENCE comments_id_seq RESTART WITH 0;
 CREATE INDEX CONCURRENTLY "user_id" ON "comments" ("user_id");
 CREATE INDEX CONCURRENTLY "dataset_id" ON "comments" ("dataset_id");
 CREATE INDEX CONCURRENTLY "fti_comment" ON "comments" ("text");
@@ -296,9 +294,8 @@ CREATE TABLE "field_comments" (
   "comment_crc32_checksum" INT          NULL,
   PRIMARY KEY ("id")
 )
-
-  AUTO_INCREMENT = 0
 ;
+ALTER SEQUENCE field_comments_id_seq RESTART WITH 0;
 COMMENT ON COLUMN field_comments.comment_crc32_checksum IS '4-byte CRC32';
 CREATE INDEX CONCURRENTLY comment_key ON "field_comments" ("comment");
 CREATE INDEX CONCURRENTLY fti_comment ON "field_comments" ("comment");
@@ -329,7 +326,6 @@ CREATE TABLE dict_dataset_instance  (
 
 CHARACTER SET latin1
 COLLATE latin1_swedish_ci
-AUTO_INCREMENT = 0
 ;
 CREATE INDEX logical_name USING BTREE
 	ON dict_dataset_instance(logical_name);
@@ -375,7 +371,6 @@ CREATE TABLE stg_dict_dataset_instance  (
 
 CHARACTER SET latin1
 COLLATE latin1_swedish_ci
-AUTO_INCREMENT = 0
 ;
 CREATE INDEX server_cluster USING BTREE
 	ON stg_dict_dataset_instance(server_cluster, deployment_tier, data_center, slice);

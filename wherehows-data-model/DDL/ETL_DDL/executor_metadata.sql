@@ -219,7 +219,7 @@ CREATE TABLE stg_flow_job (
 CREATE TABLE job_source_id_map (
   app_id           INTEGER NOT NULL
   ,
-  job_id           BIGINT      NOT NULL AUTO_INCREMENT
+  job_id           BIGSERIAL      NOT NULL
   ,
   source_id_string VARCHAR(1024),
   source_id_uuid   VARCHAR(255),
@@ -712,7 +712,7 @@ CREATE TABLE "cfg_job_type" (
   PRIMARY KEY ("job_type_id")
 )
 
-  AUTO_INCREMENT = 55
+  ALTER SEQUENCE cfg_job_type_job_type_id_seq RESTART WITH 55;
 
   COMMENT = 'job types used in mutliple schedulers';
 CREATE UNIQUE INDEX "ak_cfg_job_type__job_type" ON "cfg_job_type" ("job_type");

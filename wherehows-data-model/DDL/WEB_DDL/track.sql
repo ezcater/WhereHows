@@ -22,5 +22,4 @@ CREATE TABLE track_object_access_log (
   "parameters"      VARCHAR(500)                                                                                                         NULL,
   PRIMARY KEY (access_unixtime, login_id, object_type)
 )
-
-  AUTO_INCREMENT = 0;
+;
