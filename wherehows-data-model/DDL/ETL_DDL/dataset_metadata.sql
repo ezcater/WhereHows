@@ -296,7 +296,7 @@ CREATE INDEX CONCURRENTLY "fti_comment" ON "comments" ("text");
 
 -- field comments
 CREATE TABLE "field_comments" (
-  "id"                     INT NOT NULL AUTO_INCREMENT,
+  "id"                     SERIAL NOT NULL,
   "user_id"                INT          NOT NULL DEFAULT '0',
   "comment"                VARCHAR(4000)    NOT NULL,
   "created"                TIMESTAMP        NOT NULL,
