@@ -47,7 +47,7 @@ CREATE TABLE "stg_dict_dataset" (
   "wh_etl_exec_id"              BIGINT COMMENT 'wherehows etl execution id that modified this record',
   PRIMARY KEY ("urn", "db_id")
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = latin1
   PARTITION BY HASH(db_id)
   PARTITIONS 8;
@@ -89,7 +89,7 @@ CREATE TABLE "dict_dataset" (
   PRIMARY KEY ("id"),
   UNIQUE KEY "uq_dataset_urn" ("urn")
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = latin1;
 
 -- stagging table for sample data
@@ -103,7 +103,7 @@ CREATE TABLE "stg_dict_dataset_sample" (
   PRIMARY KEY ("db_id", "urn"),
   KEY "ref_urn_key" ("ref_urn")
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8;
 
 -- sample data table
@@ -119,7 +119,7 @@ CREATE TABLE "dict_dataset_sample" (
   PRIMARY KEY ("id"),
   UNIQUE KEY "ak_dict_dataset_sample__datasetid" ("dataset_id")
 )
-  ENGINE = InnoDB
+
   AUTO_INCREMENT = 0
   DEFAULT CHARSET = utf8;
 
@@ -148,7 +148,7 @@ CREATE TABLE "stg_dict_field_detail" (
   KEY "idx_stg_dict_field_detail__description" ("description"(100)),
   PRIMARY KEY ("urn", "sort_id", "db_id")
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = latin1
   PARTITION BY HASH(db_id)
   PARTITIONS 8;
@@ -196,7 +196,7 @@ CREATE TABLE "dict_field_detail" (
   UNIQUE KEY "uix_dict_field__datasetid_parentpath_fieldname" ("dataset_id", "parent_path", "field_name") USING BTREE,
   UNIQUE KEY "uix_dict_field__datasetid_sortid" ("dataset_id", "sort_id") USING BTREE
 )
-  ENGINE = InnoDB
+
   AUTO_INCREMENT = 0
   DEFAULT CHARSET = latin1
   COMMENT = 'Flattened Fields/Columns';
@@ -211,7 +211,7 @@ CREATE TABLE "dict_dataset_schema_history" (
   PRIMARY KEY (id),
   UNIQUE KEY "uk_dict_dataset_schema_history__urn_modified" ("urn", "modified_date")
 )
-  ENGINE = InnoDB
+
   AUTO_INCREMENT = 0;
 
 -- staging table table of fields to comments mapping
@@ -221,7 +221,7 @@ CREATE TABLE "stg_dict_dataset_field_comment" (
   "dataset_id" int(11) UNSIGNED NOT NULL,
   "db_id" smallint(6) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY ("field_id","comment_id", "db_id")
-) ENGINE=InnoDB
+)
   DEFAULT CHARSET=utf8
   PARTITION BY HASH(db_id)
   PARTITIONS 8
@@ -236,7 +236,7 @@ CREATE TABLE "dict_dataset_field_comment" (
   PRIMARY KEY (field_id, comment_id),
   KEY (comment_id)
 )
-  ENGINE = InnoDB;
+  ;
 
 -- dataset comments
 CREATE TABLE comments (
@@ -252,7 +252,7 @@ CREATE TABLE comments (
   KEY "dataset_id" ("dataset_id") USING BTREE,
   FULLTEXT KEY "fti_comment" ("text")
 )
-  ENGINE = InnoDB
+
   CHARACTER SET latin1
   COLLATE latin1_swedish_ci
   AUTO_INCREMENT = 0;
@@ -269,7 +269,7 @@ CREATE TABLE "field_comments" (
   KEY "comment_key" ("comment"(100)),
   FULLTEXT KEY "fti_comment" ("comment")
 )
-  ENGINE = InnoDB
+
   AUTO_INCREMENT = 0
   DEFAULT CHARSET = utf8;
 
@@ -295,7 +295,7 @@ CREATE TABLE dict_dataset_instance  (
 	wh_etl_exec_id       	bigint(20) COMMENT 'wherehows etl execution id that modified this record'  NULL,
 	PRIMARY KEY(dataset_id,db_id,version_sort_id)
 )
-ENGINE = InnoDB
+
 CHARACTER SET latin1
 COLLATE latin1_swedish_ci
 AUTO_INCREMENT = 0
@@ -338,7 +338,7 @@ CREATE TABLE stg_dict_dataset_instance  (
 	abstract_dataset_urn 	varchar(200) NULL,
 	PRIMARY KEY(dataset_urn,db_id)
 )
-ENGINE = InnoDB
+
 CHARACTER SET latin1
 COLLATE latin1_swedish_ci
 AUTO_INCREMENT = 0

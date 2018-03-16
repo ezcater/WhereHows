@@ -47,7 +47,7 @@ CREATE TABLE dict_business_metric  (
   KEY "idx_dict_business_metric__ref_id" ("metric_ref_id") USING BTREE,
   FULLTEXT KEY "fti_dict_business_metric_all" ("metric_name", "metric_description", "metric_category", "metric_group", "dashboard_name")
 )
-  ENGINE = InnoDB
+
   AUTO_INCREMENT = 0
 ;
 
@@ -80,5 +80,5 @@ CREATE TABLE "stg_dict_business_metric" (
   "scm_url" varchar(300) CHARACTER SET latin1 DEFAULT NULL,
   "wh_etl_exec_id"              BIGINT COMMENT 'wherehows etl execution id that modified this record',
    PRIMARY KEY("urn")
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+)  DEFAULT CHARSET=utf8
 ;

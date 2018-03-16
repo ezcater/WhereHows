@@ -34,7 +34,7 @@ CREATE TABLE "dataset_partition_layout_pattern" (
   "partition_pattern_group" VARCHAR(50)      DEFAULT NULL,
   PRIMARY KEY ("layout_id")
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8;
 
 -- log lineage pattern to extract lineage from logs
@@ -63,7 +63,7 @@ CREATE TABLE "log_lineage_pattern" (
   "source_target_type"  ENUM('source', 'target') DEFAULT NULL,
   PRIMARY KEY ("pattern_id")
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8;
 
 -- patterns used to discover the hadoop id inside log
@@ -77,7 +77,7 @@ CREATE TABLE "log_reference_job_id_pattern" (
   "comments"               VARCHAR(200) DEFAULT NULL,
   PRIMARY KEY ("pattern_id")
 )
-  ENGINE = InnoDB
+
   DEFAULT CHARSET = utf8;
 
 

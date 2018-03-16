@@ -29,7 +29,6 @@ CREATE TABLE dataset_deployment (
   PRIMARY KEY ("dataset_id", "deployment_tier", "datacenter"),
   UNIQUE KEY ("dataset_urn", "deployment_tier", "datacenter")
 )
-  ENGINE = InnoDB
   DEFAULT CHARSET = latin1;
 
 CREATE TABLE dataset_capacity (
@@ -45,7 +44,6 @@ CREATE TABLE dataset_capacity (
   PRIMARY KEY ("dataset_id", "capacity_name"),
   UNIQUE KEY ("dataset_urn", "capacity_name")
 )
-  ENGINE = InnoDB
   DEFAULT CHARSET = latin1;
 
 CREATE TABLE dataset_tag (
@@ -57,7 +55,6 @@ CREATE TABLE dataset_tag (
   PRIMARY KEY ("dataset_id", "tag"),
   UNIQUE KEY ("dataset_urn", "tag")
 )
-  ENGINE = InnoDB
   DEFAULT CHARSET = latin1;
 
 CREATE TABLE dataset_case_sensitivity (
@@ -71,7 +68,6 @@ CREATE TABLE dataset_case_sensitivity (
   PRIMARY KEY ("dataset_id"),
   UNIQUE KEY ("dataset_urn")
 )
-  ENGINE = InnoDB
   DEFAULT CHARSET = latin1;
 
 CREATE TABLE dataset_reference (
@@ -85,7 +81,6 @@ CREATE TABLE dataset_reference (
   PRIMARY KEY ("dataset_id", "reference_type", "reference_format"),
   UNIQUE KEY ("dataset_urn", "reference_type", "reference_format")
 )
-  ENGINE = InnoDB
   DEFAULT CHARSET = latin1;
 
 CREATE TABLE dataset_partition (
@@ -102,7 +97,6 @@ CREATE TABLE dataset_partition (
   PRIMARY KEY ("dataset_id"),
   UNIQUE KEY ("dataset_urn")
 )
-  ENGINE = InnoDB
   DEFAULT CHARSET = latin1;
 
 CREATE TABLE "dataset_compliance" (
@@ -125,7 +119,6 @@ CREATE TABLE "dataset_compliance" (
   PRIMARY KEY ("dataset_id"),
   UNIQUE KEY "dataset_urn" ("dataset_urn")
 )
-  ENGINE = InnoDB
   DEFAULT CHARSET = latin1;
 
 CREATE TABLE dataset_constraint (
@@ -143,7 +136,6 @@ CREATE TABLE dataset_constraint (
   PRIMARY KEY ("dataset_id", "constraint_type", "constraint_sub_type", "constraint_expression"),
   UNIQUE KEY ("dataset_urn", "constraint_type", "constraint_sub_type", "constraint_expression")
 )
-  ENGINE = InnoDB
   DEFAULT CHARSET = latin1;
 
 CREATE TABLE dataset_index (
@@ -158,7 +150,6 @@ CREATE TABLE dataset_index (
   PRIMARY KEY ("dataset_id", "index_name"),
   UNIQUE KEY ("dataset_urn", "index_name")
 )
-  ENGINE = InnoDB
   DEFAULT CHARSET = latin1;
 
 CREATE TABLE dataset_schema_info (
@@ -181,7 +172,6 @@ CREATE TABLE dataset_schema_info (
   PRIMARY KEY ("dataset_id"),
   UNIQUE KEY ("dataset_urn")
 )
-  ENGINE = InnoDB
   DEFAULT CHARSET = latin1;
 
 CREATE TABLE dataset_inventory (
@@ -200,5 +190,4 @@ CREATE TABLE dataset_inventory (
   "data_content_case_sensitivity" BOOLEAN            DEFAULT NULL,
   PRIMARY KEY ("data_platform", "native_name", "data_origin", "event_date")
 )
-  ENGINE = InnoDB
   DEFAULT CHARSET = latin1;

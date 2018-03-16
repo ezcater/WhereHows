@@ -37,4 +37,4 @@ CREATE TABLE "log_jira__hdfs_directory_to_owner_map" (
   "jira_component" varchar(100) DEFAULT NULL,
   "jira_id" bigint(20) DEFAULT NULL,
   PRIMARY KEY ("directory_path","hdfs_name")
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+)  DEFAULT CHARSET=latin1;
