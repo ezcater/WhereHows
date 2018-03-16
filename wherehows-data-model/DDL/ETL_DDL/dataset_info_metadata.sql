@@ -181,7 +181,7 @@ CREATE TABLE dataset_inventory (
   "data_origin"                   VARCHAR(20)  NOT NULL,
   "change_actor_urn"              VARCHAR(200)       DEFAULT NULL,
   "change_type"                   VARCHAR(20)        DEFAULT NULL,
-  "change_time"                   BIGINT UNSIGNED    DEFAULT NULL,
+  "change_time"                   BIGINT    DEFAULT NULL,
   "change_note"                   TEXT DEFAULT NULL,
   "native_type"                   VARCHAR(20)        DEFAULT NULL,
   "uri"                           VARCHAR(200)       DEFAULT NULL,
