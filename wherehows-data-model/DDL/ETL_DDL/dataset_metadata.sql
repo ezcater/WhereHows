@@ -95,11 +95,10 @@ CREATE TABLE "dict_dataset" (
   "created_time"                BIGINT,
   "modified_time"               BIGINT,
   "wh_etl_exec_id"              BIGINT,
-  PRIMARY KEY ("id"),
-  UNIQUE "uq_dataset_urn" ("urn")
+  PRIMARY KEY ("id")
 )
-
 ;
+CREATE UNIQUE INDEX "uq_dataset_urn" ON "dict_dataset" ("urn");
 COMMENT ON COLUMN dict_dataset.schema_type IS 'JSON, Hive, DDL, XML, CSV';
 COMMENT ON COLUMN dict_dataset.source IS 'The original data source type (for dataset in data warehouse). Oracle, Kafka ...';
 COMMENT ON COLUMN dict_dataset.parent_name IS 'Schema Name for RDBMS, Group Name for Jobs/Projects/Tracking Datasets on HDFS ';
@@ -122,11 +121,12 @@ CREATE TABLE "stg_dict_dataset_sample" (
   "ref_urn"    VARCHAR(200)          NULL,
   "ref_id"     INT               NULL,
   "data"       TEXT,
-  PRIMARY KEY ("db_id", "urn"),
-  KEY "ref_urn_key" ("ref_urn")
+  PRIMARY KEY ("db_id", "urn")
 )
 
 ;
+CREATE INDEX CONCURRENTLY "ref_urn_key" ON "stg_dict_dataset_sample" ("ref_urn");
+
 
 -- sample data table
 CREATE TABLE "dict_dataset_sample" (
@@ -138,12 +138,12 @@ CREATE TABLE "dict_dataset_sample" (
   "data"       TEXT,
   "modified"   TIMESTAMP         NULL,
   "created"    TIMESTAMP         NULL,
-  PRIMARY KEY ("id"),
-  UNIQUE "ak_dict_dataset_sample__datasetid" ("dataset_id")
+  PRIMARY KEY ("id")
 )
 
   AUTO_INCREMENT = 0
 ;
+CREATE UNIQUE INDEX "ak_dict_dataset_sample__datasetid" ON "dict_dataset_sample" ("dataset_id");
 COMMENT ON COLUMN dict_dataset_sample.ref_id IS 'Reference dataset id of which dataset that we fetch sample from. e.g. for tables we do not have permission, fetch sample data from DWH_STG correspond tables';
 
 -- stagging table for field detail
@@ -168,7 +168,6 @@ CREATE TABLE "stg_dict_field_detail" (
   "description"    VARCHAR(1000)                 NULL,
   "last_modified"  TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   "dataset_id"     BIGINT         NULL,
-  KEY "idx_stg_dict_field_detail__description" ("description"(100)),
   PRIMARY KEY ("urn", "sort_id", "db_id")
 )
 
@@ -176,6 +175,8 @@ CREATE TABLE "stg_dict_field_detail" (
   PARTITION BY HASH(db_id)
   PARTITIONS 8;
   COMMENT ON COLUMN stg_dict_field_detail.dataset_id IS 'used to opitimize metadata ETL performance';
+CREATE INDEX CONCURRENTLY "idx_stg_dict_field_detail__description" ON "stg_dict_field_detail" ("description");
+
 
 -- field detail table
 CREATE TABLE "dict_field_detail" (
@@ -216,14 +217,14 @@ CREATE TABLE "dict_field_detail" (
   "hcatalog_data_type" VARCHAR(50)                   NULL
   ,
   "modified"           TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY ("field_id"),
-  UNIQUE "uix_dict_field__datasetid_parentpath_fieldname" ("dataset_id", "parent_path", "field_name") USING BTREE,
-  UNIQUE "uix_dict_field__datasetid_sortid" ("dataset_id", "sort_id") USING BTREE
+  PRIMARY KEY ("field_id")
 )
 
   AUTO_INCREMENT = 0
 
   COMMENT = 'Flattened Fields/Columns';
+CREATE UNIQUE INDEX "uix_dict_field__datasetid_parentpath_fieldname" ON "dict_field_detail" ("dataset_id", "parent_path", "field_name");
+CREATE UNIQUE INDEX "uix_dict_field__datasetid_sortid" ON "dict_field_detail" ("dataset_id", "sort_id");
   COMMENT ON COLUMN dict_field_detail.data_precision IS 'only in decimal type';
   COMMENT ON COLUMN dict_field_detail.data_fraction IS 'only in decimal type';
   COMMENT ON COLUMN dict_field_detail.default_comment_id IS 'a list of comment_id';
@@ -242,11 +243,11 @@ CREATE TABLE "dict_dataset_schema_history" (
   "urn"           VARCHAR(200)           NOT NULL,
   "modified_date" DATE                   NULL,
   "schema"        TEXT NULL,
-  PRIMARY KEY (id),
-  UNIQUE "uk_dict_dataset_schema_history__urn_modified" ("urn", "modified_date")
+  PRIMARY KEY (id)
 )
 
   AUTO_INCREMENT = 0;
+CREATE UNIQUE INDEX "uk_dict_dataset_schema_history__urn_modified" ON "dict_dataset_schema_history" ("urn", "modified_date");
 
 -- staging table table of fields to comments mapping
 CREATE TABLE "stg_dict_dataset_field_comment" (
@@ -268,9 +269,9 @@ CREATE TABLE "dict_dataset_field_comment" (
   "dataset_id" INT NOT NULL,
   "is_default" SMALLINT NULL DEFAULT '0',
   PRIMARY KEY (field_id, comment_id),
-  KEY (comment_id)
 )
-  ;
+;
+CREATE INDEX CONCURRENTLY dict_dataset_field_comment__comment_id ON "dict_dataset_field_comment" ("comment_id");
 
 -- dataset comments
 CREATE TYPE comment_type_enum AS ENUM('Description', 'Grain', 'Partition', 'ETL Schedule', 'DQ Issue', 'Question', 'Comment');
@@ -283,14 +284,14 @@ CREATE TABLE comments (
   "modified"     TIMESTAMP                                                                                     NULL,
   "comment_type" comment_type_enum NULL,
   PRIMARY KEY (id),
-  KEY "user_id" ("user_id") USING BTREE,
-  KEY "dataset_id" ("dataset_id") USING BTREE,
-  FULLTEXT KEY "fti_comment" ("text")
 )
 
   CHARACTER SET latin1
   COLLATE latin1_swedish_ci
   AUTO_INCREMENT = 0;
+CREATE INDEX CONCURRENTLY "user_id" ON "comments" ("user_id");
+CREATE INDEX CONCURRENTLY "dataset_id" ON "comments" ("dataset_id");
+CREATE INDEX CONCURRENTLY "fti_comment" ON "comments" ("text");
 
 -- field comments
 CREATE TABLE "field_comments" (
@@ -300,14 +301,14 @@ CREATE TABLE "field_comments" (
   "created"                TIMESTAMP        NOT NULL,
   "modified"               TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   "comment_crc32_checksum" INT          NULL,
-  PRIMARY KEY ("id"),
-  KEY "comment_key" ("comment"(100)),
-  FULLTEXT KEY "fti_comment" ("comment")
+  PRIMARY KEY ("id")
 )
 
   AUTO_INCREMENT = 0
 ;
 COMMENT ON COLUMN field_comments.comment_crc32_checksum IS '4-byte CRC32';
+CREATE INDEX CONCURRENTLY comment_key ON "field_comments" ("comment");
+CREATE INDEX CONCURRENTLY fti_comment ON "field_comments" ("comment");
 
 -- dict_dataset_instance
 CREATE TYPE deployment_tier_enum AS ENUM('local','grid','dev','int','ei','ei2','ei3','qa','stg','prod');
@@ -411,4 +412,3 @@ CREATE INDEX server_cluster USING BTREE
 	COMMENT ON COLUMN stg_dict_dataset_instance.instance_created_time IS 'source instance created time';
 	COMMENT ON COLUMN stg_dict_dataset_instance.created_time IS 'wherehows created time';
 	COMMENT ON COLUMN stg_dict_dataset_instance.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
-

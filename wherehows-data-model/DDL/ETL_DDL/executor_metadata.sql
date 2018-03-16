@@ -31,10 +31,8 @@ CREATE TABLE flow (
   created_time         BIGINT,
   modified_time        BIGINT,
   wh_etl_exec_id       BIGINT,
-  PRIMARY KEY (app_id, flow_id),
-  INDEX flow_path_idx (app_id, flow_path(255)),
-  INDEX flow_name_idx (app_id, flow_group(127), flow_name(127))
-)
+  PRIMARY KEY (app_id, flow_id)
+);
 
 
   COMMENT = 'Scheduler flow table' PARTITION BY HASH (app_id) PARTITIONS 8;
@@ -54,6 +52,9 @@ CREATE TABLE flow (
   COMMENT ON COLUMN flow.flow_name IS 'name of the flow';
   COMMENT ON COLUMN flow.flow_id IS 'flow id either inherit from source or generated';
   COMMENT ON COLUMN flow.app_id IS 'application id of the flow';
+CREATE INDEX flow_path_idx ON flow (app_id, flow_path);
+CREATE INDEX flow_name_idx ON flow (app_id, flow_group, flow_name);
+
 
 CREATE TABLE stg_flow (
   app_id               INTEGER NOT NULL
@@ -72,10 +73,8 @@ CREATE TABLE stg_flow (
   main_tag_id          INT,
   created_time         BIGINT,
   modified_time        BIGINT,
-  wh_etl_exec_id       BIGINT,
-  INDEX flow_id_idx (app_id, flow_id),
-  INDEX flow_path_idx (app_id, flow_path(255))
-)
+  wh_etl_exec_id       BIGINT
+);
 
 
   COMMENT = 'Scheduler flow table' PARTITION BY HASH (app_id) PARTITIONS 8;
@@ -95,6 +94,9 @@ CREATE TABLE stg_flow (
   COMMENT ON COLUMN stg_flow.flow_name IS 'name of the flow';
   COMMENT ON COLUMN stg_flow.flow_id IS 'flow id either inherit from source or generated';
   COMMENT ON COLUMN stg_flow.app_id IS 'application id of the flow';
+CREATE INDEX flow_id_idx ON stg_flow (app_id, flow_id);
+CREATE INDEX flow_path_idx ON stg_flow (app_id, flow_path);
+
 
 CREATE TABLE flow_source_id_map (
   app_id           INTEGER NOT NULL
@@ -103,9 +105,8 @@ CREATE TABLE flow_source_id_map (
   source_id_string VARCHAR(1024),
   source_id_uuid   VARCHAR(255),
   source_id_uri    VARCHAR(255),
-  PRIMARY KEY (app_id, flow_id),
-  INDEX flow_path_idx (app_id, source_id_string(255))
-)
+  PRIMARY KEY (app_id, flow_id)
+);
   ENGINE = MyISAM
 
   COMMENT = 'Scheduler flow id mapping table' PARTITION BY HASH (app_id) PARTITIONS 8;
@@ -114,6 +115,8 @@ CREATE TABLE flow_source_id_map (
   COMMENT ON COLUMN flow_source_id_map.source_id_string IS 'source string id of the flow';
   COMMENT ON COLUMN flow_source_id_map.flow_id IS 'flow id generated ';
   COMMENT ON COLUMN flow_source_id_map.app_id IS 'application id of the flow';
+CREATE INDEX flow_path_idx ON flow_source_id_map (app_id, source_id_string);
+
 
 CREATE TABLE flow_job (
   app_id               INTEGER NOT NULL
@@ -139,11 +142,8 @@ CREATE TABLE flow_job (
   created_time         BIGINT,
   modified_time        BIGINT,
   wh_etl_exec_id       BIGINT,
-  PRIMARY KEY (app_id, job_id, dag_version),
-  INDEX flow_id_idx (app_id, flow_id),
-  INDEX ref_flow_id_idx (app_id, ref_flow_id),
-  INDEX job_path_idx (app_id, job_path(255))
-)
+  PRIMARY KEY (app_id, job_id, dag_version)
+);
 
 
   COMMENT = 'Scheduler job table' PARTITION BY HASH (app_id) PARTITIONS 8;
@@ -166,6 +166,9 @@ CREATE TABLE flow_job (
   COMMENT ON COLUMN flow_job.first_source_version IS 'first source version of the flow under this dag version';
   COMMENT ON COLUMN flow_job.flow_id IS 'flow id';
   COMMENT ON COLUMN flow_job.app_id IS 'application id of the flow';
+CREATE INDEX flow_id_idx on flow_job (app_id, flow_id);
+CREATE INDEX ref_flow_id_idx on flow_job (app_id, ref_flow_id);
+CREATE INDEX job_path_idx on flow_job (app_id, job_path);
 
 CREATE TABLE stg_flow_job (
   app_id         INTEGER NOT NULL
@@ -186,14 +189,8 @@ CREATE TABLE stg_flow_job (
   is_current     CHAR(1),
   is_first       CHAR(1),
   is_last        CHAR(1),
-  wh_etl_exec_id BIGINT,
-  INDEX (app_id, job_id, dag_version),
-  INDEX flow_id_idx (app_id, flow_id),
-  INDEX flow_path_idx (app_id, flow_path(255)),
-  INDEX ref_flow_path_idx (app_id, ref_flow_path(255)),
-  INDEX job_path_idx (app_id, job_path(255)),
-  INDEX job_type_idx (job_type)
-)
+  wh_etl_exec_id BIGINT
+);
 
 
   COMMENT = 'Scheduler job table' PARTITION BY HASH (app_id) PARTITIONS 8;
@@ -215,6 +212,12 @@ CREATE TABLE stg_flow_job (
   COMMENT ON COLUMN stg_flow_job.flow_path IS 'flow path from top level';
   COMMENT ON COLUMN stg_flow_job.flow_id IS 'flow id';
   COMMENT ON COLUMN stg_flow_job.app_id IS 'application id of the flow';
+CREATE INDEX flow_id_idx on stg_flow_job (app_id, flow_id);
+CREATE INDEX flow_path_idx on stg_flow_job (app_id, flow_path);
+CREATE INDEX ref_flow_path_idx on stg_flow_job (app_id, ref_flow_path);
+CREATE INDEX job_path_idx on stg_flow_job (app_id, job_path);
+CREATE INDEX job_type_idx on stg_flow_job (job_type);
+CREATE INDEX on stg_flow_job (app_id, job_id, dag_version);
 
 CREATE TABLE job_source_id_map (
   app_id           INTEGER NOT NULL
@@ -224,9 +227,8 @@ CREATE TABLE job_source_id_map (
   source_id_string VARCHAR(1024),
   source_id_uuid   VARCHAR(255),
   source_id_uri    VARCHAR(255),
-  PRIMARY KEY (app_id, job_id),
-  INDEX job_path_idx (app_id, source_id_string(255))
-)
+  PRIMARY KEY (app_id, job_id)
+);
   ENGINE = MyISAM
 
   COMMENT = 'Scheduler flow id mapping table' PARTITION BY HASH (app_id) PARTITIONS 8;
@@ -235,6 +237,7 @@ CREATE TABLE job_source_id_map (
   COMMENT ON COLUMN job_source_id_map.source_id_string IS 'job full path string';
   COMMENT ON COLUMN job_source_id_map.job_id IS 'job id generated';
   COMMENT ON COLUMN job_source_id_map.app_id IS 'application id of the flow';
+CREATE INDEX job_path_idx ON job_source_id_map (app_id, source_id_string);
 
 CREATE TABLE flow_dag (
   app_id         INTEGER NOT NULL
@@ -246,10 +249,8 @@ CREATE TABLE flow_dag (
   dag_md5        VARCHAR(255),
   is_current     CHAR(1),
   wh_etl_exec_id BIGINT,
-  PRIMARY KEY (app_id, flow_id, source_version),
-  INDEX flow_dag_md5_idx (app_id, flow_id, dag_md5),
-  INDEX flow_id_idx (app_id, flow_id)
-)
+  PRIMARY KEY (app_id, flow_id, source_version)
+);
 
 
   COMMENT = 'Flow dag reference table' PARTITION BY HASH (app_id) PARTITIONS 8;
@@ -260,6 +261,9 @@ CREATE TABLE flow_dag (
   COMMENT ON COLUMN flow_dag.source_version IS 'last source version of the flow under this dag version';
   COMMENT ON COLUMN flow_dag.flow_id IS 'flow id';
   COMMENT ON COLUMN flow_dag.app_id IS 'application id of the flow';
+CREATE INDEX flow_dag_md5_idx on flow_dag (app_id, flow_id, dag_md5);
+CREATE INDEX flow_id_idx on flow_dag (app_id, flow_id);
+
 
 CREATE TABLE stg_flow_dag (
   app_id         INTEGER NOT NULL
@@ -270,10 +274,8 @@ CREATE TABLE stg_flow_dag (
   dag_version    INT,
   dag_md5        VARCHAR(255),
   wh_etl_exec_id BIGINT,
-  PRIMARY KEY (app_id, flow_id, source_version),
-  INDEX flow_dag_md5_idx (app_id, flow_id, dag_md5),
-  INDEX flow_id_idx (app_id, flow_id)
-)
+  PRIMARY KEY (app_id, flow_id, source_version)
+);
 
 
   COMMENT = 'Flow dag reference table' PARTITION BY HASH (app_id) PARTITIONS 8;
@@ -283,6 +285,8 @@ CREATE TABLE stg_flow_dag (
   COMMENT ON COLUMN stg_flow_dag.source_version IS 'last source version of the flow under this dag version';
   COMMENT ON COLUMN stg_flow_dag.flow_id IS 'flow id';
   COMMENT ON COLUMN stg_flow_dag.app_id IS 'application id of the flow';
+CREATE INDEX flow_dag_md5_idx on stg_flow_dag (app_id, flow_id, dag_md5);
+CREATE INDEX flow_id_idx on stg_flow_dag (app_id, flow_id);
 
 CREATE TABLE stg_flow_dag_edge (
   app_id          INTEGER NOT NULL
@@ -294,13 +298,8 @@ CREATE TABLE stg_flow_dag_edge (
   source_job_path VARCHAR(1024),
   target_job_id   BIGINT,
   target_job_path VARCHAR(1024),
-  wh_etl_exec_id  BIGINT,
-  INDEX flow_version_idx (app_id, flow_id, source_version),
-  INDEX flow_id_idx (app_id, flow_id),
-  INDEX flow_path_idx (app_id, flow_path(255)),
-  INDEX source_job_path_idx (app_id, source_job_path(255)),
-  INDEX target_job_path_idx (app_id, target_job_path(255))
-)
+  wh_etl_exec_id  BIGINT
+);
 
 
   COMMENT = 'Flow dag table' PARTITION BY HASH (app_id) PARTITIONS 8;
@@ -313,6 +312,11 @@ CREATE TABLE stg_flow_dag_edge (
   COMMENT ON COLUMN stg_flow_dag_edge.flow_path IS 'flow path from top level';
   COMMENT ON COLUMN stg_flow_dag_edge.flow_id IS 'flow id';
   COMMENT ON COLUMN stg_flow_dag_edge.app_id IS 'application id of the flow';
+CREATE INDEX flow_version_idx on stg_flow_dag_edge (app_id, flow_id, source_version);
+CREATE INDEX flow_id_idx on stg_flow_dag_edge (app_id, flow_id);
+CREATE INDEX flow_path_idx on stg_flow_dag_edge (app_id, flow_path);
+CREATE INDEX source_job_path_idx on stg_flow_dag_edge (app_id, source_job_path);
+CREATE INDEX target_job_path_idx on stg_flow_dag_edge (app_id, target_job_path);
 
 CREATE TABLE flow_execution (
   app_id           INTEGER NOT NULL
@@ -334,10 +338,8 @@ CREATE TABLE flow_execution (
   created_time     BIGINT,
   modified_time    BIGINT,
   wh_etl_exec_id   BIGINT,
-  PRIMARY KEY (app_id, flow_exec_id),
-  INDEX flow_id_idx (app_id, flow_id),
-  INDEX flow_name_idx (app_id, flow_name)
-)
+  PRIMARY KEY (app_id, flow_exec_id)
+);
 
 
   COMMENT = 'Scheduler flow execution table' PARTITION BY HASH (app_id) PARTITIONS 8;
@@ -357,6 +359,8 @@ CREATE TABLE flow_execution (
   COMMENT ON COLUMN flow_execution.flow_exec_uuid IS 'source flow execution uuid';
   COMMENT ON COLUMN flow_execution.flow_exec_id IS 'flow execution id either from the source or generated';
   COMMENT ON COLUMN flow_execution.app_id IS 'application id of the flow';
+CREATE INDEX flow_id_idx on flow_execution (app_id, flow_id);
+CREATE INDEX flow_name_idx on flow_execution (app_id, flow_name);
 
 CREATE TABLE flow_execution_id_map (
   app_id             INTEGER NOT NULL,
@@ -364,9 +368,8 @@ CREATE TABLE flow_execution_id_map (
   source_exec_string VARCHAR(1024),
   source_exec_uuid   VARCHAR(255),
   source_exec_uri    VARCHAR(255),
-  PRIMARY KEY (app_id, flow_exec_id),
-  INDEX flow_exec_uuid_idx (app_id, source_exec_uuid)
-)
+  PRIMARY KEY (app_id, flow_exec_id)
+);
   ENGINE = MyISAM
 
   COMMENT = 'Scheduler flow execution id mapping table' PARTITION BY HASH (app_id) PARTITIONS 8;
@@ -375,6 +378,7 @@ CREATE TABLE flow_execution_id_map (
   COMMENT ON COLUMN flow_execution_id_map.source_exec_string IS 'source flow execution string';
   COMMENT ON COLUMN flow_execution_id_map.flow_exec_id IS 'generated flow execution id';
   COMMENT ON COLUMN flow_execution_id_map.app_id IS 'application id of the flow';
+CREATE INDEX flow_exec_uuid_idx ON flow_execution_id_map (app_id, source_exec_uuid);
 
 CREATE TABLE stg_flow_execution (
   app_id           INTEGER NOT NULL
@@ -392,11 +396,8 @@ CREATE TABLE stg_flow_execution (
   end_time         BIGINT,
   is_adhoc         CHAR(1),
   is_backfill      CHAR(1),
-  wh_etl_exec_id   BIGINT,
-  INDEX flow_exec_idx (app_id, flow_exec_id),
-  INDEX flow_id_idx (app_id, flow_id),
-  INDEX flow_path_idx (app_id, flow_path(255))
-)
+  wh_etl_exec_id   BIGINT
+);
 
 
   COMMENT = 'Scheduler flow execution table' PARTITION BY HASH (app_id) PARTITIONS 8;
@@ -415,6 +416,9 @@ CREATE TABLE stg_flow_execution (
   COMMENT ON COLUMN stg_flow_execution.flow_exec_uuid IS 'source flow execution uuid';
   COMMENT ON COLUMN stg_flow_execution.flow_exec_id IS 'flow execution id';
   COMMENT ON COLUMN stg_flow_execution.app_id IS 'application id of the flow';
+CREATE INDEX flow_exec_idx on stg_flow_execution (app_id, flow_exec_id);
+CREATE INDEX flow_id_idx on stg_flow_execution (app_id, flow_id);
+CREATE INDEX flow_path_idx on stg_flow_execution (app_id, flow_path);
 
 CREATE TABLE job_execution (
   app_id          INTEGER NOT NULL
@@ -438,12 +442,8 @@ CREATE TABLE job_execution (
   created_time    BIGINT,
   modified_time   BIGINT,
   wh_etl_exec_id  BIGINT,
-  PRIMARY KEY (app_id, job_exec_id),
-  INDEX flow_exec_id_idx (app_id, flow_exec_id),
-  INDEX job_id_idx (app_id, job_id),
-  INDEX flow_id_idx (app_id, flow_id),
-  INDEX job_name_idx (app_id, flow_id, job_name)
-)
+  PRIMARY KEY (app_id, job_exec_id)
+);
 
 
   COMMENT = 'Scheduler job execution table' PARTITION BY HASH (app_id) PARTITIONS 8;
@@ -464,6 +464,10 @@ CREATE TABLE job_execution (
   COMMENT ON COLUMN job_execution.job_exec_id IS 'job execution id either inherit or generated';
   COMMENT ON COLUMN job_execution.flow_exec_id IS 'flow execution id';
   COMMENT ON COLUMN job_execution.app_id IS 'application id of the flow';
+CREATE INDEX flow_exec_id_idx on job_execution (app_id, flow_exec_id);
+CREATE INDEX job_id_idx on job_execution (app_id, job_id);
+CREATE INDEX flow_id_idx on job_execution (app_id, flow_id);
+CREATE INDEX job_name_idx on job_execution (app_id, flow_id, job_name);
 
 CREATE TABLE job_execution_id_map (
   app_id             INTEGER NOT NULL,
@@ -471,9 +475,8 @@ CREATE TABLE job_execution_id_map (
   source_exec_string VARCHAR(1024),
   source_exec_uuid   VARCHAR(255),
   source_exec_uri    VARCHAR(255),
-  PRIMARY KEY (app_id, job_exec_id),
-  INDEX job_exec_uuid_idx (app_id, source_exec_uuid)
-)
+  PRIMARY KEY (app_id, job_exec_id)
+);
   ENGINE = MyISAM
 
   COMMENT = 'Scheduler job execution id mapping table' PARTITION BY HASH (app_id) PARTITIONS 8;
@@ -482,6 +485,7 @@ CREATE TABLE job_execution_id_map (
   COMMENT ON COLUMN job_execution_id_map.source_exec_string IS 'source job execution string';
   COMMENT ON COLUMN job_execution_id_map.job_exec_id IS 'generated job execution id';
   COMMENT ON COLUMN job_execution_id_map.app_id IS 'application id of the job';
+CREATE INDEX job_exec_uuid_idx ON job_execution_id_map (app_id, source_exec_uuid);
 
 CREATE TABLE stg_job_execution (
   app_id          INTEGER NOT NULL
@@ -502,13 +506,8 @@ CREATE TABLE stg_job_execution (
   end_time        BIGINT,
   is_adhoc        CHAR(1),
   is_backfill     CHAR(1),
-  wh_etl_exec_id  BIGINT,
-  INDEX flow_id_idx (app_id, flow_id),
-  INDEX flow_path_idx (app_id, flow_path(255)),
-  INDEX job_path_idx (app_id, job_path(255)),
-  INDEX flow_exec_idx (app_id, flow_exec_id),
-  INDEX job_exec_idx (app_id, job_exec_id)
-)
+  wh_etl_exec_id  BIGINT
+);
 
 
   COMMENT = 'Scheduler job execution table' PARTITION BY HASH (app_id) PARTITIONS 8;
@@ -530,6 +529,11 @@ CREATE TABLE stg_job_execution (
   COMMENT ON COLUMN stg_job_execution.flow_path IS 'flow path from top level';
   COMMENT ON COLUMN stg_job_execution.flow_id IS 'flow id';
   COMMENT ON COLUMN stg_job_execution.app_id IS 'application id of the flow';
+CREATE INDEX flow_id_idx on stg_job_execution (app_id, flow_id);
+CREATE INDEX flow_path_idx on stg_job_execution (app_id, flow_path);
+CREATE INDEX job_path_idx on stg_job_execution (app_id, job_path);
+CREATE INDEX flow_exec_idx on stg_job_execution (app_id, flow_exec_id);
+CREATE INDEX job_exec_idx on stg_job_execution (app_id, job_exec_id);
 
 CREATE TABLE flow_schedule (
   app_id               INTEGER NOT NULL
@@ -548,9 +552,8 @@ CREATE TABLE flow_schedule (
   modified_time        BIGINT,
   ref_id               VARCHAR(255),
   wh_etl_exec_id       BIGINT,
-  PRIMARY KEY (app_id, flow_id, ref_id),
-  INDEX (app_id, flow_id)
-)
+  PRIMARY KEY (app_id, flow_id, ref_id)
+);
 
 
   COMMENT = 'Scheduler flow schedule table' PARTITION BY HASH (app_id) PARTITIONS 8;
@@ -568,6 +571,7 @@ CREATE TABLE flow_schedule (
   COMMENT ON COLUMN flow_schedule.unit IS 'unit of time';
   COMMENT ON COLUMN flow_schedule.flow_id IS 'flow id';
   COMMENT ON COLUMN flow_schedule.app_id IS 'application id of the flow';
+CREATE INDEX ON flow_schedule (app_id, flow_id);
 
 CREATE TABLE stg_flow_schedule (
   app_id               INTEGER NOT NULL
@@ -583,9 +587,7 @@ CREATE TABLE stg_flow_schedule (
   effective_end_time   BIGINT,
   ref_id               VARCHAR(255),
   wh_etl_exec_id       BIGINT,
-  INDEX (app_id, flow_id),
-  INDEX (app_id, flow_path(255))
-)
+);
 
 
   COMMENT = 'Scheduler flow schedule table' PARTITION BY HASH (app_id) PARTITIONS 8;
@@ -601,6 +603,8 @@ CREATE TABLE stg_flow_schedule (
   COMMENT ON COLUMN stg_flow_schedule.flow_path IS 'flow path from top level';
   COMMENT ON COLUMN stg_flow_schedule.flow_id IS 'flow id';
   COMMENT ON COLUMN stg_flow_schedule.app_id IS 'application id of the flow';
+CREATE INDEX ON stg_flow_schedule (app_id, flow_id);
+CREATE INDEX ON stg_flow_schedule (app_id, flow_path);
 
 CREATE TABLE flow_owner_permission (
   app_id         INTEGER NOT NULL
@@ -613,10 +617,8 @@ CREATE TABLE flow_owner_permission (
   created_time   BIGINT,
   modified_time  BIGINT,
   wh_etl_exec_id BIGINT,
-  PRIMARY KEY (app_id, flow_id, owner_id),
-  INDEX flow_index (app_id, flow_id),
-  INDEX owner_index (app_id, owner_id)
-)
+  PRIMARY KEY (app_id, flow_id, owner_id)
+);
 
 
   COMMENT = 'Scheduler owner table' PARTITION BY HASH (app_id) PARTITIONS 8;
@@ -628,6 +630,8 @@ CREATE TABLE flow_owner_permission (
   COMMENT ON COLUMN flow_owner_permission.owner_id IS 'identifier of the owner';
   COMMENT ON COLUMN flow_owner_permission.flow_id IS 'flow id';
   COMMENT ON COLUMN flow_owner_permission.app_id IS 'application id of the flow';
+CREATE INDEX flow_index on flow_owner_permission (app_id, flow_id);
+CREATE INDEX owner_index on flow_owner_permission (app_id, owner_id);
 
 CREATE TABLE stg_flow_owner_permission (
   app_id         INTEGER NOT NULL
@@ -637,11 +641,8 @@ CREATE TABLE stg_flow_owner_permission (
   owner_id       VARCHAR(63),
   permissions    VARCHAR(255),
   owner_type     VARCHAR(31),
-  wh_etl_exec_id BIGINT,
-  INDEX flow_index (app_id, flow_id),
-  INDEX owner_index (app_id, owner_id),
-  INDEX flow_path_idx (app_id, flow_path(255))
-)
+  wh_etl_exec_id BIGINT
+);
 
 
   COMMENT = 'Scheduler owner table' PARTITION BY HASH (app_id) PARTITIONS 8;
@@ -652,6 +653,9 @@ CREATE TABLE stg_flow_owner_permission (
   COMMENT ON COLUMN stg_flow_owner_permission.flow_path IS 'flow path from top level';
   COMMENT ON COLUMN stg_flow_owner_permission.flow_id IS 'flow id';
   COMMENT ON COLUMN stg_flow_owner_permission.app_id IS 'application id of the flow';
+CREATE INDEX flow_index on stg_flow_owner_permission (app_id, flow_id);
+CREATE INDEX owner_index on stg_flow_owner_permission (app_id, owner_id);
+CREATE INDEX flow_path_idx on stg_flow_owner_permission (app_id, flow_path);
 
 CREATE TABLE job_execution_ext_reference (
 	app_id         	SMALLINT   NOT NULL,
@@ -727,13 +731,14 @@ CREATE TABLE "cfg_job_type" (
   "job_type_id" SMALLSERIAL NOT NULL,
   "job_type"    VARCHAR(50)          NOT NULL,
   "description" VARCHAR(200)         NULL,
-  PRIMARY KEY ("job_type_id"),
-  UNIQUE "ak_cfg_job_type__job_type" ("job_type")
+  PRIMARY KEY ("job_type_id")
 )
 
   AUTO_INCREMENT = 55
 
   COMMENT = 'job types used in mutliple schedulers';
+CREATE UNIQUE INDEX "ak_cfg_job_type__job_type" ON "cfg_job_type" ("job_type");
+
 
 CREATE TABLE "cfg_job_type_reverse_map" (
   "job_type_actual"   VARCHAR(50) NOT NULL,
@@ -741,9 +746,7 @@ CREATE TABLE "cfg_job_type_reverse_map" (
   "description"       VARCHAR(200)         NULL,
   "job_type_standard" VARCHAR(50)          NOT NULL,
   PRIMARY KEY ("job_type_actual"),
-  UNIQUE "cfg_job_type_reverse_map_uk" ("job_type_actual"),
   KEY "cfg_job_type_reverse_map_job_type_id_fk" ("job_type_id")
 )
-
-
   COMMENT = 'The reverse map of the actual job type to standard job type';
+CREATE UNIQUE INDEX "cfg_job_type_reverse_map_uk" ON "cfg_job_type_reverse_map" ("job_type_actual");,

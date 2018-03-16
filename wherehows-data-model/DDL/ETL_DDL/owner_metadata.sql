@@ -35,10 +35,10 @@ CREATE TABLE dataset_owner (
   "confirmed_on"  BIGINT,
   wh_etl_exec_id  BIGINT,
   PRIMARY KEY ("dataset_id", "owner_id", "app_id", "owner_source"),
-  UNIQUE "with_urn" ("dataset_urn", "owner_id", "app_id", "owner_source")
 )
-
 ;
+CREATE UNIQUE INDEX "with_urn" ON "dataset_owner" ("dataset_urn", "owner_id", "app_id", "owner_source");
+
 COMMENT ON COLUMN dataset_owner.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
 COMMENT ON COLUMN dataset_owner.modified_time IS 'the modified time in epoch';
 COMMENT ON COLUMN dataset_owner.created_time IS 'the create time in epoch';
