@@ -16,26 +16,27 @@
 -- dict_dataset, dict_dataset_sample, dict_field_detail, dict_dataset_schema_history
 
 -- stagging table for dataset
+CREATE TYPE storage_type_enum AS ENUM ('Table', 'View', 'Avro', 'ORC', 'RC', 'Sequence', 'Flat File', 'JSON', 'BINARY_JSON', 'XML', 'Thrift', 'Parquet', 'Protobuff');
 CREATE TABLE "stg_dict_dataset" (
   "name"                        VARCHAR(200) NOT NULL,
-  "schema"                      MEDIUMTEXT CHARACTER SET utf8,
+  "schema"                      TEXT,
   "schema_type"                 VARCHAR(50) DEFAULT 'JSON',
-  "properties"                  TEXT CHARACTER SET utf8,
-  "fields"                      MEDIUMTEXT CHARACTER SET utf8,
-  "db_id"                       SMALLINT UNSIGNED,
+  "properties"                  TEXT,
+  "fields"                      TEXT,
+  "db_id"                       INTEGER,
   "urn"                         VARCHAR(500) NOT NULL,
   "source"                      VARCHAR(50) NULL,
   "location_prefix"             VARCHAR(200) NULL,
   "parent_name"                 VARCHAR(500) NULL,
-  "storage_type"                ENUM('Table', 'View', 'Avro', 'ORC', 'RC', 'Sequence', 'Flat File', 'JSON', 'BINARY_JSON', 'XML', 'Thrift', 'Parquet', 'Protobuff') NULL,
+  "storage_type"                storage_type_enum NULL,
   "ref_dataset_name"            VARCHAR(200) NULL,
-  "ref_dataset_id"              INT(11) UNSIGNED NULL,
+  "ref_dataset_id"              INT NULL,
   "is_active"                   BOOLEAN NULL,
   "is_deprecated"               BOOLEAN NULL,
   "dataset_type"                VARCHAR(30) NULL,
   "hive_serdes_class"           VARCHAR(300) NULL,
   "is_partitioned"              CHAR(1) NULL,
-  "partition_layout_pattern_id" SMALLINT(6) NULL,
+  "partition_layout_pattern_id" SMALLINT NULL,
   "sample_partition_full_path"  VARCHAR(256),
   "source_created_time"         BIGINT NULL,
   "source_modified_time"        BIGINT NULL,
@@ -62,21 +63,21 @@ COMMENT ON COLUMN stg_dict_dataset.wh_etl_exec_id IS 'wherehows etl execution id
 
 -- dataset table
 CREATE TABLE "dict_dataset" (
-  "id"                          INT(11) UNSIGNED NOT NULL                                                                   AUTO_INCREMENT,
+  "id"                          SERIAL NOT NULL,
   "name"                        VARCHAR(200)                                                                                NOT NULL,
-  "schema"                      MEDIUMTEXT CHARACTER SET utf8,
+  "schema"                      TEXT,
   "schema_type"                 VARCHAR(50)                                                                                 DEFAULT 'JSON'
   ,
-  "properties"                  TEXT CHARACTER SET utf8,
-  "fields"                      MEDIUMTEXT CHARACTER SET utf8,
+  "properties"                  TEXT,
+  "fields"                      TEXT,
   "urn"                         VARCHAR(500)                                                                                NOT NULL,
   "source"                      VARCHAR(50)                                                                                 NULL
   ,
   "location_prefix"             VARCHAR(200)                                                                                NULL,
   "parent_name"                 VARCHAR(500)                                                                                NULL
   ,
-  "storage_type"                ENUM('Table', 'View', 'Avro', 'ORC', 'RC', 'Sequence', 'Flat File', 'JSON', 'BINARY_JSON', 'XML', 'Thrift', 'Parquet', 'Protobuff') NULL,
-  "ref_dataset_id"              INT(11) UNSIGNED                                                                            NULL
+  "storage_type"                storage_type_enum NULL,
+  "ref_dataset_id"              INT                                                                            NULL
   ,
   "is_active"                   BOOLEAN NULL,
   "is_deprecated"               BOOLEAN NULL,
@@ -84,7 +85,7 @@ CREATE TABLE "dict_dataset" (
   ,
   "hive_serdes_class"           VARCHAR(300)                                                                                NULL,
   "is_partitioned"              CHAR(1)                                                                                     NULL,
-  "partition_layout_pattern_id" SMALLINT(6)                                                                                 NULL,
+  "partition_layout_pattern_id" SMALLINT                                                                                 NULL,
   "sample_partition_full_path"  VARCHAR(256)
   ,
   "source_created_time"         BIGINT                                                                                NULL
@@ -115,12 +116,12 @@ COMMENT ON COLUMN dict_dataset.wh_etl_exec_id IS 'wherehows etl execution id tha
 
 -- stagging table for sample data
 CREATE TABLE "stg_dict_dataset_sample" (
-  "db_id"      SMALLINT  UNSIGNED,
+  "db_id"      INTEGER,
   "urn"        VARCHAR(200) NOT NULL DEFAULT '',
-  "dataset_id" INT(11)               NULL,
+  "dataset_id" INT               NULL,
   "ref_urn"    VARCHAR(200)          NULL,
-  "ref_id"     INT(11)               NULL,
-  "data"       MEDIUMTEXT,
+  "ref_id"     INT               NULL,
+  "data"       TEXT,
   PRIMARY KEY ("db_id", "urn"),
   KEY "ref_urn_key" ("ref_urn")
 )
@@ -129,14 +130,14 @@ CREATE TABLE "stg_dict_dataset_sample" (
 
 -- sample data table
 CREATE TABLE "dict_dataset_sample" (
-  "id"         INT(11) NOT NULL AUTO_INCREMENT,
-  "dataset_id" INT(11)          NULL,
+  "id"         SERIAL NOT NULL,
+  "dataset_id" INT          NULL,
   "urn"        VARCHAR(200)     NULL,
-  "ref_id"     INT(11)          NULL
+  "ref_id"     INT          NULL
   ,
-  "data"       MEDIUMTEXT,
-  "modified"   DATETIME         NULL,
-  "created"    DATETIME         NULL,
+  "data"       TEXT,
+  "modified"   TIMESTAMP         NULL,
+  "created"    TIMESTAMP         NULL,
   PRIMARY KEY ("id"),
   UNIQUE "ak_dict_dataset_sample__datasetid" ("dataset_id")
 )
@@ -147,17 +148,17 @@ COMMENT ON COLUMN dict_dataset_sample.ref_id IS 'Reference dataset id of which d
 
 -- stagging table for field detail
 CREATE TABLE "stg_dict_field_detail" (
-  "db_id"          SMALLINT  UNSIGNED,
+  "db_id"          INTEGER,
   "urn"            VARCHAR(200)         NOT NULL,
-  "sort_id"        SMALLINT(5) UNSIGNED NOT NULL,
-  "parent_sort_id" SMALLINT(5) UNSIGNED NOT NULL,
+  "sort_id"        SMALLINT NOT NULL,
+  "parent_sort_id" SMALLINT NOT NULL,
   "parent_path"    VARCHAR(200)                  NULL,
   "field_name"     VARCHAR(100)         NOT NULL,
   "field_label"    VARCHAR(100)                  NULL,
   "data_type"      VARCHAR(50)          NOT NULL,
-  "data_size"      INT(10) UNSIGNED              NULL,
-  "data_precision" TINYINT(3) UNSIGNED           NULL,
-  "data_scale"     TINYINT(3) UNSIGNED           NULL,
+  "data_size"      INT              NULL,
+  "data_precision" SMALLINT           NULL,
+  "data_scale"     SMALLINT           NULL,
   "is_nullable"    CHAR(1)                       NULL,
   "is_indexed"     CHAR(1)                       NULL,
   "is_partitioned" CHAR(1)                       NULL,
@@ -178,21 +179,21 @@ CREATE TABLE "stg_dict_field_detail" (
 
 -- field detail table
 CREATE TABLE "dict_field_detail" (
-  "field_id"           INT(11) UNSIGNED     NOT NULL AUTO_INCREMENT,
-  "dataset_id"         INT(11) UNSIGNED     NOT NULL,
-  "fields_layout_id"   INT(11) UNSIGNED     NOT NULL,
-  "sort_id"            SMALLINT(6) UNSIGNED NOT NULL,
-  "parent_sort_id"     SMALLINT(5) UNSIGNED NOT NULL,
+  "field_id"           SERIAL     NOT NULL,
+  "dataset_id"         INT     NOT NULL,
+  "fields_layout_id"   INT     NOT NULL,
+  "sort_id"            SMALLINT NOT NULL,
+  "parent_sort_id"     SMALLINT NOT NULL,
   "parent_path"        VARCHAR(200)                  NULL,
   "field_name"         VARCHAR(100)         NOT NULL,
   "field_label"        VARCHAR(100)                  NULL,
   "data_type"          VARCHAR(50)          NOT NULL,
-  "data_size"          INT(10) UNSIGNED              NULL,
-  "data_precision"     TINYINT(4)                    NULL
+  "data_size"          INT              NULL,
+  "data_precision"     SMALLINT                    NULL
   ,
-  "data_fraction"      TINYINT(4)                    NULL
+  "data_fraction"      SMALLINT                    NULL
   ,
-  "default_comment_id" INT(11) UNSIGNED              NULL
+  "default_comment_id" INT              NULL
   ,
   "comment_ids"        VARCHAR(500)                  NULL,
   "is_nullable"        CHAR(1)                       NULL,
@@ -200,7 +201,7 @@ CREATE TABLE "dict_field_detail" (
   ,
   "is_partitioned"     CHAR(1)                       NULL
   ,
-  "is_distributed"     TINYINT(4)                    NULL
+  "is_distributed"     SMALLINT                    NULL
   ,
   "is_recursive"       CHAR(1)                       NULL,
   "confidential_flags" VARCHAR(200)                  NULL,
@@ -236,11 +237,11 @@ CREATE TABLE "dict_field_detail" (
 
 -- schema history
 CREATE TABLE "dict_dataset_schema_history" (
-  "id"            INT(11) AUTO_INCREMENT NOT NULL,
-  "dataset_id"    INT(11)                NULL,
+  "id"            SERIAL NOT NULL,
+  "dataset_id"    INT                NULL,
   "urn"           VARCHAR(200)           NOT NULL,
   "modified_date" DATE                   NULL,
-  "schema"        MEDIUMTEXT CHARACTER SET utf8 NULL,
+  "schema"        TEXT NULL,
   PRIMARY KEY (id),
   UNIQUE "uk_dict_dataset_schema_history__urn_modified" ("urn", "modified_date")
 )
@@ -249,10 +250,10 @@ CREATE TABLE "dict_dataset_schema_history" (
 
 -- staging table table of fields to comments mapping
 CREATE TABLE "stg_dict_dataset_field_comment" (
-  "field_id" int(11) UNSIGNED NOT NULL,
-  "comment_id" bigint(20) NOT NULL,
-  "dataset_id" int(11) UNSIGNED NOT NULL,
-  "db_id" smallint(6) unsigned NOT NULL DEFAULT '0',
+  "field_id" INT NOT NULL,
+  "comment_id" BIGINT NOT NULL,
+  "dataset_id" INT NOT NULL,
+  "db_id" SMALLINT NOT NULL DEFAULT '0',
   PRIMARY KEY ("field_id","comment_id", "db_id")
 )
 
@@ -262,24 +263,25 @@ CREATE TABLE "stg_dict_dataset_field_comment" (
 
 -- fields to comments mapping
 CREATE TABLE "dict_dataset_field_comment" (
-  "field_id"   INT(11) UNSIGNED NOT NULL,
-  "comment_id" BIGINT(20) NOT NULL,
-  "dataset_id" INT(11) UNSIGNED NOT NULL,
-  "is_default" TINYINT(1) NULL DEFAULT '0',
+  "field_id"   INT NOT NULL,
+  "comment_id" BIGINT NOT NULL,
+  "dataset_id" INT NOT NULL,
+  "is_default" SMALLINT NULL DEFAULT '0',
   PRIMARY KEY (field_id, comment_id),
   KEY (comment_id)
 )
   ;
 
 -- dataset comments
+CREATE TYPE comment_type_enum AS ENUM('Description', 'Grain', 'Partition', 'ETL Schedule', 'DQ Issue', 'Question', 'Comment');
 CREATE TABLE comments (
-  "id"           INT(11) AUTO_INCREMENT                                                                       NOT NULL,
-  "text"         TEXT CHARACTER SET utf8                                                                      NOT NULL,
-  "user_id"      INT(11)                                                                                      NOT NULL,
-  "dataset_id"   INT(11)                                                                                      NOT NULL,
-  "created"      DATETIME                                                                                     NULL,
-  "modified"     DATETIME                                                                                     NULL,
-  "comment_type" ENUM('Description', 'Grain', 'Partition', 'ETL Schedule', 'DQ Issue', 'Question', 'Comment') NULL,
+  "id"           SERIAL                                                                       NOT NULL,
+  "text"         TEXT                                                                      NOT NULL,
+  "user_id"      INT                                                                                      NOT NULL,
+  "dataset_id"   INT                                                                                      NOT NULL,
+  "created"      TIMESTAMP                                                                                     NULL,
+  "modified"     TIMESTAMP                                                                                     NULL,
+  "comment_type" comment_type_enum NULL,
   PRIMARY KEY (id),
   KEY "user_id" ("user_id") USING BTREE,
   KEY "dataset_id" ("dataset_id") USING BTREE,
@@ -292,12 +294,12 @@ CREATE TABLE comments (
 
 -- field comments
 CREATE TABLE "field_comments" (
-  "id"                     INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  "user_id"                INT(11)          NOT NULL DEFAULT '0',
+  "id"                     SERIAL NOT NULL,
+  "user_id"                INT          NOT NULL DEFAULT '0',
   "comment"                VARCHAR(4000)    NOT NULL,
   "created"                TIMESTAMP        NOT NULL,
   "modified"               TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  "comment_crc32_checksum" INT(11) UNSIGNED          NULL,
+  "comment_crc32_checksum" INT          NULL,
   PRIMARY KEY ("id"),
   KEY "comment_key" ("comment"(100)),
   FULLTEXT KEY "fti_comment" ("comment")
@@ -308,25 +310,26 @@ CREATE TABLE "field_comments" (
 COMMENT ON COLUMN field_comments.comment_crc32_checksum IS '4-byte CRC32';
 
 -- dict_dataset_instance
+CREATE TYPE deployment_tier_enum AS ENUM('local','grid','dev','int','ei','ei2','ei3','qa','stg','prod');
 CREATE TABLE dict_dataset_instance  (
-	dataset_id           	int(11) UNSIGNED NOT NULL,
-	db_id                	smallint(6) UNSIGNED   NOT NULL DEFAULT '0',
-	deployment_tier      	enum('local','grid','dev','int','ei','ei2','ei3','qa','stg','prod') NOT NULL DEFAULT 'dev',
-	data_center          	varchar(30)   NULL DEFAULT '*',
-	server_cluster       	varchar(150)   NULL DEFAULT '*',
-	slice                	varchar(50)   NOT NULL DEFAULT '*',
+	dataset_id           	INT NOT NULL,
+	db_id                	SMALLINT   NOT NULL DEFAULT '0',
+	deployment_tier      	deployment_tier_enum NOT NULL DEFAULT 'dev',
+	data_center          	VARCHAR(30)   NULL DEFAULT '*',
+	server_cluster       	VARCHAR(150)   NULL DEFAULT '*',
+	slice                	VARCHAR(50)   NOT NULL DEFAULT '*',
   is_active             BOOLEAN NULL,
   is_deprecated         BOOLEAN NULL,
-	native_name          	varchar(250) NOT NULL,
-	logical_name         	varchar(250) NOT NULL,
-	version              	varchar(30)   NULL,
-	version_sort_id      	bigint(20)   NOT NULL DEFAULT '0',
-	schema_text           MEDIUMTEXT CHARACTER SET utf8 NULL,
-	ddl_text              MEDIUMTEXT CHARACTER SET utf8 NULL,
-	instance_created_time	int(10) UNSIGNED   NULL,
-	created_time         	int(10) UNSIGNED   NULL,
-	modified_time        	int(10) UNSIGNED   NULL,
-	wh_etl_exec_id       	bigint(20)   NULL,
+	native_name          	VARCHAR(250) NOT NULL,
+	logical_name         	VARCHAR(250) NOT NULL,
+	version              	VARCHAR(30)   NULL,
+	version_sort_id      	BIGINT   NOT NULL DEFAULT '0',
+	schema_text           TEXT NULL,
+	ddl_text              TEXT NULL,
+	instance_created_time	INT   NULL,
+	created_time         	INT   NULL,
+	modified_time        	INT   NULL,
+	wh_etl_exec_id       	BIGINT   NULL,
 	PRIMARY KEY(dataset_id,db_id,version_sort_id)
 )
 
@@ -364,24 +367,24 @@ CREATE INDEX native_name USING BTREE
 
 
 CREATE TABLE stg_dict_dataset_instance  (
-	dataset_urn          	varchar(200) NOT NULL,
-	db_id                	smallint(6) UNSIGNED NOT NULL DEFAULT '0',
-	deployment_tier      	enum('local','grid','dev','int','ei','ei2','ei3','qa','stg','prod') NOT NULL DEFAULT 'dev',
-	data_center          	varchar(30)   NULL DEFAULT '*',
-	server_cluster       	varchar(150)   NULL DEFAULT '*',
-	slice                	varchar(50)   NOT NULL DEFAULT '*',
+	dataset_urn          	VARCHAR(200) NOT NULL,
+	db_id                	SMALLINT NOT NULL DEFAULT '0',
+	deployment_tier      	deployment_tier_enum NOT NULL DEFAULT 'dev',
+	data_center          	VARCHAR(30)   NULL DEFAULT '*',
+	server_cluster       	VARCHAR(150)   NULL DEFAULT '*',
+	slice                	VARCHAR(50)   NOT NULL DEFAULT '*',
   is_active             BOOLEAN NULL,
   is_deprecated         BOOLEAN NULL,
-	native_name          	varchar(250) NOT NULL,
-	logical_name         	varchar(250) NOT NULL,
-	version              	varchar(30)   NULL,
-	schema_text           MEDIUMTEXT CHARACTER SET utf8 NULL,
-	ddl_text              MEDIUMTEXT CHARACTER SET utf8 NULL,
-	instance_created_time	int(10) UNSIGNED   NULL,
-	created_time         	int(10) UNSIGNED   NULL,
-	wh_etl_exec_id       	bigint(20)   NULL,
-	dataset_id           	int(11) UNSIGNED NULL,
-	abstract_dataset_urn 	varchar(200) NULL,
+	native_name          	VARCHAR(250) NOT NULL,
+	logical_name         	VARCHAR(250) NOT NULL,
+	version              	VARCHAR(30)   NULL,
+	schema_text           TEXT NULL,
+	ddl_text              TEXT NULL,
+	instance_created_time	INT   NULL,
+	created_time         	INT   NULL,
+	wh_etl_exec_id       	BIGINT   NULL,
+	dataset_id           	INT NULL,
+	abstract_dataset_urn 	VARCHAR(200) NULL,
 	PRIMARY KEY(dataset_urn,db_id)
 )
 

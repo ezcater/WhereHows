@@ -15,15 +15,16 @@
 -- create statement for users related tables :
 -- users, user_settings, watch
 
+CREATE TYPE digest_type_enum AS ENUM('SHA1', 'SHA2', 'MD5');
 CREATE TABLE users (
-  id                       INT(11) AUTO_INCREMENT      NOT NULL,
+  id                       INT AUTO_INCREMENT      NOT NULL,
   name                     VARCHAR(100)                NOT NULL,
   email                    VARCHAR(200)                NOT NULL,
   username                 VARCHAR(20)                 NOT NULL,
-  department_number        INT(11)                     NULL,
+  department_number        INT                     NULL,
   password_digest          VARCHAR(256)                NULL,
-  password_digest_type     ENUM('SHA1', 'SHA2', 'MD5') NULL DEFAULT 'SHA1',
-  ext_directory_ref_app_id SMALLINT UNSIGNED,
+  password_digest_type     digest_type_enum NULL DEFAULT 'SHA1',
+  ext_directory_ref_app_id INTEGER,
   authentication_type      VARCHAR(20),
   PRIMARY KEY (id)
 )
@@ -33,22 +34,23 @@ CREATE TABLE users (
 
 CREATE INDEX idx_users__username USING BTREE ON users(username);
 
+CREATE TYPE duration_enum AS ENUM('monthly', 'weekly', 'daily', 'hourly');
 CREATE TABLE user_settings (
-  user_id             INT(11)                           NOT NULL,
+  user_id             INT                           NOT NULL,
   detail_default_view VARCHAR(20)                       NULL,
-  default_watch       ENUM('monthly', 'weekly', 'daily', 'hourly') NULL DEFAULT 'weekly',
+  default_watch       duration_enum NULL DEFAULT 'weekly',
   PRIMARY KEY (user_id)
 )
-
 ;
 
+CREATE TYPE item_type_enum AS ENUM('dataset', 'dataset_field', 'metric', 'flow', 'urn');
 CREATE TABLE watch (
-  id                BIGINT(20) AUTO_INCREMENT                                 NOT NULL,
-  user_id           INT(11)                                                   NOT NULL,
-  item_id           INT(11)                                                   NULL,
+  id                BIGINT AUTO_INCREMENT                                 NOT NULL,
+  user_id           INT                                                   NOT NULL,
+  item_id           INT                                                   NULL,
   urn               VARCHAR(200)                                              NULL,
-  item_type         ENUM('dataset', 'dataset_field', 'metric', 'flow', 'urn') NOT NULL DEFAULT 'dataset',
-  notification_type ENUM('monthly', 'weekly', 'hourly', 'daily')              NULL     DEFAULT 'weekly',
+  item_type         item_type_enum NOT NULL DEFAULT 'dataset',
+  notification_type duration_enum              NULL     DEFAULT 'weekly',
   created           TIMESTAMP                                                 NULL     DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id)
 )
@@ -57,8 +59,8 @@ CREATE TABLE watch (
 ;
 
 CREATE TABLE favorites (
-  user_id    INT(11)   NOT NULL,
-  dataset_id INT(11)   NOT NULL,
+  user_id    INT   NOT NULL,
+  dataset_id INT   NOT NULL,
   created    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (user_id, dataset_id)
 )
@@ -66,7 +68,7 @@ CREATE TABLE favorites (
 ;
 
 CREATE TABLE user_login_history (
-  log_id              INT(11) AUTO_INCREMENT NOT NULL,
+  log_id              INT AUTO_INCREMENT NOT NULL,
   username            VARCHAR(20)            NOT NULL,
   authentication_type VARCHAR(20)            NOT NULL,
   "status"            VARCHAR(20)            NOT NULL,

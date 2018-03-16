@@ -18,7 +18,7 @@ CREATE TABLE "wh_etl_job_schedule" (
   ,
   "enabled"         BOOLEAN       DEFAULT NULL
   ,
-  "next_run"        INT(10) UNSIGNED     DEFAULT NULL
+  "next_run"        INT     DEFAULT NULL
   ,
   PRIMARY KEY ("wh_etl_job_name"),
   UNIQUE "etl_unique" ("wh_etl_job_name")
@@ -31,17 +31,17 @@ CREATE TABLE "wh_etl_job_schedule" (
   COMMENT ON COLUMN wh_etl_job_schedule.next_run IS 'next run time';
 
 CREATE TABLE "wh_etl_job_history" (
-  "wh_etl_exec_id"  BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT
+  "wh_etl_exec_id"  BIGINT NOT NULL AUTO_INCREMENT
   ,
   "wh_etl_job_name" VARCHAR(127)                 NOT NULL
   ,
   "status"          VARCHAR(31)                  DEFAULT NULL
   ,
-  "request_time"    INT(10) UNSIGNED             DEFAULT NULL
+  "request_time"    INT             DEFAULT NULL
   ,
-  "start_time"      INT(10) UNSIGNED             DEFAULT NULL
+  "start_time"      INT             DEFAULT NULL
   ,
-  "end_time"        INT(10) UNSIGNED             DEFAULT NULL
+  "end_time"        INT             DEFAULT NULL
   ,
   "message"         VARCHAR(1024)                DEFAULT NULL
   ,
@@ -65,18 +65,18 @@ CREATE TABLE "wh_etl_job_history" (
   COMMENT ON COLUMN wh_etl_job_history.process_id IS 'job execution process id';
 
 CREATE TABLE "cfg_application" (
-  "app_id"                  SMALLINT    UNSIGNED NOT NULL,
+  "app_id"                  INTEGER NOT NULL,
   "app_code"                VARCHAR(128)         NOT NULL,
   "description"             VARCHAR(512)         NOT NULL,
-  "tech_matrix_id"          SMALLINT(5) UNSIGNED DEFAULT '0',
+  "tech_matrix_id"          SMALLINT DEFAULT '0',
   "doc_url"                 VARCHAR(512)         DEFAULT NULL,
-  "parent_app_id"           INT(11) UNSIGNED     NOT NULL,
+  "parent_app_id"           INT     NOT NULL,
   "app_status"              CHAR(1)              NOT NULL,
   "last_modified"           TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   "is_logical"              CHAR(1)                       DEFAULT NULL,
   "uri_type"                VARCHAR(25)                   DEFAULT NULL,
   "uri"                     VARCHAR(1000)                 DEFAULT NULL,
-  "lifecycle_layer_id"      TINYINT(4) UNSIGNED           DEFAULT NULL,
+  "lifecycle_layer_id"      SMALLINT           DEFAULT NULL,
   "short_connection_string" VARCHAR(50)                   DEFAULT NULL,
   PRIMARY KEY ("app_id"),
   UNIQUE "idx_cfg_application__appcode" ("app_code") USING HASH
@@ -85,24 +85,24 @@ CREATE TABLE "cfg_application" (
 ;
 
 CREATE TABLE cfg_database  (
-	db_id                  	smallint(6) UNSIGNED NOT NULL,
-	db_code                	varchar(30)   NOT NULL,
-	primary_dataset_type    varchar(30)  NOT NULL DEFAULT '*',
-	description            	varchar(128) NOT NULL,
-	is_logical             	char(1)   NOT NULL DEFAULT 'N',
-	deployment_tier        	varchar(20)   NULL DEFAULT 'prod',
-	data_center            	varchar(200)   NULL DEFAULT '*',
-	associated_dc_num      	tinyint(4) UNSIGNED   NOT NULL DEFAULT '1',
-	cluster                	varchar(200)   NULL DEFAULT '*',
-	cluster_size           	smallint(6)   NOT NULL DEFAULT '1',
-	extra_deployment_tag1  	varchar(50)   NULL,
-	extra_deployment_tag2  	varchar(50)   NULL,
-	extra_deployment_tag3  	varchar(50)   NULL,
-	replication_role       	varchar(10)   NULL,
-	jdbc_url               	varchar(1000) NULL,
-	uri                    	varchar(1000) NULL,
-	short_connection_string	varchar(50)  NULL,
-  last_modified          	timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	db_id                  	SMALLINT NOT NULL,
+	db_code                	VARCHAR(30)   NOT NULL,
+	primary_dataset_type    VARCHAR(30)  NOT NULL DEFAULT '*',
+	description            	VARCHAR(128) NOT NULL,
+	is_logical             	CHAR(1)   NOT NULL DEFAULT 'N',
+	deployment_tier        	VARCHAR(20)   NULL DEFAULT 'prod',
+	data_center            	VARCHAR(200)   NULL DEFAULT '*',
+	associated_dc_num      	SMALLINT   NOT NULL DEFAULT '1',
+	cluster                	VARCHAR(200)   NULL DEFAULT '*',
+	cluster_size           	SMALLINT   NOT NULL DEFAULT '1',
+	extra_deployment_tag1  	VARCHAR(50)   NULL,
+	extra_deployment_tag2  	VARCHAR(50)   NULL,
+	extra_deployment_tag3  	VARCHAR(50)   NULL,
+	replication_role       	VARCHAR(10)   NULL,
+	jdbc_url               	VARCHAR(1000) NULL,
+	uri                    	VARCHAR(1000) NULL,
+	short_connection_string	VARCHAR(50)  NULL,
+  last_modified          	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY(db_id),
   UNIQUE "uix_cfg_database__dbcode" (db_code) USING HASH
 )
@@ -125,20 +125,20 @@ COMMENT ON COLUMN cfg_database.short_connection_string IS 'Oracle TNS Name, ODBC
 
 
 CREATE TABLE stg_cfg_object_name_map  (
-	object_type             	varchar(100) NOT NULL,
-	object_sub_type         	varchar(100) NULL,
-	object_name             	varchar(350) NOT NULL,
-	object_urn              	varchar(350) NULL,
-	object_dataset_id       	int(11) UNSIGNED NULL,
-	map_phrase              	varchar(100) NULL,
-	is_identical_map        	char(1) NULL DEFAULT 'N',
-	mapped_object_type      	varchar(100) NOT NULL,
-	mapped_object_sub_type  	varchar(100) NULL,
-	mapped_object_name      	varchar(350) NOT NULL,
-	mapped_object_urn       	varchar(350) NULL,
-	mapped_object_dataset_id	int(11) UNSIGNED NULL,
-	description             	varchar(500) NULL,
-	last_modified           	timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	object_type             	VARCHAR(100) NOT NULL,
+	object_sub_type         	VARCHAR(100) NULL,
+	object_name             	VARCHAR(350) NOT NULL,
+	object_urn              	VARCHAR(350) NULL,
+	object_dataset_id       	INT NULL,
+	map_phrase              	VARCHAR(100) NULL,
+	is_identical_map        	CHAR(1) NULL DEFAULT 'N',
+	mapped_object_type      	VARCHAR(100) NOT NULL,
+	mapped_object_sub_type  	VARCHAR(100) NULL,
+	mapped_object_name      	VARCHAR(350) NOT NULL,
+	mapped_object_urn       	VARCHAR(350) NULL,
+	mapped_object_dataset_id	INT NULL,
+	description             	VARCHAR(500) NULL,
+	last_modified           	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY(object_name, mapped_object_name),
   KEY idx_stg_cfg_object_name_map__mappedobjectname (mapped_object_name) USING BTREE
 )
@@ -148,19 +148,19 @@ COLLATE latin1_swedish_ci
 COMMENT = 'Map alias (when is_identical_map=Y) and view dependency' ;
 
 CREATE TABLE cfg_object_name_map  (
-  obj_name_map_id         int(11) AUTO_INCREMENT NOT NULL,
-  object_type             varchar(100) NOT NULL,
-  object_sub_type         varchar(100) NULL,
-  object_name             varchar(350) NOT NULL,
-  map_phrase              varchar(100) NULL,
-  object_dataset_id       int(11) UNSIGNED NULL,
-  is_identical_map        char(1) NOT NULL DEFAULT 'N',
-  mapped_object_type      varchar(100) NOT NULL,
-  mapped_object_sub_type  varchar(100) NULL,
-  mapped_object_name      varchar(350) NOT NULL,
-  mapped_object_dataset_id	int(11) UNSIGNED NULL,
-  description             varchar(500) NULL,
-  last_modified           timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  obj_name_map_id         SERIAL NOT NULL,
+  object_type             VARCHAR(100) NOT NULL,
+  object_sub_type         VARCHAR(100) NULL,
+  object_name             VARCHAR(350) NOT NULL,
+  map_phrase              VARCHAR(100) NULL,
+  object_dataset_id       INT NULL,
+  is_identical_map        CHAR(1) NOT NULL DEFAULT 'N',
+  mapped_object_type      VARCHAR(100) NOT NULL,
+  mapped_object_sub_type  VARCHAR(100) NULL,
+  mapped_object_name      VARCHAR(350) NOT NULL,
+  mapped_object_dataset_id	INT NULL,
+  description             VARCHAR(500) NULL,
+  last_modified           TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY(obj_name_map_id),
   KEY idx_cfg_object_name_map__mappedobjectname (mapped_object_name) USING BTREE,
   CONSTRAINT uix_cfg_object_name_map__objectname_mappedobjectname UNIQUE (object_name, mapped_object_name)
@@ -177,11 +177,11 @@ COMMENT ON COLUMN cfg_object_name_map.mapped_object_dataset_id IS 'can be the ab
 
 
 CREATE TABLE cfg_deployment_tier  (
-  tier_id      	tinyint(4) NOT NULL,
-  tier_code    	varchar(25)  NOT NULL,
-  tier_label    varchar(50)  NULL,
-  sort_id       smallint(6)  NOT NULL,
-  last_modified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  tier_id      	SMALLINT NOT NULL,
+  tier_code    	VARCHAR(25)  NOT NULL,
+  tier_label    VARCHAR(50)  NULL,
+  sort_id       SMALLINT  NOT NULL,
+  last_modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY(tier_id),
   UNIQUE uix_cfg_deployment_tier__tiercode (tier_code)
 )
@@ -194,17 +194,17 @@ COMMENT ON COLUMN cfg_deployment_tier.sort_id IS '3-digit for group, 3-digit wit
 
 
 CREATE TABLE cfg_data_center  (
-	data_center_id    	smallint(6) NOT NULL DEFAULT '0',
-	data_center_code  	varchar(30) NOT NULL,
-	data_center_name  	varchar(50) NOT NULL,
-	time_zone         	varchar(50) NOT NULL,
-	city              	varchar(50) NOT NULL,
-	state             	varchar(25) NULL,
-	country           	varchar(50) NOT NULL,
+	data_center_id    	SMALLINT NOT NULL DEFAULT '0',
+	data_center_code  	VARCHAR(30) NOT NULL,
+	data_center_name  	VARCHAR(50) NOT NULL,
+	time_zone         	VARCHAR(50) NOT NULL,
+	city              	VARCHAR(50) NOT NULL,
+	state             	VARCHAR(25) NULL,
+	country           	VARCHAR(50) NOT NULL,
 	longtitude        	decimal(10,6) NULL,
 	latitude          	decimal(10,6) NULL,
-	data_center_status	char(1)  NULL,
-	last_modified     	timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	data_center_status	CHAR(1)  NULL,
+	last_modified     	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY(data_center_id),
   UNIQUE uix_cfg_data_center__datacentercode (data_center_code)
 )
@@ -215,14 +215,14 @@ COMMENT ON COLUMN cfg_data_center.data_center_status IS 'A,D,U';
 
 
 CREATE TABLE cfg_cluster  (
-	cluster_id    	        smallint(6) NOT NULL DEFAULT '0',
-	cluster_code  	        varchar(80) NOT NULL,
-	cluster_short_name      varchar(50) NOT NULL,
-	cluster_type       	varchar(50) NOT NULL,
-	deployment_tier_code    varchar(25) NOT NULL,
-	data_center_code        varchar(30) NULL,
-	description             varchar(200) NULL,
-	last_modified     	timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	cluster_id    	        SMALLINT NOT NULL DEFAULT '0',
+	cluster_code  	        VARCHAR(80) NOT NULL,
+	cluster_short_name      VARCHAR(50) NOT NULL,
+	cluster_type       	VARCHAR(50) NOT NULL,
+	deployment_tier_code    VARCHAR(25) NOT NULL,
+	data_center_code        VARCHAR(30) NULL,
+	description             VARCHAR(200) NULL,
+	last_modified     	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY(cluster_id),
   UNIQUE uix_cfg_cluster__clustercode (cluster_code)
 )

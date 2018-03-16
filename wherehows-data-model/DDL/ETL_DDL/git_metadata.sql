@@ -13,8 +13,8 @@
 --
 
 CREATE TABLE "source_code_commit_info" (
-  "app_id"          SMALLINT(5) UNSIGNED DEFAULT NULL,
-  "repository_urn"  VARCHAR(300) NOT NULL ,
+  "app_id"          SMALLINT DEFAULT NULL,
+  "repository_urn"  VARCHAR(300) NOT NULL,
   "commit_id"       VARCHAR(50)  NOT NULL,
   "file_path"       VARCHAR(600) NOT NULL,
   "file_name"       VARCHAR(127)                 NOT NULL,
@@ -46,7 +46,7 @@ COMMENT ON COLUMN source_code_commit_info.commit_id IS 'the sha-1 hash of the co
 COMMENT ON COLUMN source_code_commit_info.repository_urn IS 'the git repo urn';
 
 CREATE TABLE "stg_source_code_commit_info" (
-  "app_id"          SMALLINT(5) UNSIGNED DEFAULT NULL,
+  "app_id"          SMALLINT DEFAULT NULL,
   "repository_urn"  VARCHAR(300) NOT NULL,
   "commit_id"       VARCHAR(50)  NOT NULL,
   "file_path"       VARCHAR(600) NOT NULL,
@@ -76,7 +76,7 @@ COMMENT ON COLUMN stg_source_code_commit_info.repository_urn IS 'the git repo ur
 
 
 CREATE TABLE "stg_git_project" (
-  "app_id"          SMALLINT(5) UNSIGNED NOT NULL,
+  "app_id"          SMALLINT NOT NULL,
   "wh_etl_exec_id"  BIGINT,
   "project_name"    VARCHAR(100) NOT NULL,
   "scm_type"        VARCHAR(20) NOT NULL,
@@ -84,9 +84,9 @@ CREATE TABLE "stg_git_project" (
   "owner_name"      VARCHAR(300) DEFAULT NULL,
   "create_time"     VARCHAR(50) DEFAULT NULL,
   "num_of_repos"    BIGINT DEFAULT NULL,
-  "repos"           MEDIUMTEXT DEFAULT NULL,
+  "repos"           TEXT DEFAULT NULL,
   "license"         VARCHAR(100) DEFAULT NULL,
-  "description"     MEDIUMTEXT DEFAULT NULL,
+  "description"     TEXT DEFAULT NULL,
   PRIMARY KEY ("project_name", "scm_type", "app_id")
 );
 COMMENT ON COLUMN stg_git_project.repos IS 'repo names in comma separated list';
@@ -95,7 +95,7 @@ COMMENT ON COLUMN stg_git_project.scm_type IS 'git, svn or other';
 COMMENT ON COLUMN stg_git_project.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
 
 CREATE TABLE "stg_product_repo" (
-  "app_id"          SMALLINT(5) UNSIGNED NOT NULL,
+  "app_id"          SMALLINT NOT NULL,
   "wh_etl_exec_id"  BIGINT,
   "scm_repo_fullname" VARCHAR(100) NOT NULL,
   "scm_type"        VARCHAR(20) NOT NULL,
@@ -115,7 +115,7 @@ COMMENT ON COLUMN stg_product_repo.dataset_group IS 'dataset group name, databas
 COMMENT ON COLUMN stg_product_repo.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
 
 CREATE TABLE "stg_repo_owner" (
-  "app_id"          SMALLINT(5) UNSIGNED NOT NULL,
+  "app_id"          SMALLINT NOT NULL,
   "wh_etl_exec_id"  BIGINT,
   "scm_repo_fullname" VARCHAR(100) NOT NULL,
   "scm_type"        VARCHAR(20) NOT NULL,
@@ -143,7 +143,7 @@ CREATE TABLE stg_database_scm_map (
   "scm_url"         VARCHAR(127) DEFAULT NULL,
   "committers"      VARCHAR(500) DEFAULT NULL,
   "filepath"        VARCHAR(200) DEFAULT NULL,
-  "app_id"          SMALLINT(5) UNSIGNED,
+  "app_id"          SMALLINT,
   "wh_etl_exec_id"  BIGINT,
   PRIMARY KEY ("database_type","database_name","scm_type","app_name")
 );

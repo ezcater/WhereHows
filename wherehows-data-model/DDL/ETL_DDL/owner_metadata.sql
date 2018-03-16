@@ -126,28 +126,28 @@ COMMENT ON COLUMN stg_dataset_owner_unmatched.app_id IS 'application id of the n
 COMMENT ON COLUMN stg_dataset_owner_unmatched.sort_id IS '0 = primary owner, order by priority/importance';
 
 CREATE TABLE "dir_external_user_info" (
-  "app_id" smallint(5) unsigned NOT NULL,
-  "user_id" varchar(50) NOT NULL,
-  "urn" varchar(200) DEFAULT NULL,
-  "full_name" varchar(200) DEFAULT NULL,
-  "display_name" varchar(200) DEFAULT NULL,
-  "title" varchar(200) DEFAULT NULL,
-  "employee_number" int(10) unsigned DEFAULT NULL,
-  "manager_urn" varchar(200) DEFAULT NULL,
-  "manager_user_id" varchar(50) DEFAULT NULL,
-  "manager_employee_number" int(10) unsigned DEFAULT NULL,
-  "default_group_name" varchar(100) DEFAULT NULL,
-  "email" varchar(200) DEFAULT NULL,
-  "department_id" int(10) unsigned DEFAULT '0',
-  "department_name" varchar(200) DEFAULT NULL,
-  "start_date" date DEFAULT NULL,
-  "mobile_phone" varchar(50) DEFAULT NULL,
-  "is_active" char(1) DEFAULT 'Y',
-  "org_hierarchy" varchar(500) DEFAULT NULL,
-  "org_hierarchy_depth" tinyint(3) unsigned DEFAULT NULL,
-  "created_time" int(10) unsigned DEFAULT NULL,
-  "modified_time" int(10) unsigned DEFAULT NULL,
-  "wh_etl_exec_id" bigint(20) DEFAULT NULL,
+  "app_id" SMALLINT NOT NULL,
+  "user_id" VARCHAR(50) NOT NULL,
+  "urn" VARCHAR(200) DEFAULT NULL,
+  "full_name" VARCHAR(200) DEFAULT NULL,
+  "display_name" VARCHAR(200) DEFAULT NULL,
+  "title" VARCHAR(200) DEFAULT NULL,
+  "employee_number" INT DEFAULT NULL,
+  "manager_urn" VARCHAR(200) DEFAULT NULL,
+  "manager_user_id" VARCHAR(50) DEFAULT NULL,
+  "manager_employee_number" INT DEFAULT NULL,
+  "default_group_name" VARCHAR(100) DEFAULT NULL,
+  "email" VARCHAR(200) DEFAULT NULL,
+  "department_id" INT DEFAULT '0',
+  "department_name" VARCHAR(200) DEFAULT NULL,
+  "start_date" DATE DEFAULT NULL,
+  "mobile_phone" VARCHAR(50) DEFAULT NULL,
+  "is_active" CHAR(1) DEFAULT 'Y',
+  "org_hierarchy" VARCHAR(500) DEFAULT NULL,
+  "org_hierarchy_depth" SMALLINT DEFAULT NULL,
+  "created_time" INT DEFAULT NULL,
+  "modified_time" INT DEFAULT NULL,
+  "wh_etl_exec_id" BIGINT DEFAULT NULL,
   PRIMARY KEY ("user_id","app_id"),
   KEY "email" ("email")
 );
@@ -156,26 +156,26 @@ COMMENT ON COLUMN dir_external_user_info.modified_time IS 'the modified time in 
 COMMENT ON COLUMN dir_external_user_info.created_time IS 'the create time in epoch';
 
 CREATE TABLE "stg_dir_external_user_info" (
-  "app_id" smallint(5) unsigned NOT NULL,
-  "user_id" varchar(50) NOT NULL,
-  "urn" varchar(200) DEFAULT NULL,
-  "full_name" varchar(200) DEFAULT NULL,
-  "display_name" varchar(200) DEFAULT NULL,
-  "title" varchar(200) DEFAULT NULL,
-  "employee_number" int(10) unsigned DEFAULT NULL,
-  "manager_urn" varchar(200) DEFAULT NULL,
-  "manager_user_id" varchar(50) DEFAULT NULL,
-  "manager_employee_number" int(10) unsigned DEFAULT NULL,
-  "default_group_name" varchar(100) DEFAULT NULL,
-  "email" varchar(200) DEFAULT NULL,
-  "department_id" int(10) unsigned DEFAULT '0',
-  "department_name" varchar(200) DEFAULT NULL,
-  "start_date" date DEFAULT NULL,
-  "mobile_phone" varchar(50) DEFAULT NULL,
-  "is_active" char(1) DEFAULT 'Y',
-  "org_hierarchy" varchar(500) DEFAULT NULL,
-  "org_hierarchy_depth" tinyint(3) unsigned DEFAULT NULL,
-  "wh_etl_exec_id" bigint(20) DEFAULT NULL,
+  "app_id" SMALLINT NOT NULL,
+  "user_id" VARCHAR(50) NOT NULL,
+  "urn" VARCHAR(200) DEFAULT NULL,
+  "full_name" VARCHAR(200) DEFAULT NULL,
+  "display_name" VARCHAR(200) DEFAULT NULL,
+  "title" VARCHAR(200) DEFAULT NULL,
+  "employee_number" INT DEFAULT NULL,
+  "manager_urn" VARCHAR(200) DEFAULT NULL,
+  "manager_user_id" VARCHAR(50) DEFAULT NULL,
+  "manager_employee_number" INT DEFAULT NULL,
+  "default_group_name" VARCHAR(100) DEFAULT NULL,
+  "email" VARCHAR(200) DEFAULT NULL,
+  "department_id" INT DEFAULT '0',
+  "department_name" VARCHAR(200) DEFAULT NULL,
+  "start_date" DATE DEFAULT NULL,
+  "mobile_phone" VARCHAR(50) DEFAULT NULL,
+  "is_active" CHAR(1) DEFAULT 'Y',
+  "org_hierarchy" VARCHAR(500) DEFAULT NULL,
+  "org_hierarchy_depth" SMALLINT DEFAULT NULL,
+  "wh_etl_exec_id" BIGINT DEFAULT NULL,
   PRIMARY KEY ("app_id","user_id"),
   KEY "email" ("email"),
   KEY "app_id" ("app_id","urn"),
@@ -184,14 +184,14 @@ CREATE TABLE "stg_dir_external_user_info" (
 COMMENT ON COLUMN stg_dir_external_user_info.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
 
 CREATE TABLE "dir_external_group_user_map" (
-  "app_id" smallint(5) unsigned NOT NULL,
-  "group_id" varchar(50) NOT NULL,
-  "sort_id" smallint(6) NOT NULL,
-  "user_app_id" smallint(5) unsigned NOT NULL,
-  "user_id" varchar(50) NOT NULL,
-  "created_time" int(10) unsigned DEFAULT NULL,
-  "modified_time" int(10) unsigned DEFAULT NULL,
-  "wh_etl_exec_id" bigint(20) DEFAULT NULL,
+  "app_id" SMALLINT NOT NULL,
+  "group_id" VARCHAR(50) NOT NULL,
+  "sort_id" SMALLINT NOT NULL,
+  "user_app_id" SMALLINT NOT NULL,
+  "user_id" VARCHAR(50) NOT NULL,
+  "created_time" INT DEFAULT NULL,
+  "modified_time" INT DEFAULT NULL,
+  "wh_etl_exec_id" BIGINT DEFAULT NULL,
   PRIMARY KEY ("app_id","group_id","user_app_id","user_id")
 );
 COMMENT ON COLUMN dir_external_group_user_map.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
@@ -199,25 +199,25 @@ COMMENT ON COLUMN dir_external_group_user_map.modified_time IS 'the modified tim
 COMMENT ON COLUMN dir_external_group_user_map.created_time IS 'the create time in epoch';
 
 CREATE TABLE "stg_dir_external_group_user_map" (
-  "app_id" smallint(5) unsigned NOT NULL,
-  "group_id" varchar(50) NOT NULL,
-  "sort_id" smallint(6) NOT NULL,
-  "user_app_id" smallint(5) unsigned NOT NULL,
-  "user_id" varchar(50) NOT NULL,
-  "wh_etl_exec_id" bigint(20) DEFAULT NULL,
+  "app_id" SMALLINT NOT NULL,
+  "group_id" VARCHAR(50) NOT NULL,
+  "sort_id" SMALLINT NOT NULL,
+  "user_app_id" SMALLINT NOT NULL,
+  "user_id" VARCHAR(50) NOT NULL,
+  "wh_etl_exec_id" BIGINT DEFAULT NULL,
   PRIMARY KEY ("app_id","group_id","user_app_id","user_id")
 );
 COMMENT ON COLUMN stg_dir_external_group_user_map.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
 
 CREATE TABLE "dir_external_group_user_map_flatten" (
-  "app_id" smallint(5) unsigned NOT NULL,
-  "group_id" varchar(50) NOT NULL,
-  "sort_id" smallint(6) NOT NULL,
-  "user_id" varchar(50) NOT NULL,
-  "user_app_id" smallint(5) unsigned NOT NULL,
-  "created_time" int(10) unsigned DEFAULT NULL,
-  "modified_time" int(10) unsigned DEFAULT NULL,
-  "wh_etl_exec_id" bigint(20) DEFAULT NULL,
+  "app_id" SMALLINT NOT NULL,
+  "group_id" VARCHAR(50) NOT NULL,
+  "sort_id" SMALLINT NOT NULL,
+  "user_id" VARCHAR(50) NOT NULL,
+  "user_app_id" SMALLINT NOT NULL,
+  "created_time" INT DEFAULT NULL,
+  "modified_time" INT DEFAULT NULL,
+  "wh_etl_exec_id" BIGINT DEFAULT NULL,
   PRIMARY KEY ("app_id","group_id","user_app_id","user_id")
 );
 COMMENT ON COLUMN dir_external_group_user_map_flatten.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
@@ -225,12 +225,12 @@ COMMENT ON COLUMN dir_external_group_user_map_flatten.modified_time IS 'the modi
 COMMENT ON COLUMN dir_external_group_user_map_flatten.created_time IS 'the create time in epoch';
 
 CREATE TABLE "stg_dir_external_group_user_map_flatten" (
-  "app_id" smallint(5) unsigned NOT NULL,
-  "group_id" varchar(50) NOT NULL,
-  "sort_id" smallint(6) NOT NULL,
-  "user_id" varchar(50) NOT NULL,
-  "user_app_id" smallint(5) unsigned NOT NULL,
-  "wh_etl_exec_id" bigint(20) DEFAULT NULL,
+  "app_id" SMALLINT NOT NULL,
+  "group_id" VARCHAR(50) NOT NULL,
+  "sort_id" SMALLINT NOT NULL,
+  "user_id" VARCHAR(50) NOT NULL,
+  "user_app_id" SMALLINT NOT NULL,
+  "wh_etl_exec_id" BIGINT DEFAULT NULL,
   PRIMARY KEY ("app_id","group_id","user_app_id","user_id")
 );
 COMMENT ON COLUMN stg_dir_external_group_user_map_flatten.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
