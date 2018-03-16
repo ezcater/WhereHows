@@ -14,7 +14,7 @@
 
 -- metrics table
 CREATE TABLE dict_business_metric  (
-  "metric_id"                	SMALLINT AUTO_INCREMENT NOT NULL,
+  "metric_id"                	SMALLSERIAL NOT NULL,
   "metric_name"              	VARCHAR(200) NOT NULL,
   "metric_description"       	VARCHAR(500) NULL,
   "dashboard_name"           	VARCHAR(100)   NULL,
@@ -78,10 +78,10 @@ CREATE TABLE "stg_dict_business_metric" (
   "metric_sub_category" VARCHAR(100) DEFAULT NULL,
   "metric_level" VARCHAR(50) DEFAULT NULL,
   "metric_source_type" VARCHAR(50) DEFAULT NULL,
-  "metric_source" VARCHAR(300) CHARACTER SET latin1 DEFAULT NULL,
+  "metric_source" VARCHAR(300) DEFAULT NULL,
   "metric_source_dataset_id" INT DEFAULT NULL,
-  "metric_ref_id_type" VARCHAR(50) CHARACTER SET latin1 DEFAULT NULL,
-  "metric_ref_id" VARCHAR(100) CHARACTER SET latin1 DEFAULT NULL,
+  "metric_ref_id_type" VARCHAR(50) DEFAULT NULL,
+  "metric_ref_id" VARCHAR(100) DEFAULT NULL,
   "metric_type" VARCHAR(100) DEFAULT NULL,
   "metric_additive_type" VARCHAR(100) DEFAULT NULL,
   "metric_grain" VARCHAR(100) DEFAULT NULL,
@@ -89,13 +89,13 @@ CREATE TABLE "stg_dict_business_metric" (
   "metric_display_factor_sym" VARCHAR(20) DEFAULT NULL,
   "metric_good_direction" VARCHAR(20) DEFAULT NULL,
   "metric_formula" text,
-  "dimensions" VARCHAR(800) CHARACTER SET latin1 DEFAULT NULL,
+  "dimensions" VARCHAR(800) DEFAULT NULL,
   "owners" VARCHAR(300) DEFAULT NULL,
   "tags" VARCHAR(500) DEFAULT NULL,
-  "urn" VARCHAR(300) CHARACTER SET latin1 NOT NULL,
-  "metric_url" VARCHAR(300) CHARACTER SET latin1 DEFAULT NULL,
-  "wiki_url" VARCHAR(300) CHARACTER SET latin1 DEFAULT NULL,
-  "scm_url" VARCHAR(300) CHARACTER SET latin1 DEFAULT NULL,
+  "urn" VARCHAR(300) NOT NULL,
+  "metric_url" VARCHAR(300) DEFAULT NULL,
+  "wiki_url" VARCHAR(300) DEFAULT NULL,
+  "scm_url" VARCHAR(300) DEFAULT NULL,
   "wh_etl_exec_id"              BIGINT,
    PRIMARY KEY("urn")
 )

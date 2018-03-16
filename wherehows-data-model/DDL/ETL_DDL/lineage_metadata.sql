@@ -13,6 +13,7 @@
 --
 
 -- created statements for lineage related tables
+CREATE TYPE source_target_type_enum AS ENUM('source', 'target', 'lookup', 'temp');
 CREATE TABLE IF NOT EXISTS "stg_job_execution_data_lineage" (
   "app_id"                 SMALLINT                                ,
   "flow_exec_id"           BIGINT                                 ,
@@ -31,7 +32,7 @@ CREATE TABLE IF NOT EXISTS "stg_job_execution_data_lineage" (
   "layout_id"              SMALLINT                                NULL,
   "storage_type"           VARCHAR(16)                                         NULL,
 
-  "source_target_type"     ENUM('source', 'target', 'lookup', 'temp') NOT NULL,
+  "source_target_type"     source_target_type_enum NOT NULL,
   "srl_no"                 SMALLINT                       NOT NULL DEFAULT '1'
   ,
   "source_srl_no"          SMALLINT                                NULL
@@ -71,7 +72,7 @@ CREATE TABLE IF NOT EXISTS "job_execution_data_lineage" (
   ,
   "storage_type"           VARCHAR(16)                                         NULL,
 
-  "source_target_type"     ENUM('source', 'target', 'lookup', 'temp') NOT NULL,
+  "source_target_type"     source_target_type_enum NOT NULL,
   "srl_no"                 SMALLINT                       NOT NULL DEFAULT '1'
   ,
   "source_srl_no"          SMALLINT                                NULL
@@ -105,7 +106,7 @@ CREATE TABLE job_attempt_source_code  (
 	script_name   	VARCHAR(256) NULL,
 	script_path   	VARCHAR(128) NOT NULL,
 	script_type   	VARCHAR(16) NOT NULL,
-	script_md5_sum	binary(16) NULL,
+	script_md5_sum	BYTEA NULL,
 	created_date  	TIMESTAMP NOT NULL,
 	PRIMARY KEY(application_id,job_id,attempt_number)
 )

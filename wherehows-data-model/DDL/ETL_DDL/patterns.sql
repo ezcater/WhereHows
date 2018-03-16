@@ -16,14 +16,14 @@
 -- file name pattern to abstract from file level to directory level
 CREATE TABLE filename_pattern
 (
-  filename_pattern_id INT NOT NULL AUTO_INCREMENT,
+  filename_pattern_id SERIAL NOT NULL,
   regex               VARCHAR(100),
   PRIMARY KEY (filename_pattern_id)
 );
 
 -- partitions pattern to abstract from partition level to dataset level
 CREATE TABLE "dataset_partition_layout_pattern" (
-  "layout_id"               INT NOT NULL AUTO_INCREMENT,
+  "layout_id"               SERIAL NOT NULL,
   "regex"                   VARCHAR(50)      DEFAULT NULL,
   "mask"                    VARCHAR(50)      DEFAULT NULL,
   "leading_path_index"      SMALLINT      DEFAULT NULL,
@@ -38,8 +38,9 @@ CREATE TABLE "dataset_partition_layout_pattern" (
 ;
 
 -- log lineage pattern to extract lineage from logs
+CREATE TYPE source_target_type_enum_2 AS ENUM('source', 'target'); -- Note: different from the source_target_type in lineage_metadata.sql
 CREATE TABLE "log_lineage_pattern" (
-  "pattern_id"          INT      NOT NULL AUTO_INCREMENT,
+  "pattern_id"          SERIAL NOT NULL,
   "pattern_type"        VARCHAR(20)              DEFAULT NULL
   ,
   "regex"               VARCHAR(200) NOT NULL,
@@ -60,7 +61,7 @@ CREATE TABLE "log_lineage_pattern" (
   "update_count_index"  INT                  DEFAULT NULL,
   "update_byte_index"   INT                  DEFAULT NULL,
   "comments"            VARCHAR(200)             DEFAULT NULL,
-  "source_target_type"  ENUM('source', 'target') DEFAULT NULL,
+  "source_target_type"  source_target_type_enum_2 DEFAULT NULL,
   PRIMARY KEY ("pattern_id")
 )
 
@@ -73,7 +74,7 @@ COMMENT ON COLUMN log_lineage_pattern.pattern_type IS 'type of job that have thi
 
 -- patterns used to discover the hadoop id inside log
 CREATE TABLE "log_reference_job_id_pattern" (
-  "pattern_id"             INT      NOT NULL AUTO_INCREMENT,
+  "pattern_id"             SERIAL      NOT NULL,
   "pattern_type"           VARCHAR(20)  DEFAULT NULL
   ,
   "regex"                  VARCHAR(200) NOT NULL,
