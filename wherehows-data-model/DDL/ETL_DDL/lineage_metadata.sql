@@ -119,4 +119,4 @@ CREATE TABLE "job_execution_script" (
   "commit_time" datetime DEFAULT NULL,
   "script_url" varchar(512) DEFAULT NULL,
   PRIMARY KEY ("app_id","job_id","script_name"(100),"committer_name")
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;

@@ -80,5 +80,5 @@ CREATE TABLE "stg_dict_business_metric" (
   "scm_url" varchar(300) CHARACTER SET latin1 DEFAULT NULL,
   "wh_etl_exec_id"              BIGINT COMMENT 'wherehows etl execution id that modified this record',
    PRIMARY KEY("urn")
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+)  DEFAULT CHARSET=utf8
 ;

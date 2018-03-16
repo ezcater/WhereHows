@@ -221,7 +221,7 @@ CREATE TABLE "stg_dict_dataset_field_comment" (
   "dataset_id" int(11) UNSIGNED NOT NULL,
   "db_id" smallint(6) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY ("field_id","comment_id", "db_id")
-) ENGINE=InnoDB
+)
   DEFAULT CHARSET=utf8
   PARTITION BY HASH(db_id)
   PARTITIONS 8
