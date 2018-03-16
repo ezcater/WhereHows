@@ -78,8 +78,8 @@ CREATE TABLE "dict_dataset" (
   "storage_type"                ENUM('Table', 'View', 'Avro', 'ORC', 'RC', 'Sequence', 'Flat File', 'JSON', 'BINARY_JSON', 'XML', 'Thrift', 'Parquet', 'Protobuff') NULL,
   "ref_dataset_id"              INT(11) UNSIGNED                                                                            NULL
   ,
-  "is_active"                   BOOLEAN NULL ,
-  "is_deprecated"               BOOLEAN NULL ,
+  "is_active"                   BOOLEAN NULL,
+  "is_deprecated"               BOOLEAN NULL,
   "dataset_type"                VARCHAR(30)                                                                                 NULL
   ,
   "hive_serdes_class"           VARCHAR(300)                                                                                NULL,
@@ -91,9 +91,9 @@ CREATE TABLE "dict_dataset" (
   ,
   "source_modified_time"        BIGINT                                                                                NULL
   ,
-  "created_time"                BIGINT ,
-  "modified_time"               BIGINT ,
-  "wh_etl_exec_id"              BIGINT ,
+  "created_time"                BIGINT,
+  "modified_time"               BIGINT,
+  "wh_etl_exec_id"              BIGINT,
   PRIMARY KEY ("id"),
   UNIQUE "uq_dataset_urn" ("urn")
 )
@@ -166,7 +166,7 @@ CREATE TABLE "stg_dict_field_detail" (
   "namespace"      VARCHAR(200)                  NULL,
   "description"    VARCHAR(1000)                 NULL,
   "last_modified"  TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  "dataset_id"     BIGINT         NULL ,
+  "dataset_id"     BIGINT         NULL,
   KEY "idx_stg_dict_field_detail__description" ("description"(100)),
   PRIMARY KEY ("urn", "sort_id", "db_id")
 )
@@ -297,7 +297,7 @@ CREATE TABLE "field_comments" (
   "comment"                VARCHAR(4000)    NOT NULL,
   "created"                TIMESTAMP        NOT NULL,
   "modified"               TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  "comment_crc32_checksum" INT(11) UNSIGNED          NULL ,
+  "comment_crc32_checksum" INT(11) UNSIGNED          NULL,
   PRIMARY KEY ("id"),
   KEY "comment_key" ("comment"(100)),
   FULLTEXT KEY "fti_comment" ("comment")
@@ -315,8 +315,8 @@ CREATE TABLE dict_dataset_instance  (
 	data_center          	varchar(30)   NULL DEFAULT '*',
 	server_cluster       	varchar(150)   NULL DEFAULT '*',
 	slice                	varchar(50)   NOT NULL DEFAULT '*',
-  is_active             BOOLEAN NULL ,
-  is_deprecated         BOOLEAN NULL ,
+  is_active             BOOLEAN NULL,
+  is_deprecated         BOOLEAN NULL,
 	native_name          	varchar(250) NOT NULL,
 	logical_name         	varchar(250) NOT NULL,
 	version              	varchar(30)   NULL,
@@ -370,8 +370,8 @@ CREATE TABLE stg_dict_dataset_instance  (
 	data_center          	varchar(30)   NULL DEFAULT '*',
 	server_cluster       	varchar(150)   NULL DEFAULT '*',
 	slice                	varchar(50)   NOT NULL DEFAULT '*',
-  is_active             BOOLEAN NULL ,
-  is_deprecated         BOOLEAN NULL ,
+  is_active             BOOLEAN NULL,
+  is_deprecated         BOOLEAN NULL,
 	native_name          	varchar(250) NOT NULL,
 	logical_name         	varchar(250) NOT NULL,
 	version              	varchar(30)   NULL,

@@ -151,14 +151,14 @@ CREATE TABLE cfg_object_name_map  (
   obj_name_map_id         int(11) AUTO_INCREMENT NOT NULL,
   object_type             varchar(100) NOT NULL,
   object_sub_type         varchar(100) NULL,
-  object_name             varchar(350) NOT NULL ,
+  object_name             varchar(350) NOT NULL,
   map_phrase              varchar(100) NULL,
-  object_dataset_id       int(11) UNSIGNED NULL ,
-  is_identical_map        char(1) NOT NULL DEFAULT 'N' ,
+  object_dataset_id       int(11) UNSIGNED NULL,
+  is_identical_map        char(1) NOT NULL DEFAULT 'N',
   mapped_object_type      varchar(100) NOT NULL,
   mapped_object_sub_type  varchar(100) NULL,
-  mapped_object_name      varchar(350) NOT NULL ,
-  mapped_object_dataset_id	int(11) UNSIGNED NULL ,
+  mapped_object_name      varchar(350) NOT NULL,
+  mapped_object_dataset_id	int(11) UNSIGNED NULL,
   description             varchar(500) NULL,
   last_modified           timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY(obj_name_map_id),
@@ -230,8 +230,8 @@ COMMENT = 'https://en.wikipedia.org/wiki/Computer_cluster' ;
 
 
 CREATE TABLE IF NOT EXISTS cfg_search_score_boost (
-  "id" INT ,
-  "static_boosting_score" INT ,
+  "id" INT,
+  "static_boosting_score" INT,
   PRIMARY KEY ("id")
 );
 COMMENT ON COLUMN cfg_search_score_boost.id IS 'dataset id';
