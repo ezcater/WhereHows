@@ -13,61 +13,61 @@
 --
 
 -- configuration tables
-CREATE TABLE `wh_etl_job_schedule` (
-  `wh_etl_job_name` VARCHAR(127)  NOT NULL
+CREATE TABLE "wh_etl_job_schedule" (
+  "wh_etl_job_name" VARCHAR(127)  NOT NULL
   COMMENT 'etl job name',
-  `enabled`         BOOLEAN       DEFAULT NULL
+  "enabled"         BOOLEAN       DEFAULT NULL
   COMMENT 'job currently enabled or disabled',
-  `next_run`        INT(10) UNSIGNED     DEFAULT NULL
+  "next_run"        INT(10) UNSIGNED     DEFAULT NULL
   COMMENT 'next run time',
-  PRIMARY KEY (`wh_etl_job_name`),
-  UNIQUE KEY `etl_unique` (`wh_etl_job_name`)
+  PRIMARY KEY ("wh_etl_job_name"),
+  UNIQUE KEY "etl_unique" ("wh_etl_job_name")
 )
   ENGINE = InnoDB
   DEFAULT CHARSET=utf8
   COMMENT='WhereHows ETL job scheduling table';
 
-CREATE TABLE `wh_etl_job_history` (
-  `wh_etl_exec_id`  BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT
+CREATE TABLE "wh_etl_job_history" (
+  "wh_etl_exec_id"  BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT
   COMMENT 'job execution id',
-  `wh_etl_job_name` VARCHAR(127)                 NOT NULL
+  "wh_etl_job_name" VARCHAR(127)                 NOT NULL
   COMMENT 'name of the etl job',
-  `status`          VARCHAR(31)                  DEFAULT NULL
+  "status"          VARCHAR(31)                  DEFAULT NULL
   COMMENT 'status of etl job execution',
-  `request_time`    INT(10) UNSIGNED             DEFAULT NULL
+  "request_time"    INT(10) UNSIGNED             DEFAULT NULL
   COMMENT 'request time of the execution',
-  `start_time`      INT(10) UNSIGNED             DEFAULT NULL
+  "start_time"      INT(10) UNSIGNED             DEFAULT NULL
   COMMENT 'start time of the execution',
-  `end_time`        INT(10) UNSIGNED             DEFAULT NULL
+  "end_time"        INT(10) UNSIGNED             DEFAULT NULL
   COMMENT 'end time of the execution',
-  `message`         VARCHAR(1024)                DEFAULT NULL
+  "message"         VARCHAR(1024)                DEFAULT NULL
   COMMENT 'debug information message',
-  `host_name`       VARCHAR(200)                 DEFAULT NULL
+  "host_name"       VARCHAR(200)                 DEFAULT NULL
   COMMENT 'host machine name of the job execution',
-  `process_id`      INT UNSIGNED                 DEFAULT NULL
+  "process_id"      INT UNSIGNED                 DEFAULT NULL
   COMMENT 'job execution process id',
-  PRIMARY KEY (`wh_etl_exec_id`)
+  PRIMARY KEY ("wh_etl_exec_id")
 )
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8
   COMMENT = 'WhereHows ETL execution history table';
 
-CREATE TABLE `cfg_application` (
-  `app_id`                  SMALLINT    UNSIGNED NOT NULL,
-  `app_code`                VARCHAR(128)         NOT NULL,
-  `description`             VARCHAR(512)         NOT NULL,
-  `tech_matrix_id`          SMALLINT(5) UNSIGNED DEFAULT '0',
-  `doc_url`                 VARCHAR(512)         DEFAULT NULL,
-  `parent_app_id`           INT(11) UNSIGNED     NOT NULL,
-  `app_status`              CHAR(1)              NOT NULL,
-  `last_modified`           TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `is_logical`              CHAR(1)                       DEFAULT NULL,
-  `uri_type`                VARCHAR(25)                   DEFAULT NULL,
-  `uri`                     VARCHAR(1000)                 DEFAULT NULL,
-  `lifecycle_layer_id`      TINYINT(4) UNSIGNED           DEFAULT NULL,
-  `short_connection_string` VARCHAR(50)                   DEFAULT NULL,
-  PRIMARY KEY (`app_id`),
-  UNIQUE KEY `idx_cfg_application__appcode` (`app_code`) USING HASH
+CREATE TABLE "cfg_application" (
+  "app_id"                  SMALLINT    UNSIGNED NOT NULL,
+  "app_code"                VARCHAR(128)         NOT NULL,
+  "description"             VARCHAR(512)         NOT NULL,
+  "tech_matrix_id"          SMALLINT(5) UNSIGNED DEFAULT '0',
+  "doc_url"                 VARCHAR(512)         DEFAULT NULL,
+  "parent_app_id"           INT(11) UNSIGNED     NOT NULL,
+  "app_status"              CHAR(1)              NOT NULL,
+  "last_modified"           TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  "is_logical"              CHAR(1)                       DEFAULT NULL,
+  "uri_type"                VARCHAR(25)                   DEFAULT NULL,
+  "uri"                     VARCHAR(1000)                 DEFAULT NULL,
+  "lifecycle_layer_id"      TINYINT(4) UNSIGNED           DEFAULT NULL,
+  "short_connection_string" VARCHAR(50)                   DEFAULT NULL,
+  PRIMARY KEY ("app_id"),
+  UNIQUE KEY "idx_cfg_application__appcode" ("app_code") USING HASH
 )
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
@@ -92,7 +92,7 @@ CREATE TABLE cfg_database  (
 	short_connection_string	varchar(50) COMMENT 'Oracle TNS Name, ODBC DSN, TDPID...' NULL,
   last_modified          	timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY(db_id),
-  UNIQUE KEY `uix_cfg_database__dbcode` (db_code) USING HASH
+  UNIQUE KEY "uix_cfg_database__dbcode" (db_code) USING HASH
 )
 ENGINE = InnoDB
 DEFAULT CHARSET = utf8
@@ -196,7 +196,7 @@ COMMENT = 'https://en.wikipedia.org/wiki/Computer_cluster' ;
 
 
 CREATE TABLE IF NOT EXISTS cfg_search_score_boost (
-  `id` INT COMMENT 'dataset id',
-  `static_boosting_score` INT COMMENT 'static boosting score for elastic search',
-  PRIMARY KEY (`id`)
+  "id" INT COMMENT 'dataset id',
+  "static_boosting_score" INT COMMENT 'static boosting score for elastic search',
+  PRIMARY KEY ("id")
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;

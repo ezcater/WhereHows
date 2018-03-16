@@ -69,7 +69,7 @@ CREATE TABLE user_login_history (
   log_id              INT(11) AUTO_INCREMENT NOT NULL,
   username            VARCHAR(20)            NOT NULL,
   authentication_type VARCHAR(20)            NOT NULL,
-  `status`            VARCHAR(20)            NOT NULL,
+  "status"            VARCHAR(20)            NOT NULL,
   message             TEXT                            DEFAULT NULL,
   login_time          TIMESTAMP              NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (log_id)

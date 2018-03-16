@@ -14,12 +14,12 @@
 
 -- tracking user access
 CREATE TABLE track_object_access_log (
-  `access_unixtime` BIGINT(20) UNSIGNED                                                                                                  NOT NULL,
-  `login_id`        INT(10) UNSIGNED                                                                                                     NOT NULL,
-  `object_type`     ENUM('dataset', 'metric', 'glossary', 'flow', 'lineage:data', 'lineage:flow', 'lineage:metric', 'lineage:metricJob') NOT NULL DEFAULT 'dataset',
-  `object_id`       BIGINT(20)                                                                                                           NULL,
-  `object_name`     VARCHAR(500)                                                                                                         NULL,
-  `parameters`      VARCHAR(500)                                                                                                         NULL,
+  "access_unixtime" BIGINT(20) UNSIGNED                                                                                                  NOT NULL,
+  "login_id"        INT(10) UNSIGNED                                                                                                     NOT NULL,
+  "object_type"     ENUM('dataset', 'metric', 'glossary', 'flow', 'lineage:data', 'lineage:flow', 'lineage:metric', 'lineage:metricJob') NOT NULL DEFAULT 'dataset',
+  "object_id"       BIGINT(20)                                                                                                           NULL,
+  "object_name"     VARCHAR(500)                                                                                                         NULL,
+  "parameters"      VARCHAR(500)                                                                                                         NULL,
   PRIMARY KEY (access_unixtime, login_id, object_type)
 )
   ENGINE = InnoDB
