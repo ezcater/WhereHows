@@ -19,38 +19,46 @@
 CREATE TABLE "stg_dict_dataset" (
   "name"                        VARCHAR(200) NOT NULL,
   "schema"                      MEDIUMTEXT CHARACTER SET utf8,
-  "schema_type"                 VARCHAR(50) DEFAULT 'JSON' COMMENT 'JSON, Hive, DDL, XML, CSV',
+  "schema_type"                 VARCHAR(50) DEFAULT 'JSON',
   "properties"                  TEXT CHARACTER SET utf8,
   "fields"                      MEDIUMTEXT CHARACTER SET utf8,
   "db_id"                       SMALLINT UNSIGNED,
   "urn"                         VARCHAR(500) NOT NULL,
   "source"                      VARCHAR(50) NULL,
   "location_prefix"             VARCHAR(200) NULL,
-  "parent_name"                 VARCHAR(500) NULL COMMENT 'Schema Name for RDBMS, Group Name for Jobs/Projects/Tracking Datasets on HDFS',
+  "parent_name"                 VARCHAR(500) NULL,
   "storage_type"                ENUM('Table', 'View', 'Avro', 'ORC', 'RC', 'Sequence', 'Flat File', 'JSON', 'BINARY_JSON', 'XML', 'Thrift', 'Parquet', 'Protobuff') NULL,
   "ref_dataset_name"            VARCHAR(200) NULL,
-  "ref_dataset_id"              INT(11) UNSIGNED NULL COMMENT 'Refer to Master/Main dataset for Views/ExternalTables',
-  "is_active"                   BOOLEAN NULL COMMENT 'is the dataset active / exist ?',
-  "is_deprecated"               BOOLEAN NULL COMMENT 'is the dataset deprecated by user ?',
-  "dataset_type"                VARCHAR(30) NULL
-  COMMENT 'hdfs, hive, kafka, teradata, mysql, sqlserver, file, nfs, pinot, salesforce, oracle, db2, netezza, cassandra, hbase, qfs, zfs',
-  "hive_serdes_class"           VARCHAR(300)                                                                                NULL,
-  "is_partitioned"              CHAR(1)                                                                                     NULL,
-  "partition_layout_pattern_id" SMALLINT(6)                                                                                 NULL,
-  "sample_partition_full_path"  VARCHAR(256) COMMENT 'sample partition full path of the dataset',
-  "source_created_time"         BIGINT                                                                                NULL
-  COMMENT 'source created time of the flow',
-  "source_modified_time"        BIGINT                                                                                NULL
-  COMMENT 'latest source modified time of the flow',
-  "created_time"                BIGINT COMMENT 'wherehows created time',
-  "modified_time"               BIGINT COMMENT 'latest wherehows modified',
-  "wh_etl_exec_id"              BIGINT COMMENT 'wherehows etl execution id that modified this record',
+  "ref_dataset_id"              INT(11) UNSIGNED NULL,
+  "is_active"                   BOOLEAN NULL,
+  "is_deprecated"               BOOLEAN NULL,
+  "dataset_type"                VARCHAR(30) NULL,
+  "hive_serdes_class"           VARCHAR(300) NULL,
+  "is_partitioned"              CHAR(1) NULL,
+  "partition_layout_pattern_id" SMALLINT(6) NULL,
+  "sample_partition_full_path"  VARCHAR(256),
+  "source_created_time"         BIGINT NULL,
+  "source_modified_time"        BIGINT NULL,
+  "created_time"                BIGINT,
+  "modified_time"               BIGINT,
+  "wh_etl_exec_id"              BIGINT,
   PRIMARY KEY ("urn", "db_id")
 )
-
-
   PARTITION BY HASH(db_id)
   PARTITIONS 8;
+COMMENT ON COLUMN stg_dict_dataset.schema_type IS 'JSON, Hive, DDL, XML, CSV';
+COMMENT ON COLUMN stg_dict_dataset.parent_name IS 'Schema Name for RDBMS, Group Name for Jobs/Projects/Tracking Datasets on HDFS';
+COMMENT ON COLUMN stg_dict_dataset.ref_dataset_id IS 'Refer to Master/Main dataset for Views/ExternalTables';
+COMMENT ON COLUMN stg_dict_dataset.is_active IS 'is the dataset active / exist ?';
+COMMENT ON COLUMN stg_dict_dataset.is_deprecated IS 'is the dataset deprecated by user ?';
+COMMENT ON COLUMN stg_dict_dataset.dataset_type IS 'hdfs, hive, kafka, teradata, mysql, sqlserver, file, nfs, pinot, salesforce, oracle, db2, netezza, cassandra, hbase, qfs, zfs';
+COMMENT ON COLUMN stg_dict_dataset.sample_partition_full_path IS 'sample partition full path of the dataset';
+COMMENT ON COLUMN stg_dict_dataset.source_created_time IS 'source created time of the flow';
+COMMENT ON COLUMN stg_dict_dataset.source_modified_time IS 'latest source modified time of the flow';
+COMMENT ON COLUMN stg_dict_dataset.created_time IS 'wherehows created time';
+COMMENT ON COLUMN stg_dict_dataset.modified_time IS 'latest wherehows modified';
+COMMENT ON COLUMN stg_dict_dataset.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
+
 
 -- dataset table
 CREATE TABLE "dict_dataset" (
