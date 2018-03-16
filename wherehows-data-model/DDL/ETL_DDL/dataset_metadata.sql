@@ -45,8 +45,7 @@ CREATE TABLE "stg_dict_dataset" (
   "wh_etl_exec_id"              BIGINT,
   PRIMARY KEY ("urn", "db_id")
 )
-  PARTITION BY HASH(db_id)
-  PARTITIONS 8;
+;
 COMMENT ON COLUMN stg_dict_dataset.schema_type IS 'JSON, Hive, DDL, XML, CSV';
 COMMENT ON COLUMN stg_dict_dataset.parent_name IS 'Schema Name for RDBMS, Group Name for Jobs/Projects/Tracking Datasets on HDFS';
 COMMENT ON COLUMN stg_dict_dataset.ref_dataset_id IS 'Refer to Master/Main dataset for Views/ExternalTables';
@@ -170,10 +169,7 @@ CREATE TABLE "stg_dict_field_detail" (
   "dataset_id"     BIGINT         NULL,
   PRIMARY KEY ("urn", "sort_id", "db_id")
 )
-
-
-  PARTITION BY HASH(db_id)
-  PARTITIONS 8;
+;
   COMMENT ON COLUMN stg_dict_field_detail.dataset_id IS 'used to opitimize metadata ETL performance';
 CREATE INDEX CONCURRENTLY "idx_stg_dict_field_detail__description" ON "stg_dict_field_detail" ("description");
 
@@ -257,9 +253,6 @@ CREATE TABLE "stg_dict_dataset_field_comment" (
   "db_id" SMALLINT NOT NULL DEFAULT '0',
   PRIMARY KEY ("field_id","comment_id", "db_id")
 )
-
-  PARTITION BY HASH(db_id)
-  PARTITIONS 8
 ;
 
 -- fields to comments mapping
@@ -337,16 +330,7 @@ CREATE TABLE dict_dataset_instance  (
 CHARACTER SET latin1
 COLLATE latin1_swedish_ci
 AUTO_INCREMENT = 0
-	PARTITION BY HASH(db_id)
-	(PARTITION p0,
-	PARTITION p1,
-	PARTITION p2,
-	PARTITION p3,
-	PARTITION p4,
-	PARTITION p5,
-	PARTITION p6,
-	PARTITION p7);
-
+;
 CREATE INDEX logical_name USING BTREE
 	ON dict_dataset_instance(logical_name);
 CREATE INDEX server_cluster USING BTREE
@@ -392,15 +376,7 @@ CREATE TABLE stg_dict_dataset_instance  (
 CHARACTER SET latin1
 COLLATE latin1_swedish_ci
 AUTO_INCREMENT = 0
-	PARTITION BY HASH(db_id)
-	(PARTITION p0,
-	PARTITION p1,
-	PARTITION p2,
-	PARTITION p3,
-	PARTITION p4,
-	PARTITION p5,
-	PARTITION p6,
-	PARTITION p7);
+;
 CREATE INDEX server_cluster USING BTREE
 	ON stg_dict_dataset_instance(server_cluster, deployment_tier, data_center, slice);
 	COMMENT ON COLUMN stg_dict_dataset_instance.data_center IS 'data center code: lva1, ltx1, dc2, dc3...';
