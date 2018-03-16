@@ -234,6 +234,6 @@ CREATE TABLE IF NOT EXISTS cfg_search_score_boost (
   "static_boosting_score" INT,
   PRIMARY KEY ("id")
 );
-COMMENT ON COLUMN IF.id IS 'dataset id';
-COMMENT ON COLUMN IF.static_boosting_score IS 'static boosting score for elastic search';
+COMMENT ON COLUMN cfg_search_score_boost.id IS 'dataset id';
+COMMENT ON COLUMN cfg_search_score_boost.static_boosting_score IS 'static boosting score for elastic search';
 
