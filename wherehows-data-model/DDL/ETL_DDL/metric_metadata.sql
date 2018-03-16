@@ -45,9 +45,9 @@ CREATE TABLE dict_business_metric  (
   PRIMARY KEY(metric_id),
   KEY "idx_dict_business_metric__ref_id" ("metric_ref_id") USING BTREE,
   FULLTEXT KEY "fti_dict_business_metric_all" ("metric_name", "metric_description", "metric_category", "metric_group", "dashboard_name")
-)
+);
 
-  AUTO_INCREMENT = 0
+  ALTER SEQUENCE dict_business_metric_metric_id_seq MINVALUE 0 START 0 RESTART 0;
 ;
 CREATE UNIQUE INDEX "uq_dataset_urn" ON "dict_business_metric" ("urn");
 COMMENT ON COLUMN dict_business_metric.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';

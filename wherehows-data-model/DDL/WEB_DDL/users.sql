@@ -17,7 +17,7 @@
 
 CREATE TYPE digest_type_enum AS ENUM('SHA1', 'SHA2', 'MD5');
 CREATE TABLE users (
-  id                       INT AUTO_INCREMENT      NOT NULL,
+  id                       SERIAL       NOT NULL,
   name                     VARCHAR(100)                NOT NULL,
   email                    VARCHAR(200)                NOT NULL,
   username                 VARCHAR(20)                 NOT NULL,
@@ -28,10 +28,8 @@ CREATE TABLE users (
   authentication_type      VARCHAR(20),
   PRIMARY KEY (id)
 )
-
-  AUTO_INCREMENT = 0
 ;
-
+ALTER SEQUENCE users_id_seq MINVALUE 0 START 0 RESTART 0;
 CREATE INDEX idx_users__username USING BTREE ON users(username);
 
 CREATE TYPE duration_enum AS ENUM('monthly', 'weekly', 'daily', 'hourly');
@@ -45,7 +43,7 @@ CREATE TABLE user_settings (
 
 CREATE TYPE item_type_enum AS ENUM('dataset', 'dataset_field', 'metric', 'flow', 'urn');
 CREATE TABLE watch (
-  id                BIGINT AUTO_INCREMENT                                 NOT NULL,
+  id                BIGSERIAL                                  NOT NULL,
   user_id           INT                                                   NOT NULL,
   item_id           INT                                                   NULL,
   urn               VARCHAR(200)                                              NULL,
@@ -54,9 +52,8 @@ CREATE TABLE watch (
   created           TIMESTAMP                                                 NULL     DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id)
 )
-
-  AUTO_INCREMENT = 0
 ;
+ALTER SEQUENCE watch_id_seq MINVALUE 0 START 0 RESTART 0;
 
 CREATE TABLE favorites (
   user_id    INT   NOT NULL,
@@ -68,7 +65,7 @@ CREATE TABLE favorites (
 ;
 
 CREATE TABLE user_login_history (
-  log_id              INT AUTO_INCREMENT NOT NULL,
+  log_id              SERIAL NOT NULL,
   username            VARCHAR(20)            NOT NULL,
   authentication_type VARCHAR(20)            NOT NULL,
   "status"            VARCHAR(20)            NOT NULL,
@@ -76,5 +73,4 @@ CREATE TABLE user_login_history (
   login_time          TIMESTAMP              NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (log_id)
 )
-
 ;

@@ -29,7 +29,7 @@ CREATE UNIQUE INDEX "etl_unique" ON "wh_etl_job_schedule" ("wh_etl_job_name");
   COMMENT ON COLUMN wh_etl_job_schedule.next_run IS 'next run time';
 
 CREATE TABLE "wh_etl_job_history" (
-  "wh_etl_exec_id"  BIGINT NOT NULL AUTO_INCREMENT
+  "wh_etl_exec_id"  BIGSERIAL NOT NULL
   ,
   "wh_etl_job_name" VARCHAR(127)                 NOT NULL
   ,
@@ -162,10 +162,10 @@ CREATE TABLE cfg_object_name_map  (
   PRIMARY KEY(obj_name_map_id),
   KEY idx_cfg_object_name_map__mappedobjectname (mapped_object_name) USING BTREE,
   CONSTRAINT uix_cfg_object_name_map__objectname_mappedobjectname UNIQUE (object_name, mapped_object_name)
-)
+);
 
 CHARACTER SET latin1
-AUTO_INCREMENT = 1
+ALTER SEQUENCE cfg_object_name_map_obj_name_map_id_seq MINVALUE 1 START 1 RESTART 1;
 COMMENT = 'Map alias (when is_identical_map=Y) and view dependency. Always map from Derived/Child (object) back to its Original/Parent (mapped_object)' ;
 COMMENT ON COLUMN cfg_object_name_map.object_name IS 'this is the derived/child object';
 COMMENT ON COLUMN cfg_object_name_map.object_dataset_id IS 'can be the abstract dataset id for versioned objects';
@@ -183,7 +183,6 @@ CREATE TABLE cfg_deployment_tier  (
   PRIMARY KEY(tier_id)
 )
 
-AUTO_INCREMENT = 0
 COMMENT = 'http://en.wikipedia.org/wiki/Deployment_environment';
 CREATE UNIQUE INDEX uix_cfg_deployment_tier__tiercode ON "cfg_deployment_tier" (tier_code);
 COMMENT ON COLUMN cfg_deployment_tier.tier_code IS 'local,dev,test,qa,stg,prod';
@@ -206,7 +205,6 @@ CREATE TABLE cfg_data_center  (
 	PRIMARY KEY(data_center_id)
 )
 
-AUTO_INCREMENT = 0
 COMMENT = 'https://en.wikipedia.org/wiki/Data_center' ;
 CREATE UNIQUE INDEX uix_cfg_data_center__datacentercode ON "cfg_data_center" (data_center_code);
 COMMENT ON COLUMN cfg_data_center.data_center_status IS 'A,D,U';
