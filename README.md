@@ -1,7 +1,7 @@
 # WhereHows [![Build Status](https://travis-ci.org/linkedin/WhereHows.svg?branch=master)](https://travis-ci.org/linkedin/WhereHows) [![latest](https://img.shields.io/badge/latest-1.0.0-blue.svg)](https://github.com/linkedin/WhereHows/releases) [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/wherehows) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/LinkedIn/Wherehows/wiki/Contributing)
 
 
-WhereHows is a data discovery and lineage tool built at LinkedIn. It integrates with all the major data processing systems and collects both catalog and operational metadata from them.
+WhereHows is a data discovery and lineage tool built at LinkedIn. It integrates with all the major data processing systems and collects both catalog and operational metadata from them. This README has been modified for ezCater's use.
 
 Within the central metadata repository, WhereHows curates, associates, and surfaces the metadata information through two interfaces:
 * a web application that enables data & linage discovery, and community collaboration
@@ -29,10 +29,6 @@ How WhereHows is used inside of LinkedIn and other potential [use cases][USE].
 ## Documentation
 The detailed information can be found in the [Wiki][wiki]
 
-
-## Examples in VM (Deprecated)
-There is a pre-built vmware image (about 11GB) to quickly demonstrate the functionality of WhereHows. Check out the [VM Guide][VM]
-
 ## WhereHows Docker
 Docker can provide configuration free dev/production setup quickly, please check out [Docker Getting Start Guide](https://github.com/linkedin/WhereHows/tree/master/wherehows-docker/README.md)
 
@@ -41,26 +37,14 @@ New to Wherehows? Check out the [Getting Started Guide][GS]
 
 
 ### Preparation
-First, please [setup the metadata repository][DB] in MySQL.
-```
-CREATE DATABASE wherehows
-  DEFAULT CHARACTER SET utf8
-  DEFAULT COLLATE utf8_general_ci;
-
-CREATE USER 'wherehows';
-SET PASSWORD FOR 'wherehows' = PASSWORD('wherehows');
-GRANT ALL ON wherehows.* TO 'wherehows'
-```
-
-Execute the [DDL files][DDL] to create the required repository tables in **wherehows** database.
+Please download the Amazon RedshiftJDBCDriver42.jar file and (without renaming) put it in the wherehows-etl/extralibs folder
+Please download Docker
 
 ### Build
-1. Get the source code: ```git clone https://github.com/linkedin/WhereHows.git```
-2. Put a few 3rd-party jar files to **wherehows-etl/extralibs** directory. Some of these jar files may not be available in Maven Central or Artifactory. See [the download instrucitons][EXJAR] for more detail. ```cd WhereHows/wherehows-etl/extralibs```
-3. From the **WhereHows** root directory and build all the modules: ```./gradlew build```
-4. Start the metadata ETL and API service: ```./gradlew wherehows-backend:runPlayBinary```
-5. In a new terminal, start the web front-end: ```./gradlew wherehows-frontend:runPlayBinary```. The WhereHows UI is available at http://localhost:9001 by default. You can change the port number by editing the value of ```project.ext.httpPort``` in ```wherehows-frontend/build.gradle```.
-
+Locally:
+* In your Wherehows repo, cd to wherehows-docker
+* run ``` ./build.sh 1```
+* run docker-compose up
 
 ## Roadmap
 Check out the current [roadmap][RM] for WhereHows.

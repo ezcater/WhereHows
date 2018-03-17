@@ -144,7 +144,7 @@ CREATE TABLE `stg_dict_field_detail` (
   `namespace`      VARCHAR(200)                  NULL,
   `description`    VARCHAR(1000)                 NULL,
   `last_modified`  TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `dataset_id`     INT UNSIGNED         NULL COMMENT 'used to opitimize metadata ETL performance',
+  `dataset_id`     INT UNSIGNED         NULL COMMENT 'used to optimize metadata ETL performance',
   KEY `idx_stg_dict_field_detail__description` (`description`(100)),
   PRIMARY KEY (`urn`, `sort_id`, `db_id`)
 )

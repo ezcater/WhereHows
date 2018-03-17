@@ -1,7 +1,7 @@
 FROM openjdk:8
 
 RUN apt-get update && \
-    apt-get install -y wget curl
+    apt-get install -y wget curl vim
 
 # Variables
 ENV ES_PKG_NAME elasticsearch-5.5.1
