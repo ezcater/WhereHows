@@ -54,7 +54,7 @@ export default Route.extend(ApplicationRouteMixin, {
     };
 
     const brand = {
-      logo: isInternal ? '/assets/assets/images/wherehows-logo.png' : '',
+      logo: '/assets/assets/images/ezcater_logo.png',
       avatarUrl: isInternal ? avatarUrl.replace('[username]', userName) : '/assets/assets/images/default_avatar.png'
     };
 

@@ -43,8 +43,8 @@ Please download Docker
 ### Build
 Locally:
 * In your Wherehows repo, cd to wherehows-docker
-* run ` ./build.sh 1`
-* run docker-compose us
+* run ``` ./build.sh 1```
+* run docker-compose up
 
 ## Roadmap
 Check out the current [roadmap][RM] for WhereHows.
