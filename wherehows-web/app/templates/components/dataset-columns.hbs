@@ -1,0 +1,13 @@
+{{#column/column-stream
+  columns=columns
+  }}
+
+  {{stream.header}}
+
+  {{#each stream.columns as |column|}}
+    {{#stream.item column=column}}
+      {{{column.text}}}
+    {{/stream.item}}
+  {{/each}}
+
+{{/column/column-stream}}

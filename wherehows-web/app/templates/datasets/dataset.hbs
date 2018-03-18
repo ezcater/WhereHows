@@ -171,6 +171,8 @@
 
       {{#tablist.tab tabIds.Comments on-select=(action "tabSelectionChanged")}}Comments{{/tablist.tab}}
 
+      {{#tablist.tab tabIds.Comments on-select=(action "tabSelectionChanged")}}Columns{{/tablist.tab}}
+
       {{#tablist.tab tabIds.Schema on-select=(action "tabSelectionChanged")}}Schema{{/tablist.tab}}
 
       {{#tablist.tab tabIds.Ownership on-select=(action "tabSelectionChanged")}}
@@ -229,7 +231,7 @@
         schemas=schemas
       }}
     {{/tabs.tabpanel}}
-
+    
     {{#tabs.tabpanel tabIds.Ownership}}
       {{dataset-authors
         owners=owners

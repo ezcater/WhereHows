@@ -14,6 +14,7 @@ import {
 import { updateDatasetDeprecation } from 'wherehows-web/utils/api/datasets/properties';
 import { readDatasetView } from 'wherehows-web/utils/api/datasets/dataset';
 import { readDatasetOwners, updateDatasetOwners } from 'wherehows-web/utils/api/datasets/owners';
+import { readDatasetColumns } from 'wherehows-web/utils/api/datasets/columns';
 import { Tabs } from 'wherehows-web/constants/datasets/shared';
 import { action } from 'ember-decorators/object';
 
