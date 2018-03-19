@@ -30,7 +30,7 @@ CREATE TABLE users (
 )
 ;
 ALTER SEQUENCE users_id_seq MINVALUE 0 START 0 RESTART 0;
-CREATE INDEX idx_users__username USING BTREE ON users(username);
+CREATE INDEX idx_users__username ON users(username);
 
 CREATE TYPE duration_enum AS ENUM('monthly', 'weekly', 'daily', 'hourly');
 CREATE TABLE user_settings (
