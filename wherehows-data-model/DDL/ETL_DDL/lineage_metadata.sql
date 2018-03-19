@@ -107,9 +107,7 @@ CREATE TABLE job_attempt_source_code  (
 	script_md5_sum	BYTEA NULL,
 	created_date  	TIMESTAMP NOT NULL,
 	PRIMARY KEY(application_id,job_id,attempt_number)
-)
-
-DEFAULT CHARSET = utf8;
+);
 
 CREATE TABLE "job_execution_script" (
   "app_id" INT NOT NULL,
