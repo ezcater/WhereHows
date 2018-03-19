@@ -48,10 +48,8 @@ CREATE TABLE "wh_etl_job_history" (
   "process_id"      BIGINT                 DEFAULT NULL
   ,
   PRIMARY KEY ("wh_etl_exec_id")
-)
-
-
-  COMMENT = 'WhereHows ETL execution history table';
+);
+  COMMENT ON TABLE wh_etl_job_history IS 'WhereHows ETL execution history table';
   COMMENT ON COLUMN wh_etl_job_history.wh_etl_exec_id IS 'job execution id';
   COMMENT ON COLUMN wh_etl_job_history.wh_etl_job_name IS 'name of the etl job';
   COMMENT ON COLUMN wh_etl_job_history.status IS 'status of etl job execution';
@@ -202,9 +200,8 @@ CREATE TABLE cfg_deployment_tier  (
   sort_id       SMALLINT  NOT NULL,
   last_modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(tier_id)
-)
-
-COMMENT = 'http://en.wikipedia.org/wiki/Deployment_environment';
+);
+COMMENT ON TABLE cfg_deployment_tier IS 'http://en.wikipedia.org/wiki/Deployment_environment';
 CREATE UNIQUE INDEX uix_cfg_deployment_tier__tiercode ON "cfg_deployment_tier" (tier_code);
 COMMENT ON COLUMN cfg_deployment_tier.tier_code IS 'local,dev,test,qa,stg,prod';
 COMMENT ON COLUMN cfg_deployment_tier.tier_label IS 'display full name';

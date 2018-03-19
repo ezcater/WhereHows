@@ -34,10 +34,8 @@ CREATE TABLE flow (
   PRIMARY KEY (app_id, flow_id),
   INDEX flow_path_idx (app_id, flow_path(255)),
   INDEX flow_name_idx (app_id, flow_group(127), flow_name(127))
-)
-
-
-  COMMENT = 'Scheduler flow table';
+);
+  COMMENT ON TABLE flow IS 'Scheduler flow table';
   COMMENT ON COLUMN flow.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
   COMMENT ON COLUMN flow.modified_time IS 'latest wherehows modified time of the flow';
   COMMENT ON COLUMN flow.created_time IS 'wherehows created time of the flow';
@@ -75,10 +73,8 @@ CREATE TABLE stg_flow (
   wh_etl_exec_id       BIGINT,
   INDEX flow_id_idx (app_id, flow_id),
   INDEX flow_path_idx (app_id, flow_path(255))
-)
-
-
-  COMMENT = 'Scheduler flow table';
+);
+  COMMENT ON TABLE stg_flow IS 'Scheduler flow table';
   COMMENT ON COLUMN stg_flow.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
   COMMENT ON COLUMN stg_flow.modified_time IS 'latest wherehows modified time of the flow';
   COMMENT ON COLUMN stg_flow.created_time IS 'wherehows created time of the flow';
@@ -105,10 +101,8 @@ CREATE TABLE flow_source_id_map (
   source_id_uri    VARCHAR(255),
   PRIMARY KEY (app_id, flow_id),
   INDEX flow_path_idx (app_id, source_id_string(255))
-)
-  ENGINE = MyISAM
-
-  COMMENT = 'Scheduler flow id mapping table';
+);
+  COMMENT ON TABLE flow_source_id_map IS 'Scheduler flow id mapping table';
   COMMENT ON COLUMN flow_source_id_map.source_id_uri IS 'source uri id of the flow';
   COMMENT ON COLUMN flow_source_id_map.source_id_uuid IS 'source uuid id of the flow';
   COMMENT ON COLUMN flow_source_id_map.source_id_string IS 'source string id of the flow';
@@ -143,10 +137,8 @@ CREATE TABLE flow_job (
   INDEX flow_id_idx (app_id, flow_id),
   INDEX ref_flow_id_idx (app_id, ref_flow_id),
   INDEX job_path_idx (app_id, job_path(255))
-)
-
-
-  COMMENT = 'Scheduler job table';
+);
+  COMMENT ON TABLE flow_job IS 'Scheduler job table';
   COMMENT ON COLUMN flow_job.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN flow_job.modified_time IS 'latest wherehows modified time of the flow';
   COMMENT ON COLUMN flow_job.created_time IS 'wherehows created time of the flow';
@@ -193,10 +185,8 @@ CREATE TABLE stg_flow_job (
   INDEX ref_flow_path_idx (app_id, ref_flow_path(255)),
   INDEX job_path_idx (app_id, job_path(255)),
   INDEX job_type_idx (job_type)
-)
-
-
-  COMMENT = 'Scheduler job table';
+);
+  COMMENT ON TABLE stg_flow_job IS 'Scheduler job table';
   COMMENT ON COLUMN stg_flow_job.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN stg_flow_job.is_last IS 'determine if it is the last job';
   COMMENT ON COLUMN stg_flow_job.is_first IS 'determine if it is the first job';
@@ -226,10 +216,8 @@ CREATE TABLE job_source_id_map (
   source_id_uri    VARCHAR(255),
   PRIMARY KEY (app_id, job_id),
   INDEX job_path_idx (app_id, source_id_string(255))
-)
-  ENGINE = MyISAM
-
-  COMMENT = 'Scheduler flow id mapping table';
+);
+  COMMENT ON TABLE job_source_id_map IS 'Scheduler flow id mapping table';
   COMMENT ON COLUMN job_source_id_map.source_id_uri IS 'source uri id of the flow';
   COMMENT ON COLUMN job_source_id_map.source_id_uuid IS 'source uuid id of the flow';
   COMMENT ON COLUMN job_source_id_map.source_id_string IS 'job full path string';
@@ -249,10 +237,8 @@ CREATE TABLE flow_dag (
   PRIMARY KEY (app_id, flow_id, source_version),
   INDEX flow_dag_md5_idx (app_id, flow_id, dag_md5),
   INDEX flow_id_idx (app_id, flow_id)
-)
-
-
-  COMMENT = 'Flow dag reference table';
+);
+  COMMENT ON TABLE flow_dag IS 'Flow dag reference table';
   COMMENT ON COLUMN flow_dag.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN flow_dag.is_current IS 'if this source version of the flow is current';
   COMMENT ON COLUMN flow_dag.dag_md5 IS 'md5 checksum for this dag version';
@@ -273,10 +259,8 @@ CREATE TABLE stg_flow_dag (
   PRIMARY KEY (app_id, flow_id, source_version),
   INDEX flow_dag_md5_idx (app_id, flow_id, dag_md5),
   INDEX flow_id_idx (app_id, flow_id)
-)
-
-
-  COMMENT = 'Flow dag reference table';
+);
+  COMMENT ON TABLE stg_flow_dag IS 'Flow dag reference table';
   COMMENT ON COLUMN stg_flow_dag.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN stg_flow_dag.dag_md5 IS 'md5 checksum for this dag version';
   COMMENT ON COLUMN stg_flow_dag.dag_version IS 'derived dag version of the flow';
@@ -300,10 +284,8 @@ CREATE TABLE stg_flow_dag_edge (
   INDEX flow_path_idx (app_id, flow_path(255)),
   INDEX source_job_path_idx (app_id, source_job_path(255)),
   INDEX target_job_path_idx (app_id, target_job_path(255))
-)
-
-
-  COMMENT = 'Flow dag table';
+);
+  COMMENT ON TABLE stg_flow_dag_edge IS 'Flow dag table';
   COMMENT ON COLUMN stg_flow_dag_edge.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN stg_flow_dag_edge.target_job_path IS 'target job path from top level';
   COMMENT ON COLUMN stg_flow_dag_edge.target_job_id IS 'job id either inherit from source or generated';
@@ -337,10 +319,8 @@ CREATE TABLE flow_execution (
   PRIMARY KEY (app_id, flow_exec_id),
   INDEX flow_id_idx (app_id, flow_id),
   INDEX flow_name_idx (app_id, flow_name)
-)
-
-
-  COMMENT = 'Scheduler flow execution table';
+);
+  COMMENT ON TABLE flow_execution IS 'Scheduler flow execution table';
   COMMENT ON COLUMN flow_execution.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN flow_execution.modified_time IS 'etl modified time';
   COMMENT ON COLUMN flow_execution.created_time IS 'etl create time';
@@ -366,10 +346,8 @@ CREATE TABLE flow_execution_id_map (
   source_exec_uri    VARCHAR(255),
   PRIMARY KEY (app_id, flow_exec_id),
   INDEX flow_exec_uuid_idx (app_id, source_exec_uuid)
-)
-  ENGINE = MyISAM
-
-  COMMENT = 'Scheduler flow execution id mapping table';
+);
+  COMMENT ON TABLE flow_execution_id_map IS 'Scheduler flow execution id mapping table';
   COMMENT ON COLUMN flow_execution_id_map.source_exec_uri IS 'source uri id of the flow execution';
   COMMENT ON COLUMN flow_execution_id_map.source_exec_uuid IS 'source uuid id of the flow execution';
   COMMENT ON COLUMN flow_execution_id_map.source_exec_string IS 'source flow execution string';
@@ -396,10 +374,8 @@ CREATE TABLE stg_flow_execution (
   INDEX flow_exec_idx (app_id, flow_exec_id),
   INDEX flow_id_idx (app_id, flow_id),
   INDEX flow_path_idx (app_id, flow_path(255))
-)
-
-
-  COMMENT = 'Scheduler flow execution table';
+);
+  COMMENT ON TABLE stg_flow_execution IS 'Scheduler flow execution table';
   COMMENT ON COLUMN stg_flow_execution.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN stg_flow_execution.is_backfill IS 'determine if it is a back-fill execution';
   COMMENT ON COLUMN stg_flow_execution.is_adhoc IS 'determine if it is a ad-hoc execution';
@@ -443,10 +419,8 @@ CREATE TABLE job_execution (
   INDEX job_id_idx (app_id, job_id),
   INDEX flow_id_idx (app_id, flow_id),
   INDEX job_name_idx (app_id, flow_id, job_name)
-)
-
-
-  COMMENT = 'Scheduler job execution table';
+);
+  COMMENT ON TABLE job_execution IS 'Scheduler job execution table';
   COMMENT ON COLUMN job_execution.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN job_execution.modified_time IS 'etl modified time';
   COMMENT ON COLUMN job_execution.created_time IS 'etl create time';
@@ -473,10 +447,8 @@ CREATE TABLE job_execution_id_map (
   source_exec_uri    VARCHAR(255),
   PRIMARY KEY (app_id, job_exec_id),
   INDEX job_exec_uuid_idx (app_id, source_exec_uuid)
-)
-  ENGINE = MyISAM
-
-  COMMENT = 'Scheduler job execution id mapping table';
+);
+  COMMENT ON TABLE job_execution_id_map IS 'Scheduler job execution id mapping table';
   COMMENT ON COLUMN job_execution_id_map.source_exec_uri IS 'source uri id of the job execution';
   COMMENT ON COLUMN job_execution_id_map.source_exec_uuid IS 'source uuid id of the job execution';
   COMMENT ON COLUMN job_execution_id_map.source_exec_string IS 'source job execution string';
@@ -508,10 +480,8 @@ CREATE TABLE stg_job_execution (
   INDEX job_path_idx (app_id, job_path(255)),
   INDEX flow_exec_idx (app_id, flow_exec_id),
   INDEX job_exec_idx (app_id, job_exec_id)
-)
-
-
-  COMMENT = 'Scheduler job execution table';
+);
+  COMMENT ON TABLE stg_job_execution IS 'Scheduler job execution table';
   COMMENT ON COLUMN stg_job_execution.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN stg_job_execution.is_backfill IS 'determine if it is a back-fill execution';
   COMMENT ON COLUMN stg_job_execution.is_adhoc IS 'determine if it is a ad-hoc execution';
@@ -550,10 +520,8 @@ CREATE TABLE flow_schedule (
   wh_etl_exec_id       BIGINT,
   PRIMARY KEY (app_id, flow_id, ref_id),
   INDEX (app_id, flow_id)
-)
-
-
-  COMMENT = 'Scheduler flow schedule table';
+);
+  COMMENT ON TABLE flow_schedule IS 'Scheduler flow schedule table';
   COMMENT ON COLUMN flow_schedule.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN flow_schedule.ref_id IS 'reference id of this schedule';
   COMMENT ON COLUMN flow_schedule.modified_time IS 'etl modified time';
@@ -585,10 +553,8 @@ CREATE TABLE stg_flow_schedule (
   wh_etl_exec_id       BIGINT,
   INDEX (app_id, flow_id),
   INDEX (app_id, flow_path(255))
-)
-
-
-  COMMENT = 'Scheduler flow schedule table';
+);
+  COMMENT ON TABLE stg_flow_schedule IS 'Scheduler flow schedule table';
   COMMENT ON COLUMN stg_flow_schedule.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN stg_flow_schedule.ref_id IS 'reference id of this schedule';
   COMMENT ON COLUMN stg_flow_schedule.effective_end_time IS 'effective end time of the flow execution';
@@ -616,10 +582,8 @@ CREATE TABLE flow_owner_permission (
   PRIMARY KEY (app_id, flow_id, owner_id),
   INDEX flow_index (app_id, flow_id),
   INDEX owner_index (app_id, owner_id)
-)
-
-
-  COMMENT = 'Scheduler owner table';
+);
+  COMMENT ON TABLE flow_owner_permission IS 'Scheduler owner table';
   COMMENT ON COLUMN flow_owner_permission.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN flow_owner_permission.modified_time IS 'etl modified time';
   COMMENT ON COLUMN flow_owner_permission.created_time IS 'etl create time';
@@ -641,10 +605,8 @@ CREATE TABLE stg_flow_owner_permission (
   INDEX flow_index (app_id, flow_id),
   INDEX owner_index (app_id, owner_id),
   INDEX flow_path_idx (app_id, flow_path(255))
-)
-
-
-  COMMENT = 'Scheduler owner table';
+);
+  COMMENT ON TABLE stg_flow_owner_permission IS 'Scheduler owner table';
   COMMENT ON COLUMN stg_flow_owner_permission.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
   COMMENT ON COLUMN stg_flow_owner_permission.owner_type IS 'whether is a group owner or not';
   COMMENT ON COLUMN stg_flow_owner_permission.permissions IS 'permissions of the owner';
@@ -663,11 +625,10 @@ CREATE TABLE job_execution_ext_reference (
 	created_time   	INT   NULL,
 	wh_etl_exec_id 	BIGINT   NULL,
 	PRIMARY KEY(app_id,job_exec_id,attempt_id,ext_ref_type,ext_ref_sort_id)
-)
+);
 
 DEFAULT CHARSET = latin1
-COMMENT = 'External reference ids for the job execution'
-;
+COMMENT ON TABLE job_execution_ext_reference IS 'External reference ids for the job execution';
 COMMENT ON COLUMN job_execution_ext_reference.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
 COMMENT ON COLUMN job_execution_ext_reference.created_time IS 'etl create time';
 COMMENT ON COLUMN job_execution_ext_reference.ext_ref_id IS 'external reference id';
@@ -691,11 +652,9 @@ CREATE TABLE stg_job_execution_ext_reference (
 	created_time   	INT   NULL,
 	wh_etl_exec_id 	BIGINT   NULL,
 	PRIMARY KEY(app_id,job_exec_id,attempt_id,ext_ref_type,ext_ref_sort_id)
-)
-
+);
 DEFAULT CHARSET = latin1
-COMMENT = 'staging table for job_execution_ext_reference'
-;
+COMMENT ON TABLE stg_job_execution_ext_reference IS 'staging table for job_execution_ext_reference';
 COMMENT ON COLUMN stg_job_execution_ext_reference.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
 COMMENT ON COLUMN stg_job_execution_ext_reference.created_time IS 'etl create time';
 COMMENT ON COLUMN stg_job_execution_ext_reference.ext_ref_id IS 'external reference id';
@@ -710,11 +669,9 @@ CREATE TABLE "cfg_job_type" (
   "job_type"    VARCHAR(50)          NOT NULL,
   "description" VARCHAR(200)         NULL,
   PRIMARY KEY ("job_type_id")
-)
-
+);
   ALTER SEQUENCE cfg_job_type_job_type_id_seq RESTART WITH 55;
-
-  COMMENT = 'job types used in mutliple schedulers';
+  COMMENT ON TABLE cfg_job_type IS 'job types used in mutliple schedulers';
 CREATE UNIQUE INDEX "ak_cfg_job_type__job_type" ON "cfg_job_type" ("job_type");
 
 
@@ -725,6 +682,6 @@ CREATE TABLE "cfg_job_type_reverse_map" (
   "job_type_standard" VARCHAR(50)          NOT NULL,
   PRIMARY KEY ("job_type_actual"),
   KEY "cfg_job_type_reverse_map_job_type_id_fk" ("job_type_id")
-)
-  COMMENT = 'The reverse map of the actual job type to standard job type';
+);
+  COMMENT ON TABLE cfg_job_type_reverse_map IS 'The reverse map of the actual job type to standard job type';
 CREATE UNIQUE INDEX "cfg_job_type_reverse_map_uk" ON "cfg_job_type_reverse_map" ("job_type_actual");,

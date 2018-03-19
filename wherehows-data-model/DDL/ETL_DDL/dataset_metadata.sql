@@ -239,7 +239,7 @@ CREATE TABLE "dict_field_detail" (
   PRIMARY KEY ("field_id")
 );
   ALTER SEQUENCE dict_field_detail_field_id_seq RESTART WITH 0;
-  COMMENT = 'Flattened Fields/Columns';
+  COMMENT ON TABLE dict_field_detail IS 'Flattened Fields/Columns';
 CREATE UNIQUE INDEX "uix_dict_field__datasetid_parentpath_fieldname" ON "dict_field_detail" ("dataset_id", "parent_path", "field_name");
 CREATE UNIQUE INDEX "uix_dict_field__datasetid_sortid" ON "dict_field_detail" ("dataset_id", "sort_id");
   COMMENT ON COLUMN dict_field_detail.data_precision IS 'only in decimal type';
