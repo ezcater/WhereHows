@@ -70,7 +70,7 @@ CREATE TABLE "cfg_application" (
   "doc_url"                 VARCHAR(512)         DEFAULT NULL,
   "parent_app_id"           INT     NOT NULL,
   "app_status"              CHAR(1)              NOT NULL,
-  "last_modified"           TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  "last_modified"           TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "is_logical"              CHAR(1)                       DEFAULT NULL,
   "uri_type"                VARCHAR(25)                   DEFAULT NULL,
   "uri"                     VARCHAR(1000)                 DEFAULT NULL,
@@ -80,6 +80,11 @@ CREATE TABLE "cfg_application" (
 )
 ;
 CREATE UNIQUE INDEX "idx_cfg_application__appcode" ON "cfg_application" USING HASH ("app_code");
+
+-- Replaces `ON UPDATE CURRENT_TIMESTAMP` in table definition
+CREATE TRIGGER cfg_application_last_modified_modtime
+  BEFORE UPDATE ON cfg_application
+  FOR EACH ROW EXECUTE PROCEDURE update_last_modified_column();
 
 
 CREATE TABLE cfg_database  (
@@ -100,7 +105,7 @@ CREATE TABLE cfg_database  (
 	jdbc_url               	VARCHAR(1000) NULL,
 	uri                    	VARCHAR(1000) NULL,
 	short_connection_string	VARCHAR(50)  NULL,
-  last_modified          	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  last_modified          	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY(db_id)
 )
 
@@ -121,6 +126,11 @@ COMMENT ON COLUMN cfg_database.extra_deployment_tag3 IS 'Additional tag. Such as
 COMMENT ON COLUMN cfg_database.replication_role IS 'master or slave or broker';
 COMMENT ON COLUMN cfg_database.short_connection_string IS 'Oracle TNS Name, ODBC DSN, TDPID...';
 
+-- Replaces `ON UPDATE CURRENT_TIMESTAMP` in table definition
+CREATE TRIGGER cfg_database_last_modified_modtime
+  BEFORE UPDATE ON cfg_database
+  FOR EACH ROW EXECUTE PROCEDURE update_last_modified_column();
+
 
 CREATE TABLE stg_cfg_object_name_map  (
 	object_type             	VARCHAR(100) NOT NULL,
@@ -136,7 +146,7 @@ CREATE TABLE stg_cfg_object_name_map  (
 	mapped_object_urn       	VARCHAR(350) NULL,
 	mapped_object_dataset_id	INT NULL,
 	description             	VARCHAR(500) NULL,
-	last_modified           	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	last_modified           	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY(object_name, mapped_object_name),
   KEY idx_stg_cfg_object_name_map__mappedobjectname (mapped_object_name) USING BTREE
 )
@@ -144,6 +154,12 @@ CREATE TABLE stg_cfg_object_name_map  (
 CHARACTER SET latin1
 COLLATE latin1_swedish_ci
 COMMENT = 'Map alias (when is_identical_map=Y) and view dependency' ;
+
+-- Replaces `ON UPDATE CURRENT_TIMESTAMP` in table definition
+CREATE TRIGGER stg_cfg_object_name_map_last_modified_modtime
+  BEFORE UPDATE ON stg_cfg_object_name_map
+  FOR EACH ROW EXECUTE PROCEDURE update_last_modified_column();
+
 
 CREATE TABLE cfg_object_name_map  (
   obj_name_map_id         SERIAL NOT NULL,
@@ -158,7 +174,7 @@ CREATE TABLE cfg_object_name_map  (
   mapped_object_name      VARCHAR(350) NOT NULL,
   mapped_object_dataset_id	INT NULL,
   description             VARCHAR(500) NULL,
-  last_modified           TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  last_modified           TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(obj_name_map_id),
   KEY idx_cfg_object_name_map__mappedobjectname (mapped_object_name) USING BTREE,
   CONSTRAINT uix_cfg_object_name_map__objectname_mappedobjectname UNIQUE (object_name, mapped_object_name)
@@ -173,13 +189,18 @@ COMMENT ON COLUMN cfg_object_name_map.is_identical_map IS 'Y/N';
 COMMENT ON COLUMN cfg_object_name_map.mapped_object_name IS 'this is the original/parent object';
 COMMENT ON COLUMN cfg_object_name_map.mapped_object_dataset_id IS 'can be the abstract dataset id for versioned objects';
 
+-- Replaces `ON UPDATE CURRENT_TIMESTAMP` in table definition
+CREATE TRIGGER cfg_object_name_map_last_modified_modtime
+  BEFORE UPDATE ON cfg_object_name_map
+  FOR EACH ROW EXECUTE PROCEDURE update_last_modified_column();
+
 
 CREATE TABLE cfg_deployment_tier  (
   tier_id      	SMALLINT NOT NULL,
   tier_code    	VARCHAR(25)  NOT NULL,
   tier_label    VARCHAR(50)  NULL,
   sort_id       SMALLINT  NOT NULL,
-  last_modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  last_modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(tier_id)
 )
 
@@ -188,6 +209,11 @@ CREATE UNIQUE INDEX uix_cfg_deployment_tier__tiercode ON "cfg_deployment_tier" (
 COMMENT ON COLUMN cfg_deployment_tier.tier_code IS 'local,dev,test,qa,stg,prod';
 COMMENT ON COLUMN cfg_deployment_tier.tier_label IS 'display full name';
 COMMENT ON COLUMN cfg_deployment_tier.sort_id IS '3-digit for group, 3-digit within group';
+
+-- Replaces `ON UPDATE CURRENT_TIMESTAMP` in table definition
+CREATE TRIGGER cfg_deployment_tier_last_modified_modtime
+  BEFORE UPDATE ON cfg_deployment_tier
+  FOR EACH ROW EXECUTE PROCEDURE update_last_modified_column();
 
 
 CREATE TABLE cfg_data_center  (
@@ -201,13 +227,18 @@ CREATE TABLE cfg_data_center  (
 	longtitude        	decimal(10,6) NULL,
 	latitude          	decimal(10,6) NULL,
 	data_center_status	CHAR(1)  NULL,
-	last_modified     	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	last_modified     	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY(data_center_id)
 )
 
 COMMENT = 'https://en.wikipedia.org/wiki/Data_center' ;
 CREATE UNIQUE INDEX uix_cfg_data_center__datacentercode ON "cfg_data_center" (data_center_code);
 COMMENT ON COLUMN cfg_data_center.data_center_status IS 'A,D,U';
+
+-- Replaces `ON UPDATE CURRENT_TIMESTAMP` in table definition
+CREATE TRIGGER cfg_data_center_last_modified_modtime
+  BEFORE UPDATE ON cfg_data_center
+  FOR EACH ROW EXECUTE PROCEDURE update_last_modified_column();
 
 
 CREATE TABLE cfg_cluster  (
@@ -218,11 +249,16 @@ CREATE TABLE cfg_cluster  (
 	deployment_tier_code    VARCHAR(25) NOT NULL,
 	data_center_code        VARCHAR(30) NULL,
 	description             VARCHAR(200) NULL,
-	last_modified     	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	last_modified     	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY(cluster_id)
 )
 COMMENT = 'https://en.wikipedia.org/wiki/Computer_cluster' ;
 CREATE UNIQUE INDEX uix_cfg_cluster__clustercode ON "cfg_cluster" (cluster_code);
+
+-- Replaces `ON UPDATE CURRENT_TIMESTAMP` in table definition
+CREATE TRIGGER cfg_cluster_last_modified_modtime
+  BEFORE UPDATE ON cfg_cluster
+  FOR EACH ROW EXECUTE PROCEDURE update_last_modified_column();
 
 
 CREATE TABLE IF NOT EXISTS cfg_search_score_boost (
