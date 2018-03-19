@@ -43,7 +43,7 @@ CREATE TABLE dict_business_metric  (
   "scm_url"               	VARCHAR(300) NULL,
   "wh_etl_exec_id"              BIGINT,
   PRIMARY KEY(metric_id),
-  KEY "idx_dict_business_metric__ref_id" ("metric_ref_id") USING BTREE,
+  KEY "idx_dict_business_metric__ref_id" ("metric_ref_id"),
   FULLTEXT KEY "fti_dict_business_metric_all" ("metric_name", "metric_description", "metric_category", "metric_group", "dashboard_name")
 )
 

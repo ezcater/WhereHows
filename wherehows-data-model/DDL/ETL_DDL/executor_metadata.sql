@@ -636,7 +636,7 @@ COMMENT ON COLUMN job_execution_ext_reference.attempt_id IS 'job execution attem
 COMMENT ON COLUMN job_execution_ext_reference.job_exec_id IS 'job execution id either inherit or generated';
 COMMENT ON COLUMN job_execution_ext_reference.app_id IS 'application id of the flow';
 
-CREATE INDEX idx_job_execution_ext_ref__ext_ref_id USING BTREE
+CREATE INDEX idx_job_execution_ext_ref__ext_ref_id
 	ON job_execution_ext_reference(ext_ref_id);
 
 

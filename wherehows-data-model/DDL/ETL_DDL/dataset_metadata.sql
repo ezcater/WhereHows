@@ -356,11 +356,11 @@ CREATE TABLE dict_dataset_instance  (
 	PRIMARY KEY(dataset_id,db_id,version_sort_id)
 )
 ;
-CREATE INDEX logical_name USING BTREE
+CREATE INDEX logical_name
 	ON dict_dataset_instance(logical_name);
-CREATE INDEX server_cluster USING BTREE
+CREATE INDEX server_cluster
 	ON dict_dataset_instance(server_cluster, deployment_tier, data_center, slice);
-CREATE INDEX native_name USING BTREE
+CREATE INDEX native_name
 	ON dict_dataset_instance(native_name);
 	COMMENT ON COLUMN dict_dataset_instance.db_id IS 'FK to cfg_database';
 	COMMENT ON COLUMN dict_dataset_instance.data_center IS 'data center code: lva1, ltx1, dc2, dc3...';
@@ -398,7 +398,7 @@ CREATE TABLE stg_dict_dataset_instance  (
 	PRIMARY KEY(dataset_urn,db_id)
 )
 ;
-CREATE INDEX server_cluster USING BTREE
+CREATE INDEX server_cluster
 	ON stg_dict_dataset_instance(server_cluster, deployment_tier, data_center, slice);
 	COMMENT ON COLUMN stg_dict_dataset_instance.data_center IS 'data center code: lva1, ltx1, dc2, dc3...';
 	COMMENT ON COLUMN stg_dict_dataset_instance.server_cluster IS 'sfo1-bigserver';

@@ -29,7 +29,7 @@ CREATE TABLE users (
 )
 ;
 ALTER SEQUENCE users_id_seq RESTART WITH 0;
-CREATE INDEX idx_users__username USING BTREE ON users(username);
+CREATE INDEX idx_users__username ON users(username);
 
 CREATE TABLE user_settings (
   user_id             INT                           NOT NULL,

@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS "job_execution_data_lineage" (
 
   PRIMARY KEY ("app_id", "job_exec_id", "srl_no"),
   KEY "idx_flow_path" ("app_id", "flow_path"(300)),
-  KEY "idx_job_execution_data_lineage__object_name" ("abstracted_object_name", "source_target_type") USING BTREE
+  KEY "idx_job_execution_data_lineage__object_name" ("abstracted_object_name", "source_target_type")
 );
   COMMENT ON TABLE job_execution_data_lineage IS 'Lineage table';
   COMMENT ON COLUMN job_execution_data_lineage.source_srl_no IS 'the related record of this record';
