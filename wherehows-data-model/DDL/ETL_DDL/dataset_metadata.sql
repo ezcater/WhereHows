@@ -15,6 +15,25 @@
 -- create statement for dataset related tables :
 -- dict_dataset, dict_dataset_sample, dict_field_detail, dict_dataset_schema_history
 
+-- These are used to replace MySQL `ON UPDATE` callbacks
+CREATE FUNCTION update_modified_column() RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  NEW.modified = NOW();
+  RETURN NEW;
+END;
+$$;
+
+CREATE FUNCTION update_last_modified_column() RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  NEW.last_modified = NOW();
+  RETURN NEW;
+END;
+$$;
+
 -- stagging table for dataset
 CREATE TYPE storage_type_enum AS ENUM ('Table', 'View', 'Avro', 'ORC', 'RC', 'Sequence', 'Flat File', 'JSON', 'BINARY_JSON', 'XML', 'Thrift', 'Parquet', 'Protobuff');
 CREATE TABLE "stg_dict_dataset" (
@@ -164,13 +183,18 @@ CREATE TABLE "stg_dict_field_detail" (
   "default_value"  VARCHAR(200)                  NULL,
   "namespace"      VARCHAR(200)                  NULL,
   "description"    VARCHAR(1000)                 NULL,
-  "last_modified"  TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  "last_modified"  TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "dataset_id"     BIGINT         NULL,
   PRIMARY KEY ("urn", "sort_id", "db_id")
 )
 ;
   COMMENT ON COLUMN stg_dict_field_detail.dataset_id IS 'used to opitimize metadata ETL performance';
 CREATE INDEX CONCURRENTLY "idx_stg_dict_field_detail__description" ON "stg_dict_field_detail" ("description");
+
+-- Replaces `ON UPDATE CURRENT_TIMESTAMP` in table definition
+CREATE TRIGGER stg_dict_field_detail_last_modified_modtime
+  BEFORE UPDATE ON stg_dict_field_detail
+  FOR EACH ROW EXECUTE PROCEDURE update_last_modified_column();
 
 
 -- field detail table
@@ -211,7 +235,7 @@ CREATE TABLE "dict_field_detail" (
   ,
   "hcatalog_data_type" VARCHAR(50)                   NULL
   ,
-  "modified"           TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  "modified"           TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY ("field_id")
 );
   ALTER SEQUENCE dict_field_detail_field_id_seq MINVALUE 0 START 0 RESTART 0;
@@ -228,6 +252,12 @@ CREATE UNIQUE INDEX "uix_dict_field__datasetid_sortid" ON "dict_field_detail" ("
   COMMENT ON COLUMN dict_field_detail.jdbc_data_type IS 'correspond type in jdbc';
   COMMENT ON COLUMN dict_field_detail.pig_data_type IS 'correspond type in pig';
   COMMENT ON COLUMN dict_field_detail.hcatalog_data_type IS 'correspond type in hcatalog';
+
+-- Replaces `ON UPDATE CURRENT_TIMESTAMP` in table definition
+CREATE TRIGGER dict_field_detail_modified_modtime
+  BEFORE UPDATE ON dict_field_detail
+  FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+
 
 -- schema history
 CREATE TABLE "dict_dataset_schema_history" (
@@ -258,7 +288,7 @@ CREATE TABLE "dict_dataset_field_comment" (
   "comment_id" BIGINT NOT NULL,
   "dataset_id" INT NOT NULL,
   "is_default" SMALLINT NULL DEFAULT '0',
-  PRIMARY KEY (field_id, comment_id),
+  PRIMARY KEY (field_id, comment_id)
 )
 ;
 CREATE INDEX CONCURRENTLY dict_dataset_field_comment__comment_id ON "dict_dataset_field_comment" ("comment_id");
@@ -273,7 +303,7 @@ CREATE TABLE comments (
   "created"      TIMESTAMP                                                                                     NULL,
   "modified"     TIMESTAMP                                                                                     NULL,
   "comment_type" comment_type_enum NULL,
-  PRIMARY KEY (id),
+  PRIMARY KEY (id)
 )
 
   CHARACTER SET latin1
@@ -290,7 +320,7 @@ CREATE TABLE "field_comments" (
   "user_id"                INT          NOT NULL DEFAULT '0',
   "comment"                VARCHAR(4000)    NOT NULL,
   "created"                TIMESTAMP        NOT NULL,
-  "modified"               TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  "modified"               TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "comment_crc32_checksum" INT          NULL,
   PRIMARY KEY ("id")
 )
@@ -299,6 +329,11 @@ ALTER SEQUENCE field_comments_id_seq MINVALUE 0 START 0 RESTART 0;
 COMMENT ON COLUMN field_comments.comment_crc32_checksum IS '4-byte CRC32';
 CREATE INDEX CONCURRENTLY comment_key ON "field_comments" ("comment");
 CREATE INDEX CONCURRENTLY fti_comment ON "field_comments" ("comment");
+
+-- Replaces `ON UPDATE CURRENT_TIMESTAMP` in table definition
+CREATE TRIGGER field_comments_modified_modtime
+  BEFORE UPDATE ON field_comments
+  FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
 -- dict_dataset_instance
 CREATE TYPE deployment_tier_enum AS ENUM('local','grid','dev','int','ei','ei2','ei3','qa','stg','prod');
