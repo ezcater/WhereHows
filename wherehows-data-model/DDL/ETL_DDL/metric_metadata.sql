@@ -42,13 +42,9 @@ CREATE TABLE dict_business_metric  (
   "wiki_url"              	VARCHAR(300) NULL,
   "scm_url"               	VARCHAR(300) NULL,
   "wh_etl_exec_id"              BIGINT,
-  PRIMARY KEY(metric_id),
-  KEY "idx_dict_business_metric__ref_id" ("metric_ref_id"),
-  FULLTEXT KEY "fti_dict_business_metric_all" ("metric_name", "metric_description", "metric_category", "metric_group", "dashboard_name")
-)
-
+  PRIMARY KEY(metric_id)
+);
   ALTER SEQUENCE dict_business_metric_metric_id_seq RESTART WITH 0;
-;
 CREATE UNIQUE INDEX "uq_dataset_urn" ON "dict_business_metric" ("urn");
 COMMENT ON COLUMN dict_business_metric.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
 COMMENT ON COLUMN dict_business_metric.metric_formula IS 'Expression, Code Snippet or Calculation Logic';
@@ -68,6 +64,8 @@ COMMENT ON COLUMN dict_business_metric.metric_sub_category IS 'Additional Classi
 COMMENT ON COLUMN dict_business_metric.metric_category IS 'Hierarchy Level 3';
 COMMENT ON COLUMN dict_business_metric.metric_group IS 'Hierarchy Level 2';
 COMMENT ON COLUMN dict_business_metric.dashboard_name IS 'Hierarchy Level 1';
+CREATE INDEX "idx_dict_business_metric__ref_id" ON "dict_business_metric" ("metric_ref_id");
+CREATE INDEX "fti_dict_business_metric_all" ON "dict_business_metric" ("metric_name", "metric_description", "metric_category", "metric_group", "dashboard_name");
 
 CREATE TABLE "stg_dict_business_metric" (
   "metric_name" VARCHAR(200) NOT NULL,

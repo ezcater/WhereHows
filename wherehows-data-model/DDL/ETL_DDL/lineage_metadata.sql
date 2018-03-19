@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS "job_execution_data_lineage" (
   "wh_etl_exec_id"              INT                                        NULL,
 
   PRIMARY KEY ("app_id", "job_exec_id", "srl_no"),
-  KEY "idx_flow_path" ("app_id", "flow_path"(300)),
+  KEY "idx_flow_path" ("app_id", "flow_path"),
   KEY "idx_job_execution_data_lineage__object_name" ("abstracted_object_name", "source_target_type")
 );
   COMMENT ON TABLE job_execution_data_lineage IS 'Lineage table';
@@ -122,5 +122,5 @@ CREATE TABLE "job_execution_script" (
   "committer_ldap" VARCHAR(30) DEFAULT NULL,
   "commit_time" TIMESTAMP DEFAULT NULL,
   "script_url" VARCHAR(512) DEFAULT NULL,
-  PRIMARY KEY ("app_id","job_id","script_name"(100),"committer_name")
+  PRIMARY KEY ("app_id","job_id","script_name","committer_name")
 );

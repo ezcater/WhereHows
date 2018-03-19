@@ -143,10 +143,10 @@ CREATE TABLE stg_cfg_object_name_map  (
 	mapped_object_dataset_id	INT NULL,
 	description             	VARCHAR(500) NULL,
 	last_modified           	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY(object_name, mapped_object_name),
-  KEY idx_stg_cfg_object_name_map__mappedobjectname (mapped_object_name)
+	PRIMARY KEY(object_name, mapped_object_name)
 );
 COMMENT ON TABLE stg_cfg_object_name_map IS 'Map alias (when is_identical_map=Y) and view dependency';
+CREATE INDEX idx_stg_cfg_object_name_map__mappedobjectname on stg_cfg_object_name_map (mapped_object_name);
 
 -- Replaces `ON UPDATE CURRENT_TIMESTAMP` in table definition
 CREATE TRIGGER stg_cfg_object_name_map_last_modified_modtime
@@ -169,11 +169,8 @@ CREATE TABLE cfg_object_name_map  (
   description             VARCHAR(500) NULL,
   last_modified           TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(obj_name_map_id),
-  KEY idx_cfg_object_name_map__mappedobjectname (mapped_object_name),
   CONSTRAINT uix_cfg_object_name_map__objectname_mappedobjectname UNIQUE (object_name, mapped_object_name)
 );
-
-
 ALTER SEQUENCE cfg_object_name_map_obj_name_map_id_seq RESTART WITH 1;
 COMMENT ON TABLE cfg_object_name_map IS 'Map alias (when is_identical_map=Y) and view dependency. Always map from Derived/Child (object) back to its Original/Parent (mapped_object)';
 COMMENT ON COLUMN cfg_object_name_map.object_name IS 'this is the derived/child object';
@@ -181,6 +178,7 @@ COMMENT ON COLUMN cfg_object_name_map.object_dataset_id IS 'can be the abstract 
 COMMENT ON COLUMN cfg_object_name_map.is_identical_map IS 'Y/N';
 COMMENT ON COLUMN cfg_object_name_map.mapped_object_name IS 'this is the original/parent object';
 COMMENT ON COLUMN cfg_object_name_map.mapped_object_dataset_id IS 'can be the abstract dataset id for versioned objects';
+CREATE INDEX idx_cfg_object_name_map__mappedobjectname on cfg_object_name_map (mapped_object_name);
 
 -- Replaces `ON UPDATE CURRENT_TIMESTAMP` in table definition
 CREATE TRIGGER cfg_object_name_map_last_modified_modtime
