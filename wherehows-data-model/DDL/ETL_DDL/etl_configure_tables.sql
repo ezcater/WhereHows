@@ -108,7 +108,7 @@ CREATE TABLE cfg_database  (
 )
 
 DEFAULT CHARSET = utf8
-COMMENT = 'Abstract different storage instances as databases' ;
+COMMENT ON TABLE foobar_table IS 'Abstract different storage instances as databases';
 CREATE UNIQUE INDEX "uix_cfg_database__dbcode" ON "cfg_database" USING HASH (db_code);
 COMMENT ON COLUMN cfg_database.db_code IS 'Unique string without space';
 COMMENT ON COLUMN cfg_database.primary_dataset_type IS 'What type of dataset this DB supports';
@@ -147,11 +147,11 @@ CREATE TABLE stg_cfg_object_name_map  (
 	last_modified           	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY(object_name, mapped_object_name),
   KEY idx_stg_cfg_object_name_map__mappedobjectname (mapped_object_name) USING BTREE
-)
+);
 
 CHARACTER SET latin1
 COLLATE latin1_swedish_ci
-COMMENT = 'Map alias (when is_identical_map=Y) and view dependency' ;
+COMMENT ON TABLE stg_cfg_object_name_map IS 'Map alias (when is_identical_map=Y) and view dependency';
 
 -- Replaces `ON UPDATE CURRENT_TIMESTAMP` in table definition
 CREATE TRIGGER stg_cfg_object_name_map_last_modified_modtime
@@ -180,7 +180,7 @@ CREATE TABLE cfg_object_name_map  (
 
 CHARACTER SET latin1
 ALTER SEQUENCE cfg_object_name_map_obj_name_map_id_seq RESTART WITH 1;
-COMMENT = 'Map alias (when is_identical_map=Y) and view dependency. Always map from Derived/Child (object) back to its Original/Parent (mapped_object)' ;
+COMMENT ON TABLE cfg_object_name_map IS 'Map alias (when is_identical_map=Y) and view dependency. Always map from Derived/Child (object) back to its Original/Parent (mapped_object)';
 COMMENT ON COLUMN cfg_object_name_map.object_name IS 'this is the derived/child object';
 COMMENT ON COLUMN cfg_object_name_map.object_dataset_id IS 'can be the abstract dataset id for versioned objects';
 COMMENT ON COLUMN cfg_object_name_map.is_identical_map IS 'Y/N';
@@ -226,9 +226,8 @@ CREATE TABLE cfg_data_center  (
 	data_center_status	CHAR(1)  NULL,
 	last_modified     	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY(data_center_id)
-)
-
-COMMENT = 'https://en.wikipedia.org/wiki/Data_center' ;
+);
+COMMENT ON TABLE cfg_data_center IS 'https://en.wikipedia.org/wiki/Data_center';
 CREATE UNIQUE INDEX uix_cfg_data_center__datacentercode ON "cfg_data_center" (data_center_code);
 COMMENT ON COLUMN cfg_data_center.data_center_status IS 'A,D,U';
 
@@ -248,8 +247,8 @@ CREATE TABLE cfg_cluster  (
 	description             VARCHAR(200) NULL,
 	last_modified     	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY(cluster_id)
-)
-COMMENT = 'https://en.wikipedia.org/wiki/Computer_cluster' ;
+);
+COMMENT ON TABLE cfg_cluster IS 'https://en.wikipedia.org/wiki/Computer_cluster';
 CREATE UNIQUE INDEX uix_cfg_cluster__clustercode ON "cfg_cluster" (cluster_code);
 
 -- Replaces `ON UPDATE CURRENT_TIMESTAMP` in table definition
