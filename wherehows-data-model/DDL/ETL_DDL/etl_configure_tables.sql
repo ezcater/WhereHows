@@ -21,8 +21,8 @@ CREATE TABLE "wh_etl_job_schedule" (
   "next_run"        INT     DEFAULT NULL
   ,
   PRIMARY KEY ("wh_etl_job_name")
-)
-  COMMENT='WhereHows ETL job scheduling table';
+);
+  COMMENT ON TABLE wh_etl_job_schedule IS 'WhereHows ETL job scheduling table';
 CREATE UNIQUE INDEX "etl_unique" ON "wh_etl_job_schedule" ("wh_etl_job_name");
   COMMENT ON COLUMN wh_etl_job_schedule.wh_etl_job_name IS 'etl job name';
   COMMENT ON COLUMN wh_etl_job_schedule.enabled IS 'job currently enabled or disabled';
@@ -106,7 +106,7 @@ CREATE TABLE cfg_database  (
   last_modified          	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY(db_id)
 );
-COMMENT ON TABLE foobar_table IS 'Abstract different storage instances as databases';
+COMMENT ON TABLE cfg_database IS 'Abstract different storage instances as databases';
 CREATE UNIQUE INDEX "uix_cfg_database__dbcode" ON "cfg_database" USING HASH (db_code);
 COMMENT ON COLUMN cfg_database.db_code IS 'Unique string without space';
 COMMENT ON COLUMN cfg_database.primary_dataset_type IS 'What type of dataset this DB supports';
@@ -144,7 +144,7 @@ CREATE TABLE stg_cfg_object_name_map  (
 	description             	VARCHAR(500) NULL,
 	last_modified           	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY(object_name, mapped_object_name),
-  KEY idx_stg_cfg_object_name_map__mappedobjectname (mapped_object_name) USING BTREE
+  KEY idx_stg_cfg_object_name_map__mappedobjectname (mapped_object_name)
 );
 COMMENT ON TABLE stg_cfg_object_name_map IS 'Map alias (when is_identical_map=Y) and view dependency';
 
@@ -169,9 +169,9 @@ CREATE TABLE cfg_object_name_map  (
   description             VARCHAR(500) NULL,
   last_modified           TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(obj_name_map_id),
-  KEY idx_cfg_object_name_map__mappedobjectname (mapped_object_name) USING BTREE,
+  KEY idx_cfg_object_name_map__mappedobjectname (mapped_object_name),
   CONSTRAINT uix_cfg_object_name_map__objectname_mappedobjectname UNIQUE (object_name, mapped_object_name)
-)
+);
 
 
 ALTER SEQUENCE cfg_object_name_map_obj_name_map_id_seq RESTART WITH 1;
