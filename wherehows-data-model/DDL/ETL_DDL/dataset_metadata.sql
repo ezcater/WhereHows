@@ -305,9 +305,6 @@ CREATE TABLE comments (
   "comment_type" comment_type_enum NULL,
   PRIMARY KEY (id)
 )
-
-
-  COLLATE latin1_swedish_ci
 ;
   ALTER SEQUENCE comments_id_seq RESTART WITH 0;
 CREATE INDEX CONCURRENTLY "user_id" ON "comments" ("user_id");
@@ -358,8 +355,6 @@ CREATE TABLE dict_dataset_instance  (
 	wh_etl_exec_id       	BIGINT   NULL,
 	PRIMARY KEY(dataset_id,db_id,version_sort_id)
 )
-
-COLLATE latin1_swedish_ci
 ;
 CREATE INDEX logical_name USING BTREE
 	ON dict_dataset_instance(logical_name);
@@ -402,9 +397,6 @@ CREATE TABLE stg_dict_dataset_instance  (
 	abstract_dataset_urn 	VARCHAR(200) NULL,
 	PRIMARY KEY(dataset_urn,db_id)
 )
-
-
-COLLATE latin1_swedish_ci
 ;
 CREATE INDEX server_cluster USING BTREE
 	ON stg_dict_dataset_instance(server_cluster, deployment_tier, data_center, slice);
