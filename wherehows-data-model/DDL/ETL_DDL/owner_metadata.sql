@@ -34,7 +34,7 @@ CREATE TABLE dataset_owner (
   "confirmed_by"  VARCHAR(127) NULL,
   "confirmed_on"  BIGINT,
   wh_etl_exec_id  BIGINT,
-  PRIMARY KEY ("dataset_id", "owner_id", "app_id", "owner_source"),
+  PRIMARY KEY ("dataset_id", "owner_id", "app_id", "owner_source")
 )
 ;
 CREATE UNIQUE INDEX "with_urn" ON "dataset_owner" ("dataset_urn", "owner_id", "app_id", "owner_source");
@@ -71,12 +71,8 @@ CREATE TABLE stg_dataset_owner (
   "db_id" INT,
   "is_active" CHAR(1),
   "source_time" BIGINT,
-  "is_parent_urn" CHAR(1) DEFAULT 'N' ,
-  KEY (dataset_urn, owner_id, namespace, db_name),
-  KEY dataset_index (dataset_urn),
-  KEY db_name_index (db_name)
+  "is_parent_urn" CHAR(1) DEFAULT 'N'
 )
-
 ;
 COMMENT ON COLUMN stg_dataset_owner.is_parent_urn IS 'if the urn is a directory for datasets';
 COMMENT ON COLUMN stg_dataset_owner.source_time IS 'the source event time in epoch';
@@ -92,6 +88,9 @@ COMMENT ON COLUMN stg_dataset_owner.namespace IS 'the namespace of the user';
 COMMENT ON COLUMN stg_dataset_owner.app_id IS 'application id of the namesapce';
 COMMENT ON COLUMN stg_dataset_owner.sort_id IS '0 = primary owner, order by priority/importance';
 COMMENT ON COLUMN stg_dataset_owner.dataset_id IS 'dataset_id';
+CREATE INDEX ON stg_dataset_owner (dataset_urn, owner_id, namespace, db_name);
+CREATE INDEX dataset_index on stg_dataset_owner (dataset_urn);
+CREATE INDEX db_name_index on stg_dataset_owner (db_name);
 
 CREATE TABLE stg_dataset_owner_unmatched (
   "dataset_urn" VARCHAR(200) NOT NULL,
@@ -107,10 +106,7 @@ CREATE TABLE stg_dataset_owner_unmatched (
   "db_name" VARCHAR(127),
   "db_id" INT,
   "is_active" CHAR(1),
-  "source_time" BIGINT,
-  KEY (dataset_urn, owner_id, namespace, db_name),
-  KEY dataset_index (dataset_urn),
-  KEY db_name_index (db_name)
+  "source_time" BIGINT
 );
 COMMENT ON COLUMN stg_dataset_owner_unmatched.source_time IS 'the source event time in epoch';
 COMMENT ON COLUMN stg_dataset_owner_unmatched.is_active IS 'if owner is active';
@@ -124,6 +120,9 @@ COMMENT ON COLUMN stg_dataset_owner_unmatched.owner_type IS 'Producer, Consumer,
 COMMENT ON COLUMN stg_dataset_owner_unmatched.namespace IS 'the namespace of the user';
 COMMENT ON COLUMN stg_dataset_owner_unmatched.app_id IS 'application id of the namesapce';
 COMMENT ON COLUMN stg_dataset_owner_unmatched.sort_id IS '0 = primary owner, order by priority/importance';
+CREATE INDEX ON stg_dataset_owner_unmatched (dataset_urn, owner_id, namespace, db_name);
+CREATE INDEX dataset_index on stg_dataset_owner_unmatched (dataset_urn);
+CREATE INDEX db_name_index on stg_dataset_owner_unmatched (db_name);
 
 CREATE TABLE "dir_external_user_info" (
   "app_id" SMALLINT NOT NULL,

@@ -554,7 +554,7 @@ CREATE TABLE stg_flow_schedule (
   effective_start_time BIGINT,
   effective_end_time   BIGINT,
   ref_id               VARCHAR(255),
-  wh_etl_exec_id       BIGINT,
+  wh_etl_exec_id       BIGINT
 );
   COMMENT ON TABLE stg_flow_schedule IS 'Scheduler flow schedule table';
   COMMENT ON COLUMN stg_flow_schedule.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
@@ -685,4 +685,4 @@ CREATE TABLE "cfg_job_type_reverse_map" (
   KEY "cfg_job_type_reverse_map_job_type_id_fk" ("job_type_id")
 );
   COMMENT ON TABLE cfg_job_type_reverse_map IS 'The reverse map of the actual job type to standard job type';
-CREATE UNIQUE INDEX "cfg_job_type_reverse_map_uk" ON "cfg_job_type_reverse_map" ("job_type_actual");,
+CREATE UNIQUE INDEX "cfg_job_type_reverse_map_uk" ON "cfg_job_type_reverse_map" ("job_type_actual");

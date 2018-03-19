@@ -27,9 +27,7 @@ CREATE TABLE "source_code_commit_info" (
   "created_time"    BIGINT,
   "modified_time"   BIGINT,
   "wh_etl_exec_id"  BIGINT,
-  PRIMARY KEY (repository_urn, file_path, commit_id),
-  KEY (commit_id),
-  KEY (repository_urn, file_name, committer_email)
+  PRIMARY KEY (repository_urn, file_path, commit_id)
 );
 COMMENT ON COLUMN source_code_commit_info.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
 COMMENT ON COLUMN source_code_commit_info.modified_time IS 'latest wherehows modified';
@@ -44,6 +42,8 @@ COMMENT ON COLUMN source_code_commit_info.file_name IS 'the file name';
 COMMENT ON COLUMN source_code_commit_info.file_path IS 'the path to the file';
 COMMENT ON COLUMN source_code_commit_info.commit_id IS 'the sha-1 hash of the commit';
 COMMENT ON COLUMN source_code_commit_info.repository_urn IS 'the git repo urn';
+CREATE INDEX ON source_code_commit_info (commit_id);
+CREATE INDEX ON source_code_commit_info (repository_urn, file_name, committer_email);
 
 CREATE TABLE "stg_source_code_commit_info" (
   "app_id"          SMALLINT DEFAULT NULL,
@@ -58,9 +58,7 @@ CREATE TABLE "stg_source_code_commit_info" (
   "author_email"    VARCHAR(128)                 NOT NULL,
   "message"         VARCHAR(1024)                NOT NULL,
   "wh_etl_exec_id"  BIGINT,
-  PRIMARY KEY (repository_urn, file_path, commit_id),
-  KEY (commit_id),
-  KEY (repository_urn, file_name, committer_email)
+  PRIMARY KEY (repository_urn, file_path, commit_id)
 );
 COMMENT ON COLUMN stg_source_code_commit_info.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
 COMMENT ON COLUMN stg_source_code_commit_info.message IS 'message of the commit';
@@ -73,6 +71,8 @@ COMMENT ON COLUMN stg_source_code_commit_info.file_name IS 'the file name';
 COMMENT ON COLUMN stg_source_code_commit_info.file_path IS 'the path to the file';
 COMMENT ON COLUMN stg_source_code_commit_info.commit_id IS 'the sha-1 hash of the commit';
 COMMENT ON COLUMN stg_source_code_commit_info.repository_urn IS 'the git repo urn';
+CREATE INDEX ON stg_source_code_commit_info (commit_id);
+CREATE INDEX ON stg_source_code_commit_info (repository_urn, file_name, committer_email);
 
 
 CREATE TABLE "stg_git_project" (
