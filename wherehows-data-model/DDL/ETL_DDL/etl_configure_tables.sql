@@ -146,9 +146,6 @@ CREATE TABLE stg_cfg_object_name_map  (
 	PRIMARY KEY(object_name, mapped_object_name),
   KEY idx_stg_cfg_object_name_map__mappedobjectname (mapped_object_name)
 );
-
-
-COLLATE latin1_swedish_ci
 COMMENT ON TABLE stg_cfg_object_name_map IS 'Map alias (when is_identical_map=Y) and view dependency';
 
 -- Replaces `ON UPDATE CURRENT_TIMESTAMP` in table definition
