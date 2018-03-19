@@ -21,8 +21,8 @@ CREATE TABLE "wh_etl_job_schedule" (
   "next_run"        INT     DEFAULT NULL
   ,
   PRIMARY KEY ("wh_etl_job_name")
-)
-  COMMENT='WhereHows ETL job scheduling table';
+);
+  COMMENT ON TABLE wh_etl_job_schedule IS 'WhereHows ETL job scheduling table';
 CREATE UNIQUE INDEX "etl_unique" ON "wh_etl_job_schedule" ("wh_etl_job_name");
   COMMENT ON COLUMN wh_etl_job_schedule.wh_etl_job_name IS 'etl job name';
   COMMENT ON COLUMN wh_etl_job_schedule.enabled IS 'job currently enabled or disabled';
@@ -48,10 +48,8 @@ CREATE TABLE "wh_etl_job_history" (
   "process_id"      BIGINT                 DEFAULT NULL
   ,
   PRIMARY KEY ("wh_etl_exec_id")
-)
-
-
-  COMMENT = 'WhereHows ETL execution history table';
+);
+  COMMENT ON TABLE wh_etl_job_history IS 'WhereHows ETL execution history table';
   COMMENT ON COLUMN wh_etl_job_history.wh_etl_exec_id IS 'job execution id';
   COMMENT ON COLUMN wh_etl_job_history.wh_etl_job_name IS 'name of the etl job';
   COMMENT ON COLUMN wh_etl_job_history.status IS 'status of etl job execution';
@@ -107,10 +105,10 @@ CREATE TABLE cfg_database  (
 	short_connection_string	VARCHAR(50)  NULL,
   last_modified          	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY(db_id)
-)
+);
 
 DEFAULT CHARSET = utf8
-COMMENT = 'Abstract different storage instances as databases' ;
+COMMENT ON TABLE cfg_database IS 'Abstract different storage instances as databases';
 CREATE UNIQUE INDEX "uix_cfg_database__dbcode" ON "cfg_database" USING HASH (db_code);
 COMMENT ON COLUMN cfg_database.db_code IS 'Unique string without space';
 COMMENT ON COLUMN cfg_database.primary_dataset_type IS 'What type of dataset this DB supports';
@@ -148,12 +146,12 @@ CREATE TABLE stg_cfg_object_name_map  (
 	description             	VARCHAR(500) NULL,
 	last_modified           	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY(object_name, mapped_object_name),
-  KEY idx_stg_cfg_object_name_map__mappedobjectname (mapped_object_name) USING BTREE
-)
+  KEY idx_stg_cfg_object_name_map__mappedobjectname (mapped_object_name)
+);
 
 CHARACTER SET latin1
 COLLATE latin1_swedish_ci
-COMMENT = 'Map alias (when is_identical_map=Y) and view dependency' ;
+COMMENT ON TABLE stg_cfg_object_name_map IS 'Map alias (when is_identical_map=Y) and view dependency';
 
 -- Replaces `ON UPDATE CURRENT_TIMESTAMP` in table definition
 CREATE TRIGGER stg_cfg_object_name_map_last_modified_modtime
@@ -176,13 +174,13 @@ CREATE TABLE cfg_object_name_map  (
   description             VARCHAR(500) NULL,
   last_modified           TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(obj_name_map_id),
-  KEY idx_cfg_object_name_map__mappedobjectname (mapped_object_name) USING BTREE,
+  KEY idx_cfg_object_name_map__mappedobjectname (mapped_object_name),
   CONSTRAINT uix_cfg_object_name_map__objectname_mappedobjectname UNIQUE (object_name, mapped_object_name)
 );
 
 CHARACTER SET latin1
 ALTER SEQUENCE cfg_object_name_map_obj_name_map_id_seq MINVALUE 1 START 1 RESTART 1;
-COMMENT = 'Map alias (when is_identical_map=Y) and view dependency. Always map from Derived/Child (object) back to its Original/Parent (mapped_object)' ;
+COMMENT ON TABLE cfg_object_name_map IS 'Map alias (when is_identical_map=Y) and view dependency. Always map from Derived/Child (object) back to its Original/Parent (mapped_object)';
 COMMENT ON COLUMN cfg_object_name_map.object_name IS 'this is the derived/child object';
 COMMENT ON COLUMN cfg_object_name_map.object_dataset_id IS 'can be the abstract dataset id for versioned objects';
 COMMENT ON COLUMN cfg_object_name_map.is_identical_map IS 'Y/N';
@@ -202,9 +200,8 @@ CREATE TABLE cfg_deployment_tier  (
   sort_id       SMALLINT  NOT NULL,
   last_modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(tier_id)
-)
-
-COMMENT = 'http://en.wikipedia.org/wiki/Deployment_environment';
+);
+COMMENT ON TABLE cfg_deployment_tier IS 'http://en.wikipedia.org/wiki/Deployment_environment';
 CREATE UNIQUE INDEX uix_cfg_deployment_tier__tiercode ON "cfg_deployment_tier" (tier_code);
 COMMENT ON COLUMN cfg_deployment_tier.tier_code IS 'local,dev,test,qa,stg,prod';
 COMMENT ON COLUMN cfg_deployment_tier.tier_label IS 'display full name';
@@ -229,9 +226,8 @@ CREATE TABLE cfg_data_center  (
 	data_center_status	CHAR(1)  NULL,
 	last_modified     	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY(data_center_id)
-)
-
-COMMENT = 'https://en.wikipedia.org/wiki/Data_center' ;
+);
+COMMENT ON TABLE cfg_data_center IS 'https://en.wikipedia.org/wiki/Data_center';
 CREATE UNIQUE INDEX uix_cfg_data_center__datacentercode ON "cfg_data_center" (data_center_code);
 COMMENT ON COLUMN cfg_data_center.data_center_status IS 'A,D,U';
 
@@ -251,8 +247,8 @@ CREATE TABLE cfg_cluster  (
 	description             VARCHAR(200) NULL,
 	last_modified     	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY(cluster_id)
-)
-COMMENT = 'https://en.wikipedia.org/wiki/Computer_cluster' ;
+);
+COMMENT ON TABLE cfg_cluster IS 'https://en.wikipedia.org/wiki/Computer_cluster';
 CREATE UNIQUE INDEX uix_cfg_cluster__clustercode ON "cfg_cluster" (cluster_code);
 
 -- Replaces `ON UPDATE CURRENT_TIMESTAMP` in table definition
