@@ -626,8 +626,6 @@ CREATE TABLE job_execution_ext_reference (
 	wh_etl_exec_id 	BIGINT   NULL,
 	PRIMARY KEY(app_id,job_exec_id,attempt_id,ext_ref_type,ext_ref_sort_id)
 );
-
-DEFAULT CHARSET = latin1
 COMMENT ON TABLE job_execution_ext_reference IS 'External reference ids for the job execution';
 COMMENT ON COLUMN job_execution_ext_reference.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
 COMMENT ON COLUMN job_execution_ext_reference.created_time IS 'etl create time';
@@ -653,7 +651,6 @@ CREATE TABLE stg_job_execution_ext_reference (
 	wh_etl_exec_id 	BIGINT   NULL,
 	PRIMARY KEY(app_id,job_exec_id,attempt_id,ext_ref_type,ext_ref_sort_id)
 );
-DEFAULT CHARSET = latin1
 COMMENT ON TABLE stg_job_execution_ext_reference IS 'staging table for job_execution_ext_reference';
 COMMENT ON COLUMN stg_job_execution_ext_reference.wh_etl_exec_id IS 'wherehows etl execution id that create this record';
 COMMENT ON COLUMN stg_job_execution_ext_reference.created_time IS 'etl create time';

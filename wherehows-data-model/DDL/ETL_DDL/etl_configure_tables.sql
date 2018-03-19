@@ -105,9 +105,7 @@ CREATE TABLE cfg_database  (
 	short_connection_string	VARCHAR(50)  NULL,
   last_modified          	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY(db_id)
-)
-
-DEFAULT CHARSET = utf8
+);
 COMMENT ON TABLE foobar_table IS 'Abstract different storage instances as databases';
 CREATE UNIQUE INDEX "uix_cfg_database__dbcode" ON "cfg_database" USING HASH (db_code);
 COMMENT ON COLUMN cfg_database.db_code IS 'Unique string without space';
@@ -149,7 +147,7 @@ CREATE TABLE stg_cfg_object_name_map  (
   KEY idx_stg_cfg_object_name_map__mappedobjectname (mapped_object_name) USING BTREE
 );
 
-CHARACTER SET latin1
+
 COLLATE latin1_swedish_ci
 COMMENT ON TABLE stg_cfg_object_name_map IS 'Map alias (when is_identical_map=Y) and view dependency';
 
@@ -178,7 +176,7 @@ CREATE TABLE cfg_object_name_map  (
   CONSTRAINT uix_cfg_object_name_map__objectname_mappedobjectname UNIQUE (object_name, mapped_object_name)
 )
 
-CHARACTER SET latin1
+
 ALTER SEQUENCE cfg_object_name_map_obj_name_map_id_seq RESTART WITH 1;
 COMMENT ON TABLE cfg_object_name_map IS 'Map alias (when is_identical_map=Y) and view dependency. Always map from Derived/Child (object) back to its Original/Parent (mapped_object)';
 COMMENT ON COLUMN cfg_object_name_map.object_name IS 'this is the derived/child object';

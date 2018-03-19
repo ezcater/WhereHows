@@ -306,7 +306,7 @@ CREATE TABLE comments (
   PRIMARY KEY (id)
 )
 
-  CHARACTER SET latin1
+
   COLLATE latin1_swedish_ci
 ;
   ALTER SEQUENCE comments_id_seq RESTART WITH 0;
@@ -359,7 +359,6 @@ CREATE TABLE dict_dataset_instance  (
 	PRIMARY KEY(dataset_id,db_id,version_sort_id)
 )
 
-CHARACTER SET latin1
 COLLATE latin1_swedish_ci
 ;
 CREATE INDEX logical_name USING BTREE
@@ -404,7 +403,7 @@ CREATE TABLE stg_dict_dataset_instance  (
 	PRIMARY KEY(dataset_urn,db_id)
 )
 
-CHARACTER SET latin1
+
 COLLATE latin1_swedish_ci
 ;
 CREATE INDEX server_cluster USING BTREE
