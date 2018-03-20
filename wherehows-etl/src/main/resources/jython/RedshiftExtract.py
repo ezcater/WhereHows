@@ -44,7 +44,7 @@ class RedshiftExtract:
 
   def get_table_info(self):
     """
-    get table, column info from Oracle all_tables
+    get table, column info from Redshift all_tables
     here Owner, Schema, Database have same meaning: a collection of tables
     :param excluded_owner_list: schema blacklist
     :param table_name: get specific table name, not used in common case
