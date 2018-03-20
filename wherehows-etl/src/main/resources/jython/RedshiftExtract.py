@@ -112,8 +112,6 @@ class RedshiftExtract:
       current_table_key = "%s.%s" % (row[0], row[1]) 
       if current_table_key != prev_table_key:
         self.table_dict[current_table_key] = {"primary_key": row[7]} # Update the constraint type
-        self.table_dict[current_table_key] = {"dist_key": row[5]}  # Update the dk type
-        self.table_dict[current_table_key] = {"sort_key": row[6]} # Update the sk type
         prev_table_key = current_table_key
 
     self.logger.info("Fetched %d tables: %s" % (len(self.table_dict), self.table_dict))
