@@ -20,7 +20,6 @@ import os
 import sys
 
 from com.ziclix.python.sql import zxJDBC
-#from org.slf4j import LoggerFactory
 from wherehows.common import Constant
 import logging
 
