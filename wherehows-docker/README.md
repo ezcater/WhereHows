@@ -8,7 +8,7 @@ Through the docker build provides a whole server instance running in docker cont
 1. install ```docker``` and ```docker-compose``` (http://www.docker.com)  
 1. From the wherehows-docker, run ```build.sh 1```
 1. Edit .env to match your environment
-1. From the docker directory: ```$ docker-compose up```
+1. From the docker directory: ```$ docker-compose -f docker-compose-[mysql|postgres].yml up```
 1. In your local browser, open http://localhost:9001
 1. The backend app is hosted on http://localhost:19001
 1. The Elasticsearch server is hosted on http://localhost:9200
@@ -34,7 +34,7 @@ Edit **.env** in wherehows-docker
 # Secret
 WHZ_SECRET=your_crpto_secret
   
-# MySQL
+# MySQL/Postgres
 WHZ_DB_NAME=wherehows
 WHZ_DB_USERNAME=wherehows
 WHZ_DB_PASSWORD=wherehows
