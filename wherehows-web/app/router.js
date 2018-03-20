@@ -65,6 +65,7 @@ AppRouter.map(function() {
       function() {
         this.route('properties');
         this.route('comments');
+        this.route('columns');
         this.route('schema');
         this.route('ownership');
         this.route('compliance');
