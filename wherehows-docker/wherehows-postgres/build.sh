@@ -7,9 +7,10 @@ if [ -z "$VERSION" ]; then
 fi
 
 # Build a single init SQL script from multiple DDLs.
-echo '-- use wherehows;' > init.sql
-cat ../../wherehows-data-model/DDL/ETL_DDL/*.sql >> init.sql
-cat ../../wherehows-data-model/DDL/WEB_DDL/*.sql >> init.sql
+/bin/rm -f init.sql
+touch init.sql
+cat ../../wherehows-data-model/DDL/postgres/ETL_DDL/*.sql >> init.sql
+cat ../../wherehows-data-model/DDL/postgres/WEB_DDL/*.sql >> init.sql
 
 docker build --force-rm -t wherehows-postgres:$VERSION .
 docker build --force-rm -t wherehows-postgres:latest .
