@@ -116,7 +116,7 @@ CREATE TABLE "dict_dataset" (
   PRIMARY KEY ("id")
 )
 ;
-CREATE UNIQUE INDEX "uq_dataset_urn" ON "dict_dataset" ("urn");
+CREATE UNIQUE INDEX "dd_uq_dataset_urn" ON "dict_dataset" ("urn");
 COMMENT ON COLUMN dict_dataset.schema_type IS 'JSON, Hive, DDL, XML, CSV';
 COMMENT ON COLUMN dict_dataset.source IS 'The original data source type (for dataset in data warehouse). Oracle, Kafka ...';
 COMMENT ON COLUMN dict_dataset.parent_name IS 'Schema Name for RDBMS, Group Name for Jobs/Projects/Tracking Datasets on HDFS ';
@@ -325,7 +325,7 @@ CREATE TABLE "field_comments" (
 ALTER SEQUENCE field_comments_id_seq MINVALUE 0 START 0 RESTART 0;
 COMMENT ON COLUMN field_comments.comment_crc32_checksum IS '4-byte CRC32';
 CREATE INDEX CONCURRENTLY comment_key ON "field_comments" ("comment");
-CREATE INDEX CONCURRENTLY fti_comment ON "field_comments" ("comment");
+CREATE INDEX CONCURRENTLY field_comments_fti_comment ON "field_comments" ("comment");
 
 -- Replaces `ON UPDATE CURRENT_TIMESTAMP` in table definition
 CREATE TRIGGER field_comments_modified_modtime
@@ -358,7 +358,7 @@ CREATE TABLE dict_dataset_instance  (
 ;
 CREATE INDEX logical_name
 	ON dict_dataset_instance(logical_name);
-CREATE INDEX server_cluster
+CREATE INDEX ddi_server_cluster
 	ON dict_dataset_instance(server_cluster, deployment_tier, data_center, slice);
 CREATE INDEX native_name
 	ON dict_dataset_instance(native_name);
@@ -398,7 +398,7 @@ CREATE TABLE stg_dict_dataset_instance  (
 	PRIMARY KEY(dataset_urn,db_id)
 )
 ;
-CREATE INDEX server_cluster
+CREATE INDEX sddi_server_cluster
 	ON stg_dict_dataset_instance(server_cluster, deployment_tier, data_center, slice);
 	COMMENT ON COLUMN stg_dict_dataset_instance.data_center IS 'data center code: lva1, ltx1, dc2, dc3...';
 	COMMENT ON COLUMN stg_dict_dataset_instance.server_cluster IS 'sfo1-bigserver';

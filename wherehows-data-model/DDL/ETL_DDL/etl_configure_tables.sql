@@ -77,7 +77,7 @@ CREATE TABLE "cfg_application" (
   PRIMARY KEY ("app_id")
 )
 ;
-CREATE UNIQUE INDEX "idx_cfg_application__appcode" ON "cfg_application" USING HASH ("app_code");
+CREATE UNIQUE INDEX "idx_cfg_application__appcode" ON "cfg_application" ("app_code"); -- formerly `USING HASH`, but uniques aren't supported
 
 -- Replaces `ON UPDATE CURRENT_TIMESTAMP` in table definition
 CREATE TRIGGER cfg_application_last_modified_modtime
@@ -107,7 +107,7 @@ CREATE TABLE cfg_database  (
 	PRIMARY KEY(db_id)
 );
 COMMENT ON TABLE cfg_database IS 'Abstract different storage instances as databases';
-CREATE UNIQUE INDEX "uix_cfg_database__dbcode" ON "cfg_database" USING HASH (db_code);
+CREATE UNIQUE INDEX "uix_cfg_database__dbcode" ON "cfg_database" (db_code); -- formerly `USING HASH`, but uniques aren't supported
 COMMENT ON COLUMN cfg_database.db_code IS 'Unique string without space';
 COMMENT ON COLUMN cfg_database.primary_dataset_type IS 'What type of dataset this DB supports';
 COMMENT ON COLUMN cfg_database.is_logical IS 'Is a group, which contains multiple physical DB(s)';

@@ -50,8 +50,8 @@ CREATE TABLE flow (
   COMMENT ON COLUMN flow.flow_name IS 'name of the flow';
   COMMENT ON COLUMN flow.flow_id IS 'flow id either inherit from source or generated';
   COMMENT ON COLUMN flow.app_id IS 'application id of the flow';
-CREATE INDEX flow_path_idx ON flow (app_id, flow_path);
-CREATE INDEX flow_name_idx ON flow (app_id, flow_group, flow_name);
+CREATE INDEX flow_flow_path_idx ON flow (app_id, flow_path);
+CREATE INDEX flow_flow_name_idx ON flow (app_id, flow_group, flow_name);
 
 
 CREATE TABLE stg_flow (
@@ -90,8 +90,8 @@ CREATE TABLE stg_flow (
   COMMENT ON COLUMN stg_flow.flow_name IS 'name of the flow';
   COMMENT ON COLUMN stg_flow.flow_id IS 'flow id either inherit from source or generated';
   COMMENT ON COLUMN stg_flow.app_id IS 'application id of the flow';
-CREATE INDEX flow_id_idx ON stg_flow (app_id, flow_id);
-CREATE INDEX flow_path_idx ON stg_flow (app_id, flow_path);
+CREATE INDEX stg_flow_flow_id_idx ON stg_flow (app_id, flow_id);
+CREATE INDEX stg_flow_flow_path_idx ON stg_flow (app_id, flow_path);
 
 
 CREATE TABLE flow_source_id_map (
@@ -109,7 +109,7 @@ CREATE TABLE flow_source_id_map (
   COMMENT ON COLUMN flow_source_id_map.source_id_string IS 'source string id of the flow';
   COMMENT ON COLUMN flow_source_id_map.flow_id IS 'flow id generated ';
   COMMENT ON COLUMN flow_source_id_map.app_id IS 'application id of the flow';
-CREATE INDEX flow_path_idx ON flow_source_id_map (app_id, source_id_string);
+CREATE INDEX fsi_flow_path_idx ON flow_source_id_map (app_id, source_id_string);
 
 
 CREATE TABLE flow_job (
@@ -158,9 +158,9 @@ CREATE TABLE flow_job (
   COMMENT ON COLUMN flow_job.first_source_version IS 'first source version of the flow under this dag version';
   COMMENT ON COLUMN flow_job.flow_id IS 'flow id';
   COMMENT ON COLUMN flow_job.app_id IS 'application id of the flow';
-CREATE INDEX flow_id_idx on flow_job (app_id, flow_id);
+CREATE INDEX fj_flow_id_idx on flow_job (app_id, flow_id);
 CREATE INDEX ref_flow_id_idx on flow_job (app_id, ref_flow_id);
-CREATE INDEX job_path_idx on flow_job (app_id, job_path);
+CREATE INDEX fj_job_path_idx on flow_job (app_id, job_path);
 
 CREATE TABLE stg_flow_job (
   app_id         INTEGER NOT NULL
@@ -202,10 +202,10 @@ CREATE TABLE stg_flow_job (
   COMMENT ON COLUMN stg_flow_job.flow_path IS 'flow path from top level';
   COMMENT ON COLUMN stg_flow_job.flow_id IS 'flow id';
   COMMENT ON COLUMN stg_flow_job.app_id IS 'application id of the flow';
-CREATE INDEX flow_id_idx on stg_flow_job (app_id, flow_id);
-CREATE INDEX flow_path_idx on stg_flow_job (app_id, flow_path);
+CREATE INDEX sfj_flow_id_idx on stg_flow_job (app_id, flow_id);
+CREATE INDEX sfj_flow_path_idx on stg_flow_job (app_id, flow_path);
 CREATE INDEX ref_flow_path_idx on stg_flow_job (app_id, ref_flow_path);
-CREATE INDEX job_path_idx on stg_flow_job (app_id, job_path);
+CREATE INDEX sfj_job_path_idx on stg_flow_job (app_id, job_path);
 CREATE INDEX job_type_idx on stg_flow_job (job_type);
 CREATE INDEX on stg_flow_job (app_id, job_id, dag_version);
 
@@ -225,7 +225,7 @@ CREATE TABLE job_source_id_map (
   COMMENT ON COLUMN job_source_id_map.source_id_string IS 'job full path string';
   COMMENT ON COLUMN job_source_id_map.job_id IS 'job id generated';
   COMMENT ON COLUMN job_source_id_map.app_id IS 'application id of the flow';
-CREATE INDEX job_path_idx ON job_source_id_map (app_id, source_id_string);
+CREATE INDEX jsim_job_path_idx ON job_source_id_map (app_id, source_id_string);
 
 CREATE TABLE flow_dag (
   app_id         INTEGER NOT NULL
@@ -248,7 +248,7 @@ CREATE TABLE flow_dag (
   COMMENT ON COLUMN flow_dag.flow_id IS 'flow id';
   COMMENT ON COLUMN flow_dag.app_id IS 'application id of the flow';
 CREATE INDEX flow_dag_md5_idx on flow_dag (app_id, flow_id, dag_md5);
-CREATE INDEX flow_id_idx on flow_dag (app_id, flow_id);
+CREATE INDEX flow_dag_flow_id_idx on flow_dag (app_id, flow_id);
 
 
 CREATE TABLE stg_flow_dag (
@@ -269,8 +269,8 @@ CREATE TABLE stg_flow_dag (
   COMMENT ON COLUMN stg_flow_dag.source_version IS 'last source version of the flow under this dag version';
   COMMENT ON COLUMN stg_flow_dag.flow_id IS 'flow id';
   COMMENT ON COLUMN stg_flow_dag.app_id IS 'application id of the flow';
-CREATE INDEX flow_dag_md5_idx on stg_flow_dag (app_id, flow_id, dag_md5);
-CREATE INDEX flow_id_idx on stg_flow_dag (app_id, flow_id);
+CREATE INDEX sfd_flow_dag_md5_idx on stg_flow_dag (app_id, flow_id, dag_md5);
+CREATE INDEX sfd_flow_id_idx on stg_flow_dag (app_id, flow_id);
 
 CREATE TABLE stg_flow_dag_edge (
   app_id          INTEGER NOT NULL
@@ -295,8 +295,8 @@ CREATE TABLE stg_flow_dag_edge (
   COMMENT ON COLUMN stg_flow_dag_edge.flow_id IS 'flow id';
   COMMENT ON COLUMN stg_flow_dag_edge.app_id IS 'application id of the flow';
 CREATE INDEX flow_version_idx on stg_flow_dag_edge (app_id, flow_id, source_version);
-CREATE INDEX flow_id_idx on stg_flow_dag_edge (app_id, flow_id);
-CREATE INDEX flow_path_idx on stg_flow_dag_edge (app_id, flow_path);
+CREATE INDEX sfde_flow_id_idx on stg_flow_dag_edge (app_id, flow_id);
+CREATE INDEX sfde_flow_path_idx on stg_flow_dag_edge (app_id, flow_path);
 CREATE INDEX source_job_path_idx on stg_flow_dag_edge (app_id, source_job_path);
 CREATE INDEX target_job_path_idx on stg_flow_dag_edge (app_id, target_job_path);
 
@@ -339,7 +339,7 @@ CREATE TABLE flow_execution (
   COMMENT ON COLUMN flow_execution.flow_exec_uuid IS 'source flow execution uuid';
   COMMENT ON COLUMN flow_execution.flow_exec_id IS 'flow execution id either from the source or generated';
   COMMENT ON COLUMN flow_execution.app_id IS 'application id of the flow';
-CREATE INDEX flow_id_idx on flow_execution (app_id, flow_id);
+CREATE INDEX fe_flow_id_idx on flow_execution (app_id, flow_id);
 CREATE INDEX flow_name_idx on flow_execution (app_id, flow_name);
 
 CREATE TABLE flow_execution_id_map (
@@ -392,9 +392,9 @@ CREATE TABLE stg_flow_execution (
   COMMENT ON COLUMN stg_flow_execution.flow_exec_uuid IS 'source flow execution uuid';
   COMMENT ON COLUMN stg_flow_execution.flow_exec_id IS 'flow execution id';
   COMMENT ON COLUMN stg_flow_execution.app_id IS 'application id of the flow';
-CREATE INDEX flow_exec_idx on stg_flow_execution (app_id, flow_exec_id);
-CREATE INDEX flow_id_idx on stg_flow_execution (app_id, flow_id);
-CREATE INDEX flow_path_idx on stg_flow_execution (app_id, flow_path);
+CREATE INDEX sfe_flow_exec_idx on stg_flow_execution (app_id, flow_exec_id);
+CREATE INDEX sfe_flow_id_idx on stg_flow_execution (app_id, flow_id);
+CREATE INDEX sfe_flow_path_idx on stg_flow_execution (app_id, flow_path);
 
 CREATE TABLE job_execution (
   app_id          INTEGER NOT NULL
@@ -440,7 +440,7 @@ CREATE TABLE job_execution (
   COMMENT ON COLUMN job_execution.app_id IS 'application id of the flow';
 CREATE INDEX flow_exec_id_idx on job_execution (app_id, flow_exec_id);
 CREATE INDEX job_id_idx on job_execution (app_id, job_id);
-CREATE INDEX flow_id_idx on job_execution (app_id, flow_id);
+CREATE INDEX je_flow_id_idx on job_execution (app_id, flow_id);
 CREATE INDEX job_name_idx on job_execution (app_id, flow_id, job_name);
 
 CREATE TABLE job_execution_id_map (
@@ -499,10 +499,10 @@ CREATE TABLE stg_job_execution (
   COMMENT ON COLUMN stg_job_execution.flow_path IS 'flow path from top level';
   COMMENT ON COLUMN stg_job_execution.flow_id IS 'flow id';
   COMMENT ON COLUMN stg_job_execution.app_id IS 'application id of the flow';
-CREATE INDEX flow_id_idx on stg_job_execution (app_id, flow_id);
-CREATE INDEX flow_path_idx on stg_job_execution (app_id, flow_path);
-CREATE INDEX job_path_idx on stg_job_execution (app_id, job_path);
-CREATE INDEX flow_exec_idx on stg_job_execution (app_id, flow_exec_id);
+CREATE INDEX sje_flow_id_idx on stg_job_execution (app_id, flow_id);
+CREATE INDEX sje_flow_path_idx on stg_job_execution (app_id, flow_path);
+CREATE INDEX sje_job_path_idx on stg_job_execution (app_id, job_path);
+CREATE INDEX sje_flow_exec_idx on stg_job_execution (app_id, flow_exec_id);
 CREATE INDEX job_exec_idx on stg_job_execution (app_id, job_exec_id);
 
 CREATE TABLE flow_schedule (
@@ -615,9 +615,9 @@ CREATE TABLE stg_flow_owner_permission (
   COMMENT ON COLUMN stg_flow_owner_permission.flow_path IS 'flow path from top level';
   COMMENT ON COLUMN stg_flow_owner_permission.flow_id IS 'flow id';
   COMMENT ON COLUMN stg_flow_owner_permission.app_id IS 'application id of the flow';
-CREATE INDEX flow_index on stg_flow_owner_permission (app_id, flow_id);
-CREATE INDEX owner_index on stg_flow_owner_permission (app_id, owner_id);
-CREATE INDEX flow_path_idx on stg_flow_owner_permission (app_id, flow_path);
+CREATE INDEX sfop_flow_index on stg_flow_owner_permission (app_id, flow_id);
+CREATE INDEX sfop_owner_index on stg_flow_owner_permission (app_id, owner_id);
+CREATE INDEX sfop_flow_path_idx on stg_flow_owner_permission (app_id, flow_path);
 
 CREATE TABLE job_execution_ext_reference (
 	app_id         	SMALLINT   NOT NULL,
@@ -681,8 +681,8 @@ CREATE TABLE "cfg_job_type_reverse_map" (
   "job_type_id"       SMALLINT NOT NULL,
   "description"       VARCHAR(200)         NULL,
   "job_type_standard" VARCHAR(50)          NOT NULL,
-  PRIMARY KEY ("job_type_actual"),
-  KEY "cfg_job_type_reverse_map_job_type_id_fk" ("job_type_id")
+  PRIMARY KEY ("job_type_actual")
 );
   COMMENT ON TABLE cfg_job_type_reverse_map IS 'The reverse map of the actual job type to standard job type';
 CREATE UNIQUE INDEX "cfg_job_type_reverse_map_uk" ON "cfg_job_type_reverse_map" ("job_type_actual");
+CREATE INDEX "cfg_job_type_reverse_map_job_type_id_fk" ON "cfg_job_type_reverse_map" ("job_type_id");

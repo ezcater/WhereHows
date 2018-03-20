@@ -89,8 +89,8 @@ COMMENT ON COLUMN stg_dataset_owner.app_id IS 'application id of the namesapce';
 COMMENT ON COLUMN stg_dataset_owner.sort_id IS '0 = primary owner, order by priority/importance';
 COMMENT ON COLUMN stg_dataset_owner.dataset_id IS 'dataset_id';
 CREATE INDEX ON stg_dataset_owner (dataset_urn, owner_id, namespace, db_name);
-CREATE INDEX dataset_index on stg_dataset_owner (dataset_urn);
-CREATE INDEX db_name_index on stg_dataset_owner (db_name);
+CREATE INDEX sdo_dataset_index on stg_dataset_owner (dataset_urn);
+CREATE INDEX sdo_db_name_index on stg_dataset_owner (db_name);
 
 CREATE TABLE stg_dataset_owner_unmatched (
   "dataset_urn" VARCHAR(200) NOT NULL,
@@ -121,8 +121,8 @@ COMMENT ON COLUMN stg_dataset_owner_unmatched.namespace IS 'the namespace of the
 COMMENT ON COLUMN stg_dataset_owner_unmatched.app_id IS 'application id of the namesapce';
 COMMENT ON COLUMN stg_dataset_owner_unmatched.sort_id IS '0 = primary owner, order by priority/importance';
 CREATE INDEX ON stg_dataset_owner_unmatched (dataset_urn, owner_id, namespace, db_name);
-CREATE INDEX dataset_index on stg_dataset_owner_unmatched (dataset_urn);
-CREATE INDEX db_name_index on stg_dataset_owner_unmatched (db_name);
+CREATE INDEX sdou_dataset_index on stg_dataset_owner_unmatched (dataset_urn);
+CREATE INDEX sdou_db_name_index on stg_dataset_owner_unmatched (db_name);
 
 CREATE TABLE "dir_external_user_info" (
   "app_id" SMALLINT NOT NULL,
@@ -147,12 +147,12 @@ CREATE TABLE "dir_external_user_info" (
   "created_time" INT DEFAULT NULL,
   "modified_time" INT DEFAULT NULL,
   "wh_etl_exec_id" BIGINT DEFAULT NULL,
-  PRIMARY KEY ("user_id","app_id"),
-  KEY "email" ("email")
+  PRIMARY KEY ("user_id","app_id")
 );
 COMMENT ON COLUMN dir_external_user_info.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
 COMMENT ON COLUMN dir_external_user_info.modified_time IS 'the modified time in epoch';
 COMMENT ON COLUMN dir_external_user_info.created_time IS 'the create time in epoch';
+CREATE INDEX "deui_email" on dir_external_user_info ("email");
 
 CREATE TABLE "stg_dir_external_user_info" (
   "app_id" SMALLINT NOT NULL,
@@ -175,12 +175,12 @@ CREATE TABLE "stg_dir_external_user_info" (
   "org_hierarchy" VARCHAR(500) DEFAULT NULL,
   "org_hierarchy_depth" SMALLINT DEFAULT NULL,
   "wh_etl_exec_id" BIGINT DEFAULT NULL,
-  PRIMARY KEY ("app_id","user_id"),
-  KEY "email" ("email"),
-  KEY "app_id" ("app_id","urn"),
-  KEY "app_id_2" ("app_id","manager_urn")
+  PRIMARY KEY ("app_id","user_id")
 );
 COMMENT ON COLUMN stg_dir_external_user_info.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
+CREATE INDEX "sdeui_email" on stg_dir_external_user_info ("email");
+CREATE INDEX "sdeui_app_id" on stg_dir_external_user_info ("app_id","urn");
+CREATE INDEX "sdeui_app_id_2" on stg_dir_external_user_info ("app_id","manager_urn");
 
 CREATE TABLE "dir_external_group_user_map" (
   "app_id" SMALLINT NOT NULL,
