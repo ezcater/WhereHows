@@ -1,4 +1,5 @@
 ext.externalDependency = [
+    "postgres"            : "org.postgresql:postgresql:42.2.1",
     "mysql"               : "mysql:mysql-connector-java:5.1.40",
     "jython"              : "org.python:jython-standalone:2.7.0",
     "testng"              : "org.testng:testng:6.9.10",
