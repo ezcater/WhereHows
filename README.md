@@ -29,9 +29,6 @@ How WhereHows is used inside of LinkedIn and other potential [use cases][USE].
 ## Documentation
 The detailed information can be found in the [Wiki][wiki]
 
-## WhereHows Docker
-Docker can provide configuration free dev/production setup quickly, please check out [Docker Getting Start Guide](https://github.com/linkedin/WhereHows/tree/master/wherehows-docker/README.md)
-
 ## Getting Started
 New to Wherehows? Check out the [Getting Started Guide][GS]
 
@@ -41,10 +38,11 @@ Please download the Amazon RedshiftJDBCDriver42.jar(https://docs.aws.amazon.com/
 Please download Docker(https://www.docker.com/community-edition#/download)
 
 ### Build
-Locally:
+Docker can provide configuration free dev/production setup quickly, please check out more information in the [Docker Getting Start Guide](https://github.com/linkedin/WhereHows/tree/master/wherehows-docker/README.md)
+Locally, we perform these steps:
 * In your Wherehows repo, cd to wherehows-docker
-* run ./build.sh 1
-* run docker-compose up
+* run ``./build.sh <DOCKER_CONTAINER_TAG>``
+* run ``docker-compose up``
 
 ## Roadmap
 Check out the current [roadmap][RM] for WhereHows.
