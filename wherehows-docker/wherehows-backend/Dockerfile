@@ -1,7 +1,7 @@
 FROM openjdk:8
 
 RUN apt-get update && \
-    apt-get install -y wget vim
+    apt-get install -y wget
 
 # Install dockerize
 ENV DOCKERIZE_VERSION v0.5.0
