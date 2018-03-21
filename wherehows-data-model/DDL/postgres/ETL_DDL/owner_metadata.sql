@@ -39,7 +39,6 @@ CREATE TABLE dataset_owner (
 )
 ;
 CREATE UNIQUE INDEX "with_urn" ON "dataset_owner" ("dataset_urn", "owner_id", "app_id", "owner_source");
-
 COMMENT ON COLUMN dataset_owner.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
 COMMENT ON COLUMN dataset_owner.modified_time IS 'the modified time in epoch';
 COMMENT ON COLUMN dataset_owner.created_time IS 'the create time in epoch';

@@ -85,32 +85,24 @@ CREATE TABLE "dict_dataset" (
   "id"                          SERIAL NOT NULL,
   "name"                        VARCHAR(200)                                                                                NOT NULL,
   "schema"                      TEXT,
-  "schema_type"                 VARCHAR(50)                                                                                 DEFAULT 'JSON'
-  ,
+  "schema_type"                 VARCHAR(50)                                                                                 DEFAULT 'JSON',
   "properties"                  TEXT,
   "fields"                      TEXT,
   "urn"                         VARCHAR(500)                                                                                NOT NULL,
-  "source"                      VARCHAR(50)                                                                                 NULL
-  ,
+  "source"                      VARCHAR(50)                                                                                 NULL,
   "location_prefix"             VARCHAR(200)                                                                                NULL,
-  "parent_name"                 VARCHAR(500)                                                                                NULL
-  ,
+  "parent_name"                 VARCHAR(500)                                                                                NULL,
   "storage_type"                storage_type_enum NULL,
-  "ref_dataset_id"              INT                                                                            NULL
-  ,
+  "ref_dataset_id"              INT                                                                            NULL,
   "is_active"                   BOOLEAN NULL,
   "is_deprecated"               BOOLEAN NULL,
-  "dataset_type"                VARCHAR(30)                                                                                 NULL
-  ,
+  "dataset_type"                VARCHAR(30)                                                                                 NULL,
   "hive_serdes_class"           VARCHAR(300)                                                                                NULL,
   "is_partitioned"              CHAR(1)                                                                                     NULL,
   "partition_layout_pattern_id" SMALLINT                                                                                 NULL,
-  "sample_partition_full_path"  VARCHAR(256)
-  ,
-  "source_created_time"         BIGINT                                                                                NULL
-  ,
-  "source_modified_time"        BIGINT                                                                                NULL
-  ,
+  "sample_partition_full_path"  VARCHAR(256),
+  "source_created_time"         BIGINT                                                                                NULL,
+  "source_modified_time"        BIGINT                                                                                NULL,
   "created_time"                BIGINT,
   "modified_time"               BIGINT,
   "wh_etl_exec_id"              BIGINT,
@@ -152,8 +144,7 @@ CREATE TABLE "dict_dataset_sample" (
   "id"         SERIAL NOT NULL,
   "dataset_id" INT          NULL,
   "urn"        VARCHAR(200)     NULL,
-  "ref_id"     INT          NULL
-  ,
+  "ref_id"     INT          NULL,
   "data"       TEXT,
   "modified"   TIMESTAMP         NULL,
   "created"    TIMESTAMP         NULL,
@@ -210,32 +201,22 @@ CREATE TABLE "dict_field_detail" (
   "field_label"        VARCHAR(100)                  NULL,
   "data_type"          VARCHAR(50)          NOT NULL,
   "data_size"          INT              NULL,
-  "data_precision"     SMALLINT                    NULL
-  ,
-  "data_fraction"      SMALLINT                    NULL
-  ,
-  "default_comment_id" INT              NULL
-  ,
+  "data_precision"     SMALLINT                    NULL,
+  "data_fraction"      SMALLINT                    NULL,
+  "default_comment_id" INT              NULL,
   "comment_ids"        VARCHAR(500)                  NULL,
   "is_nullable"        CHAR(1)                       NULL,
-  "is_indexed"         CHAR(1)                       NULL
-  ,
-  "is_partitioned"     CHAR(1)                       NULL
-  ,
-  "is_distributed"     SMALLINT                    NULL
-  ,
+  "is_indexed"         CHAR(1)                       NULL,
+  "is_partitioned"     CHAR(1)                       NULL,
+  "is_distributed"     SMALLINT                    NULL,
   "is_recursive"       CHAR(1)                       NULL,
   "confidential_flags" VARCHAR(200)                  NULL,
   "default_value"      VARCHAR(200)                  NULL,
   "namespace"          VARCHAR(200)                  NULL,
-  "java_data_type"     VARCHAR(50)                   NULL
-  ,
-  "jdbc_data_type"     VARCHAR(50)                   NULL
-  ,
-  "pig_data_type"      VARCHAR(50)                   NULL
-  ,
-  "hcatalog_data_type" VARCHAR(50)                   NULL
-  ,
+  "java_data_type"     VARCHAR(50)                   NULL,
+  "jdbc_data_type"     VARCHAR(50)                   NULL,
+  "pig_data_type"      VARCHAR(50)                   NULL,
+  "hcatalog_data_type" VARCHAR(50)                   NULL,
   "modified"           TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY ("field_id")
 );

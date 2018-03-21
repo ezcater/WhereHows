@@ -15,12 +15,9 @@
 
 -- configuration tables
 CREATE TABLE "wh_etl_job_schedule" (
-  "wh_etl_job_name" VARCHAR(127)  NOT NULL
-  ,
-  "enabled"         BOOLEAN       DEFAULT NULL
-  ,
-  "next_run"        INT     DEFAULT NULL
-  ,
+  "wh_etl_job_name" VARCHAR(127)  NOT NULL,
+  "enabled"         BOOLEAN       DEFAULT NULL,
+  "next_run"        INT     DEFAULT NULL,
   PRIMARY KEY ("wh_etl_job_name")
 );
   COMMENT ON TABLE wh_etl_job_schedule IS 'WhereHows ETL job scheduling table';
@@ -30,24 +27,15 @@ CREATE UNIQUE INDEX "etl_unique" ON "wh_etl_job_schedule" ("wh_etl_job_name");
   COMMENT ON COLUMN wh_etl_job_schedule.next_run IS 'next run time';
 
 CREATE TABLE "wh_etl_job_history" (
-  "wh_etl_exec_id"  BIGSERIAL NOT NULL
-  ,
-  "wh_etl_job_name" VARCHAR(127)                 NOT NULL
-  ,
-  "status"          VARCHAR(31)                  DEFAULT NULL
-  ,
-  "request_time"    INT             DEFAULT NULL
-  ,
-  "start_time"      INT             DEFAULT NULL
-  ,
-  "end_time"        INT             DEFAULT NULL
-  ,
-  "message"         VARCHAR(1024)                DEFAULT NULL
-  ,
-  "host_name"       VARCHAR(200)                 DEFAULT NULL
-  ,
-  "process_id"      BIGINT                 DEFAULT NULL
-  ,
+  "wh_etl_exec_id"  BIGSERIAL NOT NULL,
+  "wh_etl_job_name" VARCHAR(127)                 NOT NULL,
+  "status"          VARCHAR(31)                  DEFAULT NULL,
+  "request_time"    INT             DEFAULT NULL,
+  "start_time"      INT             DEFAULT NULL,
+  "end_time"        INT             DEFAULT NULL,
+  "message"         VARCHAR(1024)                DEFAULT NULL,
+  "host_name"       VARCHAR(200)                 DEFAULT NULL,
+  "process_id"      BIGINT                 DEFAULT NULL,
   PRIMARY KEY ("wh_etl_exec_id")
 );
   COMMENT ON TABLE wh_etl_job_history IS 'WhereHows ETL execution history table';

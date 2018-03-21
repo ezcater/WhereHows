@@ -14,10 +14,8 @@
 --
 
 CREATE TABLE flow (
-  app_id               INTEGER NOT NULL
-  ,
-  flow_id              BIGINT      NOT NULL
-  ,
+  app_id               INTEGER NOT NULL,
+  flow_id              BIGINT      NOT NULL,
   flow_name            VARCHAR(255),
   flow_group           VARCHAR(255),
   flow_path            VARCHAR(1024),
@@ -56,8 +54,7 @@ CREATE INDEX flow_flow_name_idx ON flow (app_id, flow_group, flow_name);
 
 
 CREATE TABLE stg_flow (
-  app_id               INTEGER NOT NULL
-  ,
+  app_id               INTEGER NOT NULL,
   flow_id              BIGINT,
   flow_name            VARCHAR(255),
   flow_group           VARCHAR(255),
@@ -96,8 +93,7 @@ CREATE INDEX stg_flow_flow_path_idx ON stg_flow (app_id, flow_path);
 
 
 CREATE TABLE flow_source_id_map (
-  app_id           INTEGER NOT NULL
-  ,
+  app_id           INTEGER NOT NULL,
   flow_id          BIGSERIAL NOT NULL,
   source_id_string VARCHAR(1024),
   source_id_uuid   VARCHAR(255),
@@ -114,16 +110,12 @@ CREATE INDEX fsi_flow_path_idx ON flow_source_id_map (app_id, source_id_string);
 
 
 CREATE TABLE flow_job (
-  app_id               INTEGER NOT NULL
-  ,
-  flow_id              BIGINT      NOT NULL
-  ,
+  app_id               INTEGER NOT NULL,
+  flow_id              BIGINT      NOT NULL,
   first_source_version VARCHAR(255),
   last_source_version  VARCHAR(255),
-  dag_version          INT               NOT NULL
-  ,
-  job_id               BIGINT      NOT NULL
-  ,
+  dag_version          INT               NOT NULL,
+  job_id               BIGINT      NOT NULL,
   job_name             VARCHAR(255),
   job_path             VARCHAR(1024),
   job_type_id          SMALLINT,
@@ -164,8 +156,7 @@ CREATE INDEX ref_flow_id_idx on flow_job (app_id, ref_flow_id);
 CREATE INDEX fj_job_path_idx on flow_job (app_id, job_path);
 
 CREATE TABLE stg_flow_job (
-  app_id         INTEGER NOT NULL
-  ,
+  app_id         INTEGER NOT NULL,
   flow_id        BIGINT,
   flow_path      VARCHAR(1024),
   source_version VARCHAR(255),
@@ -211,10 +202,8 @@ CREATE INDEX job_type_idx on stg_flow_job (job_type);
 CREATE INDEX on stg_flow_job (app_id, job_id, dag_version);
 
 CREATE TABLE job_source_id_map (
-  app_id           INTEGER NOT NULL
-  ,
-  job_id           BIGSERIAL      NOT NULL
-  ,
+  app_id           INTEGER NOT NULL,
+  job_id           BIGSERIAL      NOT NULL,
   source_id_string VARCHAR(1024),
   source_id_uuid   VARCHAR(255),
   source_id_uri    VARCHAR(255),
@@ -229,10 +218,8 @@ CREATE TABLE job_source_id_map (
 CREATE INDEX jsim_job_path_idx ON job_source_id_map (app_id, source_id_string);
 
 CREATE TABLE flow_dag (
-  app_id         INTEGER NOT NULL
-  ,
-  flow_id        BIGINT NOT NULL
-  ,
+  app_id         INTEGER NOT NULL,
+  flow_id        BIGINT NOT NULL,
   source_version VARCHAR(255),
   dag_version    INT,
   dag_md5        VARCHAR(255),
@@ -253,10 +240,8 @@ CREATE INDEX flow_dag_flow_id_idx on flow_dag (app_id, flow_id);
 
 
 CREATE TABLE stg_flow_dag (
-  app_id         INTEGER NOT NULL
-  ,
-  flow_id        BIGINT NOT NULL
-  ,
+  app_id         INTEGER NOT NULL,
+  flow_id        BIGINT NOT NULL,
   source_version VARCHAR(255),
   dag_version    INT,
   dag_md5        VARCHAR(255),
@@ -274,8 +259,7 @@ CREATE INDEX sfd_flow_dag_md5_idx on stg_flow_dag (app_id, flow_id, dag_md5);
 CREATE INDEX sfd_flow_id_idx on stg_flow_dag (app_id, flow_id);
 
 CREATE TABLE stg_flow_dag_edge (
-  app_id          INTEGER NOT NULL
-  ,
+  app_id          INTEGER NOT NULL,
   flow_id         BIGINT,
   flow_path       VARCHAR(1024),
   source_version  VARCHAR(255),
@@ -302,13 +286,10 @@ CREATE INDEX source_job_path_idx on stg_flow_dag_edge (app_id, source_job_path);
 CREATE INDEX target_job_path_idx on stg_flow_dag_edge (app_id, target_job_path);
 
 CREATE TABLE flow_execution (
-  app_id           INTEGER NOT NULL
-  ,
-  flow_exec_id     BIGINT   NOT NULL
-  ,
+  app_id           INTEGER NOT NULL,
+  flow_exec_id     BIGINT   NOT NULL,
   flow_exec_uuid   VARCHAR(255),
-  flow_id          BIGINT      NOT NULL
-  ,
+  flow_id          BIGINT      NOT NULL,
   flow_name        VARCHAR(255),
   source_version   VARCHAR(255),
   flow_exec_status VARCHAR(31),
@@ -360,8 +341,7 @@ CREATE TABLE flow_execution_id_map (
 CREATE INDEX flow_exec_uuid_idx ON flow_execution_id_map (app_id, source_exec_uuid);
 
 CREATE TABLE stg_flow_execution (
-  app_id           INTEGER NOT NULL
-  ,
+  app_id           INTEGER NOT NULL,
   flow_exec_id     BIGINT,
   flow_exec_uuid   VARCHAR(255),
   flow_id          BIGINT,
@@ -398,17 +378,13 @@ CREATE INDEX sfe_flow_id_idx on stg_flow_execution (app_id, flow_id);
 CREATE INDEX sfe_flow_path_idx on stg_flow_execution (app_id, flow_path);
 
 CREATE TABLE job_execution (
-  app_id          INTEGER NOT NULL
-  ,
+  app_id          INTEGER NOT NULL,
   flow_exec_id    BIGINT,
-  job_exec_id     BIGINT   NOT NULL
-  ,
+  job_exec_id     BIGINT   NOT NULL,
   job_exec_uuid   VARCHAR(255),
-  flow_id         BIGINT      NOT NULL
-  ,
+  flow_id         BIGINT      NOT NULL,
   source_version  VARCHAR(255),
-  job_id          BIGINT      NOT NULL
-  ,
+  job_id          BIGINT      NOT NULL,
   job_name        VARCHAR(255),
   job_exec_status VARCHAR(31),
   attempt_id      SMALLINT,
@@ -461,8 +437,7 @@ CREATE TABLE job_execution_id_map (
 CREATE INDEX job_exec_uuid_idx ON job_execution_id_map (app_id, source_exec_uuid);
 
 CREATE TABLE stg_job_execution (
-  app_id          INTEGER NOT NULL
-  ,
+  app_id          INTEGER NOT NULL,
   flow_id         BIGINT,
   flow_path       VARCHAR(1024),
   source_version  VARCHAR(255),
@@ -507,10 +482,8 @@ CREATE INDEX sje_flow_exec_idx on stg_job_execution (app_id, flow_exec_id);
 CREATE INDEX job_exec_idx on stg_job_execution (app_id, job_exec_id);
 
 CREATE TABLE flow_schedule (
-  app_id               INTEGER NOT NULL
-  ,
-  flow_id              BIGINT      NOT NULL
-  ,
+  app_id               INTEGER NOT NULL,
+  flow_id              BIGINT      NOT NULL,
   unit                 VARCHAR(31),
   frequency            INT,
   cron_expression      VARCHAR(127),
@@ -543,8 +516,7 @@ CREATE TABLE flow_schedule (
 CREATE INDEX ON flow_schedule (app_id, flow_id);
 
 CREATE TABLE stg_flow_schedule (
-  app_id               INTEGER NOT NULL
-  ,
+  app_id               INTEGER NOT NULL,
   flow_id              BIGINT,
   flow_path            VARCHAR(1024),
   unit                 VARCHAR(31),
@@ -574,10 +546,8 @@ CREATE INDEX ON stg_flow_schedule (app_id, flow_id);
 CREATE INDEX ON stg_flow_schedule (app_id, flow_path);
 
 CREATE TABLE flow_owner_permission (
-  app_id         INTEGER NOT NULL
-  ,
-  flow_id        BIGINT      NOT NULL
-  ,
+  app_id         INTEGER NOT NULL,
+  flow_id        BIGINT      NOT NULL,
   owner_id       VARCHAR(63),
   permissions    VARCHAR(255),
   owner_type     VARCHAR(31),
@@ -599,8 +569,7 @@ CREATE INDEX flow_index on flow_owner_permission (app_id, flow_id);
 CREATE INDEX owner_index on flow_owner_permission (app_id, owner_id);
 
 CREATE TABLE stg_flow_owner_permission (
-  app_id         INTEGER NOT NULL
-  ,
+  app_id         INTEGER NOT NULL,
   flow_id        BIGINT,
   flow_path      VARCHAR(1024),
   owner_id       VARCHAR(63),

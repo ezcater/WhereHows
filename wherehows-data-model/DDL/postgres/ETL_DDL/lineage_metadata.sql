@@ -23,7 +23,6 @@ CREATE TABLE IF NOT EXISTS "stg_job_execution_data_lineage" (
   "job_name"               VARCHAR(255)                                        NULL,
   "job_start_unixtime"     BIGINT                                          NOT NULL,
   "job_finished_unixtime"  BIGINT                                          NOT NULL,
-
   "db_id"                  SMALLINT                                NULL,
   "abstracted_object_name" VARCHAR(255)                                        NOT NULL,
   "full_object_name"       VARCHAR(1000)                                       NOT NULL,
@@ -32,12 +31,9 @@ CREATE TABLE IF NOT EXISTS "stg_job_execution_data_lineage" (
   "partition_type"         VARCHAR(20)                                         NULL,
   "layout_id"              SMALLINT                                NULL,
   "storage_type"           VARCHAR(16)                                         NULL,
-
   "source_target_type"     source_target_type_enum NOT NULL,
-  "srl_no"                 SMALLINT                       NOT NULL DEFAULT '1'
-  ,
-  "source_srl_no"          SMALLINT                                NULL
-  ,
+  "srl_no"                 SMALLINT                       NOT NULL DEFAULT '1',
+  "source_srl_no"          SMALLINT                                NULL,
   "operation"              VARCHAR(64)                                         NULL,
   "record_count"           BIGINT                                 NULL,
   "insert_count"           BIGINT                                 NULL,
@@ -55,29 +51,22 @@ COMMENT ON COLUMN stg_job_execution_data_lineage.srl_no IS 'the sorted number of
 CREATE TABLE IF NOT EXISTS "job_execution_data_lineage" (
   "app_id"                 SMALLINT                       NOT NULL,
   "flow_exec_id"           BIGINT                                 NOT NULL,
-  "job_exec_id"            BIGINT                                 NOT NULL
-  ,
-  "job_exec_uuid"          VARCHAR(100)                                        NULL
-  ,
+  "job_exec_id"            BIGINT                                 NOT NULL,
+  "job_exec_uuid"          VARCHAR(100)                                        NULL,
   "job_name"               VARCHAR(255)                                        NOT NULL,
   "job_start_unixtime"     BIGINT                                          NOT NULL,
   "job_finished_unixtime"  BIGINT                                          NOT NULL,
-
   "db_id"                  SMALLINT                                NULL,
   "abstracted_object_name" VARCHAR(255)                               NOT NULL,
   "full_object_name"       VARCHAR(1000)                                       NULL,
   "partition_start"        VARCHAR(50)                                         NULL,
   "partition_end"          VARCHAR(50)                                         NULL,
   "partition_type"         VARCHAR(20)                                         NULL,
-  "layout_id"              SMALLINT                                NULL
-  ,
+  "layout_id"              SMALLINT                                NULL,
   "storage_type"           VARCHAR(16)                                         NULL,
-
   "source_target_type"     source_target_type_enum NOT NULL,
-  "srl_no"                 SMALLINT                       NOT NULL DEFAULT '1'
-  ,
-  "source_srl_no"          SMALLINT                                NULL
-  ,
+  "srl_no"                 SMALLINT                       NOT NULL DEFAULT '1',
+  "source_srl_no"          SMALLINT                                NULL,
   "operation"              VARCHAR(64)                                         NULL,
   "record_count"           BIGINT                                 NULL,
   "insert_count"           BIGINT                                 NULL,
@@ -86,7 +75,6 @@ CREATE TABLE IF NOT EXISTS "job_execution_data_lineage" (
   "flow_path"              VARCHAR(1024)                                       NULL,
   "created_date"           BIGINT,
   "wh_etl_exec_id"              INT                                        NULL,
-
   PRIMARY KEY ("app_id", "job_exec_id", "srl_no")
 );
   COMMENT ON TABLE job_execution_data_lineage IS 'Lineage table';

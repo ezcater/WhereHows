@@ -62,7 +62,6 @@ CREATE TABLE favorites (
   created    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (user_id, dataset_id)
 )
-
 ;
 
 CREATE TABLE user_login_history (
