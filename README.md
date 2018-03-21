@@ -44,8 +44,8 @@ Docker can provide configuration free dev/production setup quickly, please check
 Locally, we perform these steps:
 * Clone this repo
 * In your Wherehows repo, cd to wherehows-docker
-* run ``./build.sh <DOCKER_CONTAINER_TAG>``
-* run ``docker-compose up``
+* run ```./build.sh <DOCKER_CONTAINER_TAG>```
+* run ```docker-compose up```
 
 ## Roadmap
 Check out the current [roadmap][RM] for WhereHows.
