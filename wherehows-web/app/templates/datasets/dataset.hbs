@@ -64,7 +64,9 @@
         {{#tablist.tab tabIds.Access on-select=(action "tabSelectionChanged")}}ACL Access{{/tablist.tab}}
       </span>
 
-      {{#tablist.tab tabIds.Schema on-select=(action "tabSelectionChanged")}}Schema{{/tablist.tab}}
+      {{#tablist.tab tabIds.Comments on-select=(action "tabSelectionChanged")}}Table Definition{{/tablist.tab}}
+
+      {{#tablist.tab tabIds.Schema on-select=(action "tabSelectionChanged")}}Fields{{/tablist.tab}}
 
       {{#tablist.tab tabIds.Ownership on-select=(action "tabSelectionChanged")}}
         Ownership
@@ -83,6 +85,20 @@
           {{/if}}
         {{/tablist.tab}}
       {{/if}}
+
+      {{!--feature not available--}}
+      <span style="display:none">
+        {{#unless isSFDC}}
+          {{#tablist.tab tabIds.SampleData on-select=(action "tabSelectionChanged")}}
+            Sample Data{{/tablist.tab}}
+        {{/unless}}
+      </span>
+
+      {{!--feature not available--}}
+      <span style="display:none">
+        {{#tablist.tab tabIds.Relations on-select=(action "tabSelectionChanged")}}
+          Relations{{/tablist.tab}}
+      </span>
 
     {{/tabs.tablist}}
 
@@ -104,9 +120,12 @@
     {{/tabs.tabpanel}}
 
     {{#tabs.tabpanel tabIds.Schema}}
-      {{datasets/containers/dataset-schema urn=encodedUrn}}
+      {{dataset-schema
+        isTable=isTable
+        schemas=model.schema
+      }}
     {{/tabs.tabpanel}}
-
+    
     {{#tabs.tabpanel tabIds.Ownership}}
       {{datasets/containers/dataset-ownership urn=encodedUrn}}
     {{/tabs.tabpanel}}
