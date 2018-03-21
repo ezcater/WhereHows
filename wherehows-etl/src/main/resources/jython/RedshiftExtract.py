@@ -1,5 +1,6 @@
 #
-# Copyright 2015 LinkedIn Corp. All rights reserved.
+# Copyright 2018 ezCater, Inc. All rights reserved.
+# Derived from OracleExtract.py, copyright 2015 LinkedIn Corp. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -161,6 +162,7 @@ class RedshiftExtract:
       field_record = {
         "sort_id": self.num_to_int(row[8]),
         "name": row[2],
+        "primary_key": self.num_to_int(row[7]),
         "data_type": row[4],
         "nullable": row[3]
       }
@@ -220,7 +222,7 @@ class RedshiftExtract:
                    'parent_name', 'storage_type', 'dataset_type']
     self.write_csv(table_output_file, csv_columns, self.table_output_list)
 
-    csv_columns = ['dataset_urn', 'sort_id', 'name', 'data_type', 'nullable']
+    csv_columns = ['dataset_urn', 'sort_id', 'name', 'primary_key', 'data_type', 'nullable']
     self.write_csv(field_output_file, csv_columns, self.field_output_list)
 
 if __name__ == "__main__":
