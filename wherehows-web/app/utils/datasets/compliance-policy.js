@@ -1,19 +1,25 @@
 import { DatasetClassifiers } from 'wherehows-web/constants/dataset-classification';
 import { lastSeenSuggestionInterval } from 'wherehows-web/constants/metadata-acquisition';
 import { assert, warn } from '@ember/debug';
+import { decodeUrn } from 'wherehows-web/utils/validators/urn';
+import { arrayMap } from 'wherehows-web/utils/array';
 
 /**
  * Builds a default shape for securitySpecification & privacyCompliancePolicy with default / unset values
  *   for non null properties as per Avro schema
- * @param {number} datasetId id for the dataset that this privacy object applies to
+ * @param {number} datasetId identifier for the dataset that this privacy object applies to
  */
-const createInitialComplianceInfo = datasetId => ({
-  datasetId,
-  complianceType: '',
-  compliancePurgeNote: '',
-  complianceEntities: [],
-  datasetClassification: {}
-});
+const createInitialComplianceInfo = datasetId => {
+  const identifier = typeof datasetId === 'string' ? { datasetUrn: decodeUrn(datasetId) } : { datasetId };
+
+  return {
+    ...identifier,
+    complianceType: '',
+    compliancePurgeNote: '',
+    complianceEntities: [],
+    datasetClassification: {}
+  };
+};
 
 /**
  *
@@ -118,21 +124,33 @@ const isRecentSuggestion = (policyModificationTime = 0, suggestionModificationTi
 /**
  * Checks if a compliance policy changeSet field requires user attention: if a suggestion
  * is available  but the user has not indicated intent or a policy for the field does not currently exist remotely
- * and the related field changeSet has not been modified on the client
+ * and the related field changeSet has not been modified on the client and isn't readonly
  * @param {boolean} isDirty flag indicating the field changeSet has been modified on the client
  * @param {object|void} suggestion the field suggestion properties
  * @param {boolean} privacyPolicyExists flag indicating that the field has a current policy upstream
  * @param {string} suggestionAuthority possibly empty string indicating the user intent for the suggestion
  * @return {boolean}
  */
-const fieldChangeSetRequiresReview = ({ isDirty, suggestion, privacyPolicyExists, suggestionAuthority } = {}) => {
+const fieldChangeSetRequiresReview = ({
+  isDirty,
+  suggestion,
+  privacyPolicyExists,
+  suggestionAuthority,
+  readonly
+} = {}) => {
   if (suggestion) {
-    return !suggestionAuthority;
+    return !suggestionAuthority && !readonly;
   }
 
-  // If either the privacy policy exists, or user has made changes, then no review is required
-  return !(privacyPolicyExists || isDirty);
+  // If either the privacy policy exists, or user has made changes, and field is not readonly then no review is required
+  return !(privacyPolicyExists || isDirty) && !readonly;
 };
+
+/**
+ * Gets the fields requiring review
+ * @type {(array: Array<IComplianceChangeSet>) => Array<boolean>}
+ */
+const getFieldsRequiringReview = arrayMap(fieldChangeSetRequiresReview);
 
 /**
  * Merges the column fields with the suggestion for the field if available
@@ -151,7 +169,8 @@ const mergeMappedColumnFieldsWithSuggestions = (mappedColumnFields = {}, fieldSu
       policyModificationTime,
       privacyPolicyExists,
       isDirty,
-      nonOwner
+      nonOwner,
+      readonly
     } = mappedColumnFields[fieldName];
     const suggestion = fieldSuggestionMap[identifierField];
 
@@ -163,7 +182,8 @@ const mergeMappedColumnFieldsWithSuggestions = (mappedColumnFields = {}, fieldSu
       privacyPolicyExists,
       isDirty,
       nonOwner,
-      securityClassification
+      securityClassification,
+      readonly
     };
 
     // If a suggestion exists for this field add the suggestion attribute to the field properties / changeSet
@@ -180,5 +200,6 @@ export {
   isPolicyExpectedShape,
   fieldChangeSetRequiresReview,
   mergeMappedColumnFieldsWithSuggestions,
-  isRecentSuggestion
+  isRecentSuggestion,
+  getFieldsRequiringReview
 };

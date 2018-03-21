@@ -57,7 +57,7 @@ export default class PurgePolicyComponent extends Component {
    * Flag indication that policy has a request exemption reason
    * @type {boolean}
    */
-  requestExemptionReason = false;
+  requestExemptionReason: boolean;
 
   /**
    * An options hash for the purge exempt reason text editor
@@ -78,6 +78,12 @@ export default class PurgePolicyComponent extends Component {
    * @memberof PurgePolicyComponent
    */
   onPolicyChange: (purgePolicy: PurgePolicy) => IComplianceInfo['complianceType'] | null;
+
+  constructor() {
+    super(...arguments);
+
+    this.requestExemptionReason || (this.requestExemptionReason = false);
+  }
 
   didReceiveAttrs(this: PurgePolicyComponent) {
     this._super(...arguments);
@@ -104,7 +110,8 @@ export default class PurgePolicyComponent extends Component {
    * Applies cursor / document focus to the purge note text editor
    */
   focusEditor(this: PurgePolicyComponent) {
-    const exemptionReasonElement = <HTMLElement>get(this, 'element').querySelector('.comment-new__content');
+    const element = get(this, 'element');
+    const exemptionReasonElement: HTMLElement | null = element && element.querySelector('.comment-new__content');
 
     if (exemptionReasonElement) {
       exemptionReasonElement.focus();

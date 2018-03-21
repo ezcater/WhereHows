@@ -1,13 +1,21 @@
-import { IOwner, IOwnerPostResponse, IOwnerResponse } from 'wherehows-web/typings/api/datasets/owners';
+import {
+  IOwner,
+  IOwnerPostResponse,
+  IOwnerResponse,
+  IOwnerTypeResponse
+} from 'wherehows-web/typings/api/datasets/owners';
 import {
   IPartyEntity,
   IPartyEntityResponse,
   IPartyProps,
   IUserEntityMap
 } from 'wherehows-web/typings/api/datasets/party-entities';
-import { datasetUrlById } from 'wherehows-web/utils/api/datasets/shared';
+import { notFoundApiError } from 'wherehows-web/utils/api';
+import { datasetUrlById, datasetUrlByUrn } from 'wherehows-web/utils/api/datasets/shared';
 import { getJSON, postJSON } from 'wherehows-web/utils/api/fetcher';
 import { getApiRoot, ApiStatus } from 'wherehows-web/utils/api/shared';
+import { arrayFilter, arrayMap } from 'wherehows-web/utils/array';
+import { fleece } from 'wherehows-web/utils/object';
 
 /**
  * Defines a string enum for valid owner types
@@ -34,7 +42,8 @@ enum OwnerType {
  */
 enum OwnerUrnNamespace {
   corpUser = 'urn:li:corpuser',
-  groupUser = 'urn:li:corpGroup'
+  groupUser = 'urn:li:corpGroup',
+  multiProduct = 'urn:li:multiProduct'
 }
 
 enum OwnerSource {
@@ -57,7 +66,24 @@ enum OwnerSource {
  */
 const datasetOwnersUrlById = (id: number): string => `${datasetUrlById(id)}/owners`;
 
+/**
+ * Returns the dataset owners url by urn
+ * @param {string} urn
+ * @return {string}
+ */
+const datasetOwnersUrlByUrn = (urn: string): string => `${datasetUrlByUrn(urn)}/owners`;
+
+/**
+ * Returns the party entities url
+ * @type {string}
+ */
 const partyEntitiesUrl = `${getApiRoot()}/party/entities`;
+
+/**
+ * Returns the owner types url
+ * @return {string}
+ */
+const datasetOwnerTypesUrl = () => `${getApiRoot()}/owner/types`;
 
 /**
  * Requests the list of dataset owners from the GET endpoint, converts the modifiedTime property
@@ -68,13 +94,46 @@ const partyEntitiesUrl = `${getApiRoot()}/party/entities`;
 const readDatasetOwners = async (id: number): Promise<Array<IOwner>> => {
   const { owners = [], status, msg } = await getJSON<IOwnerResponse>({ url: datasetOwnersUrlById(id) });
   if (status === ApiStatus.OK) {
-    return owners.map(owner => ({
-      ...owner,
-      modifiedTime: new Date(<number>owner.modifiedTime!) // Api response is always in number format
-    }));
+    return ownersWithModifiedTimeAsDate(owners);
   }
 
   throw new Error(msg);
+};
+
+/**
+ * Modifies an owner object by applying the modified date property as a Date object
+ * @param {IOwner} owner
+ * @return {IOwner}
+ */
+const ownerWithModifiedTimeAsDate = (owner: IOwner): IOwner => ({
+  ...owner,
+  modifiedTime: new Date(<number>owner.modifiedTime)
+}); // Api response is always in number format
+
+/**
+ * Modifies a list of owners with a modified date property as a Date object
+ * @type {(array: Array<IOwner>) => Array<IOwner>}
+ */
+const ownersWithModifiedTimeAsDate = arrayMap(ownerWithModifiedTimeAsDate);
+
+/**
+ * Reads the owners for dataset by urn
+ * @param {string} urn
+ * @return {Promise<Array<IOwner>>}
+ */
+const readDatasetOwnersByUrn = async (urn: string): Promise<Array<IOwner>> => {
+  let owners: Array<IOwner> = [];
+
+  try {
+    ({ owners = [] } = await getJSON<Pick<IOwnerResponse, 'owners'>>({ url: datasetOwnersUrlByUrn(urn) }));
+    return ownersWithModifiedTimeAsDate(owners);
+  } catch (e) {
+    if (notFoundApiError(e)) {
+      return owners;
+    } else {
+      throw e;
+    }
+  }
 };
 
 /**
@@ -104,6 +163,49 @@ const updateDatasetOwners = async (
 
   throw new Error(msg);
 };
+
+/**
+ * Updates the owners on a dataset by urn
+ * @param {string} urn
+ * @param {string} csrfToken
+ * @param {Array<IOwner>} updatedOwners
+ * @return {Promise<void>}
+ */
+const updateDatasetOwnersByUrn = (urn: string, csrfToken: string = '', updatedOwners: Array<IOwner>): Promise<{}> => {
+  const ownersWithoutModifiedTime = arrayMap(fleece<IOwner, 'modifiedTime'>(['modifiedTime']));
+
+  return postJSON<{}>({
+    url: datasetOwnersUrlByUrn(urn),
+    headers: { 'csrf-token': csrfToken },
+    data: {
+      csrfToken,
+      owners: ownersWithoutModifiedTime(updatedOwners) // strips the modified time from each owner, remote is source of truth
+    }
+  });
+};
+
+/**
+ * Reads the owner types list on a dataset
+ * @return {Promise<Array<OwnerType>>}
+ */
+const readDatasetOwnerTypes = async (): Promise<Array<OwnerType>> => {
+  const url = datasetOwnerTypesUrl();
+  const { ownerTypes = [] } = await getJSON<IOwnerTypeResponse>({ url });
+  return ownerTypes.sort((a: string, b: string) => a.localeCompare(b));
+};
+
+/**
+ * Determines if an owner type supplied is not of type consumer
+ * @param {OwnerType} ownerType
+ * @return {boolean}
+ */
+const isNotAConsumer = (ownerType: OwnerType): boolean => ownerType !== OwnerType.Consumer;
+
+/**
+ * Reads the dataset owner types and filters out the OwnerType.Consumer type from the list
+ * @return {Promise<Array<OwnerType>>}
+ */
+const readDatasetOwnerTypesWithoutConsumer = async () => arrayFilter(isNotAConsumer)(await readDatasetOwnerTypes());
 
 /**
  * Requests party entities and if the response status is OK, resolves with an array of entities
@@ -179,6 +281,9 @@ const readPartyEntitiesMap = (partyEntities: Array<IPartyEntity>): IUserEntityMa
 
 export {
   readDatasetOwners,
+  readDatasetOwnersByUrn,
+  updateDatasetOwnersByUrn,
+  readDatasetOwnerTypesWithoutConsumer,
   readPartyEntities,
   readPartyEntitiesMap,
   getUserEntities,
