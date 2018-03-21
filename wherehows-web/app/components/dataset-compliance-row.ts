@@ -1,6 +1,6 @@
 import { IComplianceChangeSet } from 'wherehows-web/components/dataset-compliance';
 import DatasetTableRow from 'wherehows-web/components/dataset-table-row';
-import ComputedProperty, { alias } from '@ember/object/computed';
+import ComputedProperty, { alias, bool } from '@ember/object/computed';
 import { computed, get, getProperties, getWithDefault } from '@ember/object';
 import {
   Classification,
@@ -13,7 +13,7 @@ import {
 } from 'wherehows-web/constants';
 import { IComplianceDataType } from 'wherehows-web/typings/api/list/compliance-datatypes';
 import { fieldChangeSetRequiresReview } from 'wherehows-web/utils/datasets/compliance-policy';
-import { isHighConfidenceSuggestion } from 'wherehows-web/utils/datasets/compliance-suggestions';
+import { getFieldSuggestions } from 'wherehows-web/utils/datasets/compliance-suggestions';
 import noop from 'wherehows-web/utils/noop';
 import { hasEnumerableKeys } from 'wherehows-web/utils/object';
 
@@ -28,6 +28,8 @@ const unSelectedFieldFormatValue: IFieldIdentifierOption<null> = {
 };
 
 export default class DatasetComplianceRow extends DatasetTableRow {
+  classNameBindings = ['isReadonlyEntity:dataset-compliance-fields--readonly'];
+
   /**
    * Declares the field property on a DatasetTableRow. Contains attributes for a compliance field record
    * @type {IComplianceChangeSet}
@@ -91,6 +93,13 @@ export default class DatasetComplianceRow extends DatasetTableRow {
    * @memberof DatasetComplianceRow
    */
   dataType: ComputedProperty<string> = alias('field.dataType');
+
+  /**
+   * Aliases a fields readonly attribute as a boolean computed property
+   * @type {ComputedProperty<boolean>}
+   * @memberof DatasetComplianceRow
+   */
+  isReadonlyEntity: ComputedProperty<boolean> = bool('field.readonly');
 
   /**
    * Dropdown options for each compliance field / record
@@ -327,17 +336,7 @@ export default class DatasetComplianceRow extends DatasetTableRow {
     logicalType: IComplianceChangeSet['logicalType'];
     confidence: number;
   } | void {
-    const field = getWithDefault(this, 'field', <IComplianceChangeSet>{});
-    // If a suggestionAuthority property exists on the field, then the user has already either accepted or ignored
-    // the suggestion for this field. It's value should not be taken into account on re-renders
-    // in place, this substitutes an empty suggestion
-    const { suggestion } = field.hasOwnProperty('suggestionAuthority') ? { suggestion: void 0 } : field;
-
-    if (suggestion && isHighConfidenceSuggestion(suggestion)) {
-      const { identifierType, logicalType, confidenceLevel: confidence } = suggestion;
-
-      return { identifierType, logicalType, confidence: +(confidence * 100).toFixed(2) };
-    }
+    return getFieldSuggestions(getWithDefault(this, 'field', <IComplianceChangeSet>{}));
   });
 
   actions = {

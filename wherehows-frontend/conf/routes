@@ -268,7 +268,7 @@ POST          /api/v1/tracking                                                  
 
 GET           /api/v2/list/platforms                                            controllers.api.v2.Dataset.getDataPlatforms
 
-GET           /api/v2/list/complianceDataTypes                                  controllers.api.v2.Dataset.getComplianceDataTypes
+GET           /api/v2/list/compliance-data-types                                  controllers.api.v2.Dataset.getComplianceDataTypes
 
 GET           /api/v2/platforms/:platform/prefix/:prefix                        controllers.api.v2.Dataset.listSegments(platform: String, prefix: String)
 
@@ -288,6 +288,8 @@ GET           /api/v2/datasets/count/platform/:platform                         
 
 GET           /api/v2/datasets/count                                            controllers.api.v2.Dataset.countDatasets(platform = null, prefix = "")
 
+HEAD          /api/v2/datasets/idtourn/:id                                      controllers.api.v2.Dataset.getWhUrnById(id: Int)
+
 GET           /api/v2/datasets/:urn                                             controllers.api.v2.Dataset.getDataset(urn: String)
 
 PUT           /api/v2/datasets/:urn/deprecate                                   controllers.api.v2.Dataset.updateDatasetDeprecation(urn: String)
@@ -302,7 +304,13 @@ GET           /api/v2/datasets/:urn/compliance                                  
 
 POST          /api/v2/datasets/:urn/compliance                                  controllers.api.v2.Dataset.updateDatasetCompliance(urn: String)
 
-GET           /api/v2/datasets/:urn/complianceSuggestion                        controllers.api.v2.Dataset.getDatasetSuggestedCompliance(urn: String)
+GET           /api/v2/datasets/:urn/compliance/suggestion                       controllers.api.v2.Dataset.getDatasetSuggestedCompliance(urn: String)
+
+GET           /api/v2/datasets/:urn/acl                                         controllers.api.v2.Dataset.getDatasetAcls(urn: String)
+
+POST          /api/v2/datasets/:urn/acl/add                                     controllers.api.v2.Dataset.addUserToDatasetAcl(urn: String)
+
+PUT           /api/v2/datasets/:urn/acl/remove                                  controllers.api.v2.Dataset.removeUserFromDatasetAcl(urn: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET           /assets/*file                                                     controllers.Assets.at(path="/public", file)
