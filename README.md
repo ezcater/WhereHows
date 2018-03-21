@@ -34,12 +34,15 @@ New to Wherehows? Check out the [Getting Started Guide][GS]
 
 
 ### Preparation
-Please download the Amazon RedshiftJDBCDriver42.jar(https://docs.aws.amazon.com/redshift/latest/mgmt/configure-jdbc-connection.html#download-jdbc-driver) file and (without renaming) put it in the wherehows-etl/extralibs folder
+Please download the Amazon RedshiftJDBCDriver42.jar(https://docs.aws.amazon.com/redshift/latest/mgmt/configure-jdbc-connection.html#download-jdbc-driver) file
+Please download the gsp.jar for SQL Parsing(http://www.sqlparser.com/)
+Put a these jar files to **wherehows-etl/extralibs** directory. See [the download instrucitons][EXJAR] for more detail. ```cd WhereHows/wherehows-etl/extralibs```
 Please download Docker(https://www.docker.com/community-edition#/download)
 
 ### Build
 Docker can provide configuration free dev/production setup quickly, please check out more information in the [Docker Getting Start Guide](https://github.com/linkedin/WhereHows/tree/master/wherehows-docker/README.md)
 Locally, we perform these steps:
+* Clone this repo
 * In your Wherehows repo, cd to wherehows-docker
 * run ``./build.sh <DOCKER_CONTAINER_TAG>``
 * run ``docker-compose up``
