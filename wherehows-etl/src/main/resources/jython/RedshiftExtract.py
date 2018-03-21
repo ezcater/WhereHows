@@ -236,8 +236,6 @@ if __name__ == "__main__":
   e = RedshiftExtract()
   e.conn_db = zxJDBC.connect(JDBC_URL, username, password, JDBC_DRIVER)
 
-  
-
   temp_dir = FileUtil.etl_temp_dir(args, "REDSHIFT")
   table_output_file = os.path.join(temp_dir, args[Constant.RED_SCHEMA_OUTPUT_KEY])
   field_output_file = os.path.join(temp_dir, args[Constant.RED_FIELD_OUTPUT_KEY])
