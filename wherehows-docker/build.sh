@@ -21,5 +21,6 @@ fi
 (cd wherehows-elasticsearch && ./build.sh $VERSION)
 
 cd ..
-echo "now run this to start the application:"
-echo "docker-compose up"
+echo "now run one of these to start the application:"
+echo "docker-compose -f docker-compose-mysql.yml up # To use a MySQL DB"
+echo "docker-compose -f docker-compose-postgres.yml up # To use a Postgres DB"
