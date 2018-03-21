@@ -108,12 +108,14 @@ class RedshiftExtract:
     curs_meta.close()
 
     prev_table_key = ''
+    primary_keys = []
     for row in rows:
       current_table_key = "%s.%s" % (row[0], row[1]) 
-      primary_keys = []
+      if prev_table_key != current_table_key:
+        primary_keys = []
       if row[7] is True:
         primary_keys.append(row[2])
-        self.table_dict[current_table_key] = {"primary_key": primary_keys} # Update the constraint type
+      self.table_dict[current_table_key] = {"primary_key": primary_keys} # Update the constraint type
       prev_table_key = current_table_key
 
     self.logger.info("Fetched %d tables: %s" % (len(self.table_dict), self.table_dict))
