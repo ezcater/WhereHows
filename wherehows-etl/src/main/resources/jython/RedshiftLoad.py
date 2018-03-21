@@ -1,5 +1,6 @@
 #
-# Copyright 2015 LinkedIn Corp. All rights reserved.
+# Copyright 2018 ezCater, Inc. All rights reserved.
+# Derived from OracleLoad.py, copyright 2015 LinkedIn Corp. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -43,7 +44,6 @@ class RedshiftLoad:
     temp_dir = FileUtil.etl_temp_dir(args, "REDSHIFT")
     self.input_table_file = os.path.join(temp_dir, args[Constant.RED_SCHEMA_OUTPUT_KEY])
     self.input_field_file = os.path.join(temp_dir, args[Constant.RED_FIELD_OUTPUT_KEY])
-    #self.input_sample_file = os.path.join(temp_dir, args[Constant.RED_SAMPLE_OUTPUT_KEY])
 
     self.logger.info("Load Redshift Metadata into {}, db_id {}, wh_exec_id {}"
                      .format(JDBC_URL, self.db_id, self.wh_etl_exec_id))
@@ -122,11 +122,6 @@ class RedshiftLoad:
         IGNORE 1 LINES
         (urn, sort_id, field_name, data_type, is_nullable)
         SET db_id = {db_id};
-        -- data_size = nullif(@vdata_size,''),
-        -- data_precision = nullif(@vdata_precision,''),
-        -- data_scale = nullif(@vdata_scale,''),
-        -- default_value = nullif(@vdefault_value,'')
-        -- show warnings limit 20;
         analyze table stg_dict_field_detail;
 
         update stg_dict_field_detail
