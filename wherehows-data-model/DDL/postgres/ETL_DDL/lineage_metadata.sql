@@ -77,25 +77,25 @@ CREATE TABLE IF NOT EXISTS "job_execution_data_lineage" (
   "wh_etl_exec_id"              INT                                        NULL,
   PRIMARY KEY ("app_id", "job_exec_id", "srl_no")
 );
-  COMMENT ON TABLE job_execution_data_lineage IS 'Lineage table';
-  COMMENT ON COLUMN job_execution_data_lineage.source_srl_no IS 'the related record of this record';
-  COMMENT ON COLUMN job_execution_data_lineage.srl_no IS 'the sorted number of this record in all records of this job related operation';
-  COMMENT ON COLUMN job_execution_data_lineage.layout_id IS 'layout of the dataset';
-  COMMENT ON COLUMN job_execution_data_lineage.job_exec_uuid IS 'some scheduler do not have this value, e.g. Azkaban';
-  COMMENT ON COLUMN job_execution_data_lineage.job_exec_id IS 'in azkaban this is a smart key combined execution id and sort id of the job';
+COMMENT ON TABLE job_execution_data_lineage IS 'Lineage table';
+COMMENT ON COLUMN job_execution_data_lineage.source_srl_no IS 'the related record of this record';
+COMMENT ON COLUMN job_execution_data_lineage.srl_no IS 'the sorted number of this record in all records of this job related operation';
+COMMENT ON COLUMN job_execution_data_lineage.layout_id IS 'layout of the dataset';
+COMMENT ON COLUMN job_execution_data_lineage.job_exec_uuid IS 'some scheduler do not have this value, e.g. Azkaban';
+COMMENT ON COLUMN job_execution_data_lineage.job_exec_id IS 'in azkaban this is a smart key combined execution id and sort id of the job';
 CREATE INDEX "jedl_idx_flow_path" on job_execution_data_lineage ("app_id", "flow_path");
 CREATE INDEX "idx_job_execution_data_lineage__object_name" on job_execution_data_lineage ("abstracted_object_name", "source_target_type");
 
 CREATE TABLE job_attempt_source_code  (
-	application_id	INT NOT NULL,
-	job_id        	INT NOT NULL,
-	attempt_number	SMALLINT NOT NULL,
-	script_name   	VARCHAR(256) NULL,
-	script_path   	VARCHAR(128) NOT NULL,
-	script_type   	VARCHAR(16) NOT NULL,
-	script_md5_sum	BYTEA NULL,
-	created_date  	TIMESTAMP NOT NULL,
-	PRIMARY KEY(application_id,job_id,attempt_number)
+  application_id	INT NOT NULL,
+  job_id        	INT NOT NULL,
+  attempt_number	SMALLINT NOT NULL,
+  script_name   	VARCHAR(256) NULL,
+  script_path   	VARCHAR(128) NOT NULL,
+  script_type   	VARCHAR(16) NOT NULL,
+  script_md5_sum	BYTEA NULL,
+  created_date  	TIMESTAMP NOT NULL,
+  PRIMARY KEY(application_id,job_id,attempt_number)
 );
 
 CREATE TABLE "job_execution_script" (

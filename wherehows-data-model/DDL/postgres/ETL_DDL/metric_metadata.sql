@@ -96,7 +96,7 @@ CREATE TABLE "stg_dict_business_metric" (
   "wiki_url" VARCHAR(300) DEFAULT NULL,
   "scm_url" VARCHAR(300) DEFAULT NULL,
   "wh_etl_exec_id"              BIGINT,
-   PRIMARY KEY("urn")
+  PRIMARY KEY("urn")
 )
 ;
 COMMENT ON COLUMN stg_dict_business_metric.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';

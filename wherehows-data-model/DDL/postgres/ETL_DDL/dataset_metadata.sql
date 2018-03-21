@@ -180,7 +180,7 @@ CREATE TABLE "stg_dict_field_detail" (
   PRIMARY KEY ("urn", "sort_id", "db_id")
 )
 ;
-  COMMENT ON COLUMN stg_dict_field_detail.dataset_id IS 'used to opitimize metadata ETL performance';
+COMMENT ON COLUMN stg_dict_field_detail.dataset_id IS 'used to opitimize metadata ETL performance';
 CREATE INDEX CONCURRENTLY "idx_stg_dict_field_detail__description" ON "stg_dict_field_detail" ("description");
 
 -- Replaces `ON UPDATE CURRENT_TIMESTAMP` in table definition
@@ -220,20 +220,20 @@ CREATE TABLE "dict_field_detail" (
   "modified"           TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY ("field_id")
 );
-  ALTER SEQUENCE dict_field_detail_field_id_seq MINVALUE 0 START 0 RESTART 0;
-  COMMENT ON TABLE dict_field_detail IS 'Flattened Fields/Columns';
+ALTER SEQUENCE dict_field_detail_field_id_seq MINVALUE 0 START 0 RESTART 0;
+COMMENT ON TABLE dict_field_detail IS 'Flattened Fields/Columns';
 CREATE UNIQUE INDEX "uix_dict_field__datasetid_parentpath_fieldname" ON "dict_field_detail" ("dataset_id", "parent_path", "field_name");
 CREATE UNIQUE INDEX "uix_dict_field__datasetid_sortid" ON "dict_field_detail" ("dataset_id", "sort_id");
-  COMMENT ON COLUMN dict_field_detail.data_precision IS 'only in decimal type';
-  COMMENT ON COLUMN dict_field_detail.data_fraction IS 'only in decimal type';
-  COMMENT ON COLUMN dict_field_detail.default_comment_id IS 'a list of comment_id';
-  COMMENT ON COLUMN dict_field_detail.is_indexed IS 'only in RDBMS';
-  COMMENT ON COLUMN dict_field_detail.is_partitioned IS 'only in RDBMS';
-  COMMENT ON COLUMN dict_field_detail.is_distributed IS 'only in RDBMS';
-  COMMENT ON COLUMN dict_field_detail.java_data_type IS 'correspond type in java';
-  COMMENT ON COLUMN dict_field_detail.jdbc_data_type IS 'correspond type in jdbc';
-  COMMENT ON COLUMN dict_field_detail.pig_data_type IS 'correspond type in pig';
-  COMMENT ON COLUMN dict_field_detail.hcatalog_data_type IS 'correspond type in hcatalog';
+COMMENT ON COLUMN dict_field_detail.data_precision IS 'only in decimal type';
+COMMENT ON COLUMN dict_field_detail.data_fraction IS 'only in decimal type';
+COMMENT ON COLUMN dict_field_detail.default_comment_id IS 'a list of comment_id';
+COMMENT ON COLUMN dict_field_detail.is_indexed IS 'only in RDBMS';
+COMMENT ON COLUMN dict_field_detail.is_partitioned IS 'only in RDBMS';
+COMMENT ON COLUMN dict_field_detail.is_distributed IS 'only in RDBMS';
+COMMENT ON COLUMN dict_field_detail.java_data_type IS 'correspond type in java';
+COMMENT ON COLUMN dict_field_detail.jdbc_data_type IS 'correspond type in jdbc';
+COMMENT ON COLUMN dict_field_detail.pig_data_type IS 'correspond type in pig';
+COMMENT ON COLUMN dict_field_detail.hcatalog_data_type IS 'correspond type in hcatalog';
 
 -- Replaces `ON UPDATE CURRENT_TIMESTAMP` in table definition
 CREATE TRIGGER dict_field_detail_modified_modtime
@@ -288,7 +288,7 @@ CREATE TABLE comments (
   PRIMARY KEY (id)
 )
 ;
-  ALTER SEQUENCE comments_id_seq MINVALUE 0 START 0 RESTART 0;
+ALTER SEQUENCE comments_id_seq MINVALUE 0 START 0 RESTART 0;
 CREATE INDEX CONCURRENTLY "user_id" ON "comments" ("user_id");
 CREATE INDEX CONCURRENTLY "dataset_id" ON "comments" ("dataset_id");
 CREATE INDEX CONCURRENTLY "fti_comment" ON "comments" ("text");
@@ -317,77 +317,77 @@ CREATE TRIGGER field_comments_modified_modtime
 -- dict_dataset_instance
 CREATE TYPE deployment_tier_enum AS ENUM('local','grid','dev','int','ei','ei2','ei3','qa','stg','prod');
 CREATE TABLE dict_dataset_instance  (
-	dataset_id           	INT NOT NULL,
-	db_id                	SMALLINT   NOT NULL DEFAULT '0',
-	deployment_tier      	deployment_tier_enum NOT NULL DEFAULT 'dev',
-	data_center          	VARCHAR(30)   NULL DEFAULT '*',
-	server_cluster       	VARCHAR(150)   NULL DEFAULT '*',
-	slice                	VARCHAR(50)   NOT NULL DEFAULT '*',
+  dataset_id           	INT NOT NULL,
+  db_id                	SMALLINT   NOT NULL DEFAULT '0',
+  deployment_tier      	deployment_tier_enum NOT NULL DEFAULT 'dev',
+  data_center          	VARCHAR(30)   NULL DEFAULT '*',
+  server_cluster       	VARCHAR(150)   NULL DEFAULT '*',
+  slice                	VARCHAR(50)   NOT NULL DEFAULT '*',
   is_active             BOOLEAN NULL,
   is_deprecated         BOOLEAN NULL,
-	native_name          	VARCHAR(250) NOT NULL,
-	logical_name         	VARCHAR(250) NOT NULL,
-	version              	VARCHAR(30)   NULL,
-	version_sort_id      	BIGINT   NOT NULL DEFAULT '0',
-	schema_text           TEXT NULL,
-	ddl_text              TEXT NULL,
-	instance_created_time	INT   NULL,
-	created_time         	INT   NULL,
-	modified_time        	INT   NULL,
-	wh_etl_exec_id       	BIGINT   NULL,
-	PRIMARY KEY(dataset_id,db_id,version_sort_id)
+  native_name          	VARCHAR(250) NOT NULL,
+  logical_name         	VARCHAR(250) NOT NULL,
+  version              	VARCHAR(30)   NULL,
+  version_sort_id      	BIGINT   NOT NULL DEFAULT '0',
+  schema_text           TEXT NULL,
+  ddl_text              TEXT NULL,
+  instance_created_time	INT   NULL,
+  created_time         	INT   NULL,
+  modified_time        	INT   NULL,
+  wh_etl_exec_id       	BIGINT   NULL,
+  PRIMARY KEY(dataset_id,db_id,version_sort_id)
 )
 ;
 CREATE INDEX logical_name
-	ON dict_dataset_instance(logical_name);
+  ON dict_dataset_instance(logical_name);
 CREATE INDEX ddi_server_cluster
-	ON dict_dataset_instance(server_cluster, deployment_tier, data_center, slice);
+  ON dict_dataset_instance(server_cluster, deployment_tier, data_center, slice);
 CREATE INDEX native_name
-	ON dict_dataset_instance(native_name);
-	COMMENT ON COLUMN dict_dataset_instance.db_id IS 'FK to cfg_database';
-	COMMENT ON COLUMN dict_dataset_instance.data_center IS 'data center code: lva1, ltx1, dc2, dc3...';
-	COMMENT ON COLUMN dict_dataset_instance.server_cluster IS 'sfo1-bigserver, jfk3-sqlserver03';
-	COMMENT ON COLUMN dict_dataset_instance.slice IS 'virtual group/tenant id/instance tag';
-	COMMENT ON COLUMN dict_dataset_instance.is_active IS 'is the dataset active / exist ?';
-	COMMENT ON COLUMN dict_dataset_instance.is_deprecated IS 'is the dataset deprecated by user ?';
-	COMMENT ON COLUMN dict_dataset_instance.version IS '1.2.3 or 0.3.131';
-	COMMENT ON COLUMN dict_dataset_instance.version_sort_id IS '4-digit for each version number: 000100020003, 000000030131';
-	COMMENT ON COLUMN dict_dataset_instance.instance_created_time IS 'source instance created time';
-	COMMENT ON COLUMN dict_dataset_instance.created_time IS 'wherehows created time';
-	COMMENT ON COLUMN dict_dataset_instance.modified_time IS 'latest wherehows modified';
-	COMMENT ON COLUMN dict_dataset_instance.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
+  ON dict_dataset_instance(native_name);
+COMMENT ON COLUMN dict_dataset_instance.db_id IS 'FK to cfg_database';
+COMMENT ON COLUMN dict_dataset_instance.data_center IS 'data center code: lva1, ltx1, dc2, dc3...';
+COMMENT ON COLUMN dict_dataset_instance.server_cluster IS 'sfo1-bigserver, jfk3-sqlserver03';
+COMMENT ON COLUMN dict_dataset_instance.slice IS 'virtual group/tenant id/instance tag';
+COMMENT ON COLUMN dict_dataset_instance.is_active IS 'is the dataset active / exist ?';
+COMMENT ON COLUMN dict_dataset_instance.is_deprecated IS 'is the dataset deprecated by user ?';
+COMMENT ON COLUMN dict_dataset_instance.version IS '1.2.3 or 0.3.131';
+COMMENT ON COLUMN dict_dataset_instance.version_sort_id IS '4-digit for each version number: 000100020003, 000000030131';
+COMMENT ON COLUMN dict_dataset_instance.instance_created_time IS 'source instance created time';
+COMMENT ON COLUMN dict_dataset_instance.created_time IS 'wherehows created time';
+COMMENT ON COLUMN dict_dataset_instance.modified_time IS 'latest wherehows modified';
+COMMENT ON COLUMN dict_dataset_instance.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
 
 
 CREATE TABLE stg_dict_dataset_instance  (
-	dataset_urn          	VARCHAR(200) NOT NULL,
-	db_id                	SMALLINT NOT NULL DEFAULT '0',
-	deployment_tier      	deployment_tier_enum NOT NULL DEFAULT 'dev',
-	data_center          	VARCHAR(30)   NULL DEFAULT '*',
-	server_cluster       	VARCHAR(150)   NULL DEFAULT '*',
-	slice                	VARCHAR(50)   NOT NULL DEFAULT '*',
+  dataset_urn          	VARCHAR(200) NOT NULL,
+  db_id                	SMALLINT NOT NULL DEFAULT '0',
+  deployment_tier      	deployment_tier_enum NOT NULL DEFAULT 'dev',
+  data_center          	VARCHAR(30)   NULL DEFAULT '*',
+  server_cluster       	VARCHAR(150)   NULL DEFAULT '*',
+  slice                	VARCHAR(50)   NOT NULL DEFAULT '*',
   is_active             BOOLEAN NULL,
   is_deprecated         BOOLEAN NULL,
-	native_name          	VARCHAR(250) NOT NULL,
-	logical_name         	VARCHAR(250) NOT NULL,
-	version              	VARCHAR(30)   NULL,
-	schema_text           TEXT NULL,
-	ddl_text              TEXT NULL,
-	instance_created_time	INT   NULL,
-	created_time         	INT   NULL,
-	wh_etl_exec_id       	BIGINT   NULL,
-	dataset_id           	INT NULL,
-	abstract_dataset_urn 	VARCHAR(200) NULL,
-	PRIMARY KEY(dataset_urn,db_id)
+  native_name          	VARCHAR(250) NOT NULL,
+  logical_name         	VARCHAR(250) NOT NULL,
+  version              	VARCHAR(30)   NULL,
+  schema_text           TEXT NULL,
+  ddl_text              TEXT NULL,
+  instance_created_time	INT   NULL,
+  created_time         	INT   NULL,
+  wh_etl_exec_id       	BIGINT   NULL,
+  dataset_id           	INT NULL,
+  abstract_dataset_urn 	VARCHAR(200) NULL,
+  PRIMARY KEY(dataset_urn,db_id)
 )
 ;
 CREATE INDEX sddi_server_cluster
-	ON stg_dict_dataset_instance(server_cluster, deployment_tier, data_center, slice);
-	COMMENT ON COLUMN stg_dict_dataset_instance.data_center IS 'data center code: lva1, ltx1, dc2, dc3...';
-	COMMENT ON COLUMN stg_dict_dataset_instance.server_cluster IS 'sfo1-bigserver';
-	COMMENT ON COLUMN stg_dict_dataset_instance.slice IS 'virtual group/tenant id/instance tag';
-	COMMENT ON COLUMN stg_dict_dataset_instance.is_active IS 'is the dataset active / exist ?';
-	COMMENT ON COLUMN stg_dict_dataset_instance.is_deprecated IS 'is the dataset deprecated by user ?';
-	COMMENT ON COLUMN stg_dict_dataset_instance.version IS '1.2.3 or 0.3.131';
-	COMMENT ON COLUMN stg_dict_dataset_instance.instance_created_time IS 'source instance created time';
-	COMMENT ON COLUMN stg_dict_dataset_instance.created_time IS 'wherehows created time';
-	COMMENT ON COLUMN stg_dict_dataset_instance.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';
+  ON stg_dict_dataset_instance(server_cluster, deployment_tier, data_center, slice);
+COMMENT ON COLUMN stg_dict_dataset_instance.data_center IS 'data center code: lva1, ltx1, dc2, dc3...';
+COMMENT ON COLUMN stg_dict_dataset_instance.server_cluster IS 'sfo1-bigserver';
+COMMENT ON COLUMN stg_dict_dataset_instance.slice IS 'virtual group/tenant id/instance tag';
+COMMENT ON COLUMN stg_dict_dataset_instance.is_active IS 'is the dataset active / exist ?';
+COMMENT ON COLUMN stg_dict_dataset_instance.is_deprecated IS 'is the dataset deprecated by user ?';
+COMMENT ON COLUMN stg_dict_dataset_instance.version IS '1.2.3 or 0.3.131';
+COMMENT ON COLUMN stg_dict_dataset_instance.instance_created_time IS 'source instance created time';
+COMMENT ON COLUMN stg_dict_dataset_instance.created_time IS 'wherehows created time';
+COMMENT ON COLUMN stg_dict_dataset_instance.wh_etl_exec_id IS 'wherehows etl execution id that modified this record';

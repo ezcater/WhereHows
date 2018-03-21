@@ -20,11 +20,11 @@ CREATE TABLE "wh_etl_job_schedule" (
   "next_run"        INT     DEFAULT NULL,
   PRIMARY KEY ("wh_etl_job_name")
 );
-  COMMENT ON TABLE wh_etl_job_schedule IS 'WhereHows ETL job scheduling table';
+COMMENT ON TABLE wh_etl_job_schedule IS 'WhereHows ETL job scheduling table';
 CREATE UNIQUE INDEX "etl_unique" ON "wh_etl_job_schedule" ("wh_etl_job_name");
-  COMMENT ON COLUMN wh_etl_job_schedule.wh_etl_job_name IS 'etl job name';
-  COMMENT ON COLUMN wh_etl_job_schedule.enabled IS 'job currently enabled or disabled';
-  COMMENT ON COLUMN wh_etl_job_schedule.next_run IS 'next run time';
+COMMENT ON COLUMN wh_etl_job_schedule.wh_etl_job_name IS 'etl job name';
+COMMENT ON COLUMN wh_etl_job_schedule.enabled IS 'job currently enabled or disabled';
+COMMENT ON COLUMN wh_etl_job_schedule.next_run IS 'next run time';
 
 CREATE TABLE "wh_etl_job_history" (
   "wh_etl_exec_id"  BIGSERIAL NOT NULL,
@@ -38,16 +38,16 @@ CREATE TABLE "wh_etl_job_history" (
   "process_id"      BIGINT                 DEFAULT NULL,
   PRIMARY KEY ("wh_etl_exec_id")
 );
-  COMMENT ON TABLE wh_etl_job_history IS 'WhereHows ETL execution history table';
-  COMMENT ON COLUMN wh_etl_job_history.wh_etl_exec_id IS 'job execution id';
-  COMMENT ON COLUMN wh_etl_job_history.wh_etl_job_name IS 'name of the etl job';
-  COMMENT ON COLUMN wh_etl_job_history.status IS 'status of etl job execution';
-  COMMENT ON COLUMN wh_etl_job_history.request_time IS 'request time of the execution';
-  COMMENT ON COLUMN wh_etl_job_history.start_time IS 'start time of the execution';
-  COMMENT ON COLUMN wh_etl_job_history.end_time IS 'end time of the execution';
-  COMMENT ON COLUMN wh_etl_job_history.message IS 'debug information message';
-  COMMENT ON COLUMN wh_etl_job_history.host_name IS 'host machine name of the job execution';
-  COMMENT ON COLUMN wh_etl_job_history.process_id IS 'job execution process id';
+COMMENT ON TABLE wh_etl_job_history IS 'WhereHows ETL execution history table';
+COMMENT ON COLUMN wh_etl_job_history.wh_etl_exec_id IS 'job execution id';
+COMMENT ON COLUMN wh_etl_job_history.wh_etl_job_name IS 'name of the etl job';
+COMMENT ON COLUMN wh_etl_job_history.status IS 'status of etl job execution';
+COMMENT ON COLUMN wh_etl_job_history.request_time IS 'request time of the execution';
+COMMENT ON COLUMN wh_etl_job_history.start_time IS 'start time of the execution';
+COMMENT ON COLUMN wh_etl_job_history.end_time IS 'end time of the execution';
+COMMENT ON COLUMN wh_etl_job_history.message IS 'debug information message';
+COMMENT ON COLUMN wh_etl_job_history.host_name IS 'host machine name of the job execution';
+COMMENT ON COLUMN wh_etl_job_history.process_id IS 'job execution process id';
 
 CREATE TABLE "cfg_application" (
   "app_id"                  INTEGER NOT NULL,
@@ -75,25 +75,25 @@ CREATE TRIGGER cfg_application_last_modified_modtime
 
 
 CREATE TABLE cfg_database  (
-	db_id                  	SMALLINT NOT NULL,
-	db_code                	VARCHAR(30)   NOT NULL,
-	primary_dataset_type    VARCHAR(30)  NOT NULL DEFAULT '*',
-	description            	VARCHAR(128) NOT NULL,
-	is_logical             	CHAR(1)   NOT NULL DEFAULT 'N',
-	deployment_tier        	VARCHAR(20)   NULL DEFAULT 'prod',
-	data_center            	VARCHAR(200)   NULL DEFAULT '*',
-	associated_dc_num      	SMALLINT   NOT NULL DEFAULT '1',
-	cluster                	VARCHAR(200)   NULL DEFAULT '*',
-	cluster_size           	SMALLINT   NOT NULL DEFAULT '1',
-	extra_deployment_tag1  	VARCHAR(50)   NULL,
-	extra_deployment_tag2  	VARCHAR(50)   NULL,
-	extra_deployment_tag3  	VARCHAR(50)   NULL,
-	replication_role       	VARCHAR(10)   NULL,
-	jdbc_url               	VARCHAR(1000) NULL,
-	uri                    	VARCHAR(1000) NULL,
-	short_connection_string	VARCHAR(50)  NULL,
+  db_id                  	SMALLINT NOT NULL,
+  db_code                	VARCHAR(30)   NOT NULL,
+  primary_dataset_type    VARCHAR(30)  NOT NULL DEFAULT '*',
+  description            	VARCHAR(128) NOT NULL,
+  is_logical             	CHAR(1)   NOT NULL DEFAULT 'N',
+  deployment_tier        	VARCHAR(20)   NULL DEFAULT 'prod',
+  data_center            	VARCHAR(200)   NULL DEFAULT '*',
+  associated_dc_num      	SMALLINT   NOT NULL DEFAULT '1',
+  cluster                	VARCHAR(200)   NULL DEFAULT '*',
+  cluster_size           	SMALLINT   NOT NULL DEFAULT '1',
+  extra_deployment_tag1  	VARCHAR(50)   NULL,
+  extra_deployment_tag2  	VARCHAR(50)   NULL,
+  extra_deployment_tag3  	VARCHAR(50)   NULL,
+  replication_role       	VARCHAR(10)   NULL,
+  jdbc_url               	VARCHAR(1000) NULL,
+  uri                    	VARCHAR(1000) NULL,
+  short_connection_string	VARCHAR(50)  NULL,
   last_modified          	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY(db_id)
+  PRIMARY KEY(db_id)
 );
 COMMENT ON TABLE cfg_database IS 'Abstract different storage instances as databases';
 CREATE UNIQUE INDEX "uix_cfg_database__dbcode" ON "cfg_database" (db_code); -- formerly `USING HASH`, but uniques aren't supported
@@ -118,21 +118,21 @@ CREATE TRIGGER cfg_database_last_modified_modtime
 
 
 CREATE TABLE stg_cfg_object_name_map  (
-	object_type             	VARCHAR(100) NOT NULL,
-	object_sub_type         	VARCHAR(100) NULL,
-	object_name             	VARCHAR(350) NOT NULL,
-	object_urn              	VARCHAR(350) NULL,
-	object_dataset_id       	INT NULL,
-	map_phrase              	VARCHAR(100) NULL,
-	is_identical_map        	CHAR(1) NULL DEFAULT 'N',
-	mapped_object_type      	VARCHAR(100) NOT NULL,
-	mapped_object_sub_type  	VARCHAR(100) NULL,
-	mapped_object_name      	VARCHAR(350) NOT NULL,
-	mapped_object_urn       	VARCHAR(350) NULL,
-	mapped_object_dataset_id	INT NULL,
-	description             	VARCHAR(500) NULL,
-	last_modified           	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY(object_name, mapped_object_name)
+  object_type             	VARCHAR(100) NOT NULL,
+  object_sub_type         	VARCHAR(100) NULL,
+  object_name             	VARCHAR(350) NOT NULL,
+  object_urn              	VARCHAR(350) NULL,
+  object_dataset_id       	INT NULL,
+  map_phrase              	VARCHAR(100) NULL,
+  is_identical_map        	CHAR(1) NULL DEFAULT 'N',
+  mapped_object_type      	VARCHAR(100) NOT NULL,
+  mapped_object_sub_type  	VARCHAR(100) NULL,
+  mapped_object_name      	VARCHAR(350) NOT NULL,
+  mapped_object_urn       	VARCHAR(350) NULL,
+  mapped_object_dataset_id	INT NULL,
+  description             	VARCHAR(500) NULL,
+  last_modified           	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY(object_name, mapped_object_name)
 );
 COMMENT ON TABLE stg_cfg_object_name_map IS 'Map alias (when is_identical_map=Y) and view dependency';
 CREATE INDEX idx_stg_cfg_object_name_map__mappedobjectname on stg_cfg_object_name_map (mapped_object_name);
@@ -196,18 +196,18 @@ CREATE TRIGGER cfg_deployment_tier_last_modified_modtime
 
 
 CREATE TABLE cfg_data_center  (
-	data_center_id    	SMALLINT NOT NULL DEFAULT '0',
-	data_center_code  	VARCHAR(30) NOT NULL,
-	data_center_name  	VARCHAR(50) NOT NULL,
-	time_zone         	VARCHAR(50) NOT NULL,
-	city              	VARCHAR(50) NOT NULL,
-	state             	VARCHAR(25) NULL,
-	country           	VARCHAR(50) NOT NULL,
-	longtitude        	decimal(10,6) NULL,
-	latitude          	decimal(10,6) NULL,
-	data_center_status	CHAR(1)  NULL,
-	last_modified     	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY(data_center_id)
+  data_center_id    	SMALLINT NOT NULL DEFAULT '0',
+  data_center_code  	VARCHAR(30) NOT NULL,
+  data_center_name  	VARCHAR(50) NOT NULL,
+  time_zone         	VARCHAR(50) NOT NULL,
+  city              	VARCHAR(50) NOT NULL,
+  state             	VARCHAR(25) NULL,
+  country           	VARCHAR(50) NOT NULL,
+  longtitude        	decimal(10,6) NULL,
+  latitude          	decimal(10,6) NULL,
+  data_center_status	CHAR(1)  NULL,
+  last_modified     	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY(data_center_id)
 );
 COMMENT ON TABLE cfg_data_center IS 'https://en.wikipedia.org/wiki/Data_center';
 CREATE UNIQUE INDEX uix_cfg_data_center__datacentercode ON "cfg_data_center" (data_center_code);
@@ -220,15 +220,15 @@ CREATE TRIGGER cfg_data_center_last_modified_modtime
 
 
 CREATE TABLE cfg_cluster  (
-	cluster_id    	        SMALLINT NOT NULL DEFAULT '0',
-	cluster_code  	        VARCHAR(80) NOT NULL,
-	cluster_short_name      VARCHAR(50) NOT NULL,
-	cluster_type       	VARCHAR(50) NOT NULL,
-	deployment_tier_code    VARCHAR(25) NOT NULL,
-	data_center_code        VARCHAR(30) NULL,
-	description             VARCHAR(200) NULL,
-	last_modified     	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY(cluster_id)
+  cluster_id    	        SMALLINT NOT NULL DEFAULT '0',
+  cluster_code  	        VARCHAR(80) NOT NULL,
+  cluster_short_name      VARCHAR(50) NOT NULL,
+  cluster_type       	VARCHAR(50) NOT NULL,
+  deployment_tier_code    VARCHAR(25) NOT NULL,
+  data_center_code        VARCHAR(30) NULL,
+  description             VARCHAR(200) NULL,
+  last_modified     	TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY(cluster_id)
 );
 COMMENT ON TABLE cfg_cluster IS 'https://en.wikipedia.org/wiki/Computer_cluster';
 CREATE UNIQUE INDEX uix_cfg_cluster__clustercode ON "cfg_cluster" (cluster_code);
