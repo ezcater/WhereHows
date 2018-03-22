@@ -46,6 +46,7 @@ Locally, we perform these steps:
 * In your Wherehows repo, cd to wherehows-docker
 * run ```./build.sh <DOCKER_CONTAINER_TAG>```
 * run ```docker-compose up```
+* The WhereHows UI is available at http://localhost:9001 by default. You can change the port number by editing the value of ```project.ext.httpPort``` in ```wherehows-frontend/build.gradle```.
 
 ## Roadmap
 Check out the current [roadmap][RM] for WhereHows.
