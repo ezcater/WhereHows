@@ -86,6 +86,12 @@ export default Route.extend({
         set(model, 'schema', originalSchema);
       }
 
+      const schemas = JSON.parse(model.schema).fields.map(field => ({
+        fieldName: field.name
+        , dataType: field.data_type
+        , nullable: field.nullable
+      }));
+      Object.assign(model, { schemas } );
       controller.set('model', model);
     } else if (model.dataset) {
       ({ id, source, urn } = model.dataset);
