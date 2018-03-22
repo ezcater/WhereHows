@@ -1,7 +1,7 @@
 import Component from '@ember/component';
-import { computed, set, get, setProperties, getProperties, getWithDefault, observer } from '@ember/object';
-import ComputedProperty, { gt, not, or } from '@ember/object/computed';
-import { run, schedule } from '@ember/runloop';
+import { computed, set, get, setProperties, getProperties, getWithDefault } from '@ember/object';
+import ComputedProperty, { not, or } from '@ember/object/computed';
+import { run, schedule, next } from '@ember/runloop';
 import { inject } from '@ember/service';
 import { classify } from '@ember/string';
 import { IFieldIdentifierOption, ISecurityClassificationOption } from 'wherehows-web/constants/dataset-compliance';
@@ -29,9 +29,11 @@ import {
 import {
   isPolicyExpectedShape,
   fieldChangeSetRequiresReview,
-  mergeMappedColumnFieldsWithSuggestions
+  mergeMappedColumnFieldsWithSuggestions,
+  getFieldsRequiringReview
 } from 'wherehows-web/utils/datasets/compliance-policy';
 import scrollMonitor from 'scrollmonitor';
+import { getFieldsSuggestions } from 'wherehows-web/utils/datasets/compliance-suggestions';
 import { hasEnumerableKeys } from 'wherehows-web/utils/object';
 import { arrayFilter, isListUnique } from 'wherehows-web/utils/array';
 import noop from 'wherehows-web/utils/noop';
@@ -44,7 +46,6 @@ import {
   ISuggestedFieldClassification,
   IComplianceSuggestion
 } from 'wherehows-web/typings/api/datasets/compliance';
-import { ApiStatus } from 'wherehows-web/utils/api';
 import { task, TaskInstance } from 'ember-concurrency';
 
 /**
@@ -64,7 +65,7 @@ interface IDatasetComplianceActions {
  */
 type SchemaFieldToPolicyValue = Pick<
   IComplianceEntity,
-  'identifierField' | 'identifierType' | 'logicalType' | 'securityClassification' | 'nonOwner'
+  'identifierField' | 'identifierType' | 'logicalType' | 'securityClassification' | 'nonOwner' | 'readonly'
 > & {
   privacyPolicyExists: boolean;
   isDirty: boolean;
@@ -117,8 +118,6 @@ const {
   complianceDataException,
   complianceFieldNotUnique,
   missingTypes,
-  successUpdating,
-  failedUpdating,
   helpText,
   successUploading,
   invalidPolicyData,
@@ -163,31 +162,7 @@ const changeSetFieldsRequiringReview = arrayFilter<IComplianceChangeSet>(fieldCh
  */
 const initialStepIndex = -1;
 
-/**
- * Defines observers for the DatasetCompliance Component
- * @type {Component}
- */
-const ObservableDecorator = Component.extend({
-  /**
-   * Observes changes editStepIndex to trigger the update edit step task
-   * @type {() => void}
-   */
-  editStepIndexChanged: observer('editStepIndex', function(this: DatasetCompliance) {
-    // @ts-ignore ts limitation with the ember object model, fixed in ember 3.1 with es5 getters
-    get(this, 'updateEditStepTask').perform();
-  }),
-
-  /**
-   * Observes changes to the platform property and invokes the task to update the supportedPurgePolicies prop
-   * @type {() => void}
-   */
-  platformChanged: observer('platform', function(this: DatasetCompliance) {
-    // @ts-ignore ts limitation with the ember object model, fixed in ember 3.1 with es5 getters
-    get(this, 'complianceAvailabilityTask').perform();
-  })
-});
-
-export default class DatasetCompliance extends ObservableDecorator {
+export default class DatasetCompliance extends Component {
   isNewComplianceInfo: boolean;
   datasetName: string;
   sortColumnWithName: string;
@@ -204,10 +179,18 @@ export default class DatasetCompliance extends ObservableDecorator {
   isCompliancePolicyAvailable: boolean = false;
   showAllDatasetMemberData: boolean;
   complianceInfo: void | IComplianceInfo;
-  complianceSuggestion: IComplianceSuggestion;
+
+  /**
+   * Suggested values for compliance types e.g. identifier type and/or logical type
+   * @type {IComplianceSuggestion | void}
+   */
+  complianceSuggestion: IComplianceSuggestion | void;
+
   schemaFieldNamesMappedToDataTypes: Array<Pick<IDatasetColumn, 'dataType' | 'fieldName'>>;
-  onReset: <T extends { status: ApiStatus }>() => Promise<T>;
-  onSave: <T extends { status: ApiStatus }>() => Promise<T>;
+  onReset: <T>() => Promise<T>;
+  onSave: <T>() => Promise<T>;
+  notifyOnChangeSetSuggestions: (hasSuggestions: boolean) => void;
+  notifyOnChangeSetRequiresReview: (hasChangeSetDrift: boolean) => void;
 
   classNames = ['compliance-container'];
 
@@ -236,7 +219,7 @@ export default class DatasetCompliance extends ObservableDecorator {
    * @type {number}
    * @memberof DatasetCompliance
    */
-  editStepIndex = initialStepIndex;
+  editStepIndex: number;
 
   /**
    * List of complianceDataType values
@@ -259,7 +242,10 @@ export default class DatasetCompliance extends ObservableDecorator {
    * @type {ComputedProperty<boolean>}
    * @memberof DatasetCompliance
    */
-  isEditing = gt('editStepIndex', initialStepIndex);
+  isEditing = computed('editStepIndex', 'complianceInfo.fromUpstream', function(): boolean {
+    // initialStepIndex is less than the currently set step index, and compliance is not from upstream
+    return get(this, 'editStepIndex') > initialStepIndex && !get(this, 'complianceInfo.fromUpstream');
+  });
 
   /**
    * Convenience flag indicating the policy is not currently being edited
@@ -286,11 +272,11 @@ export default class DatasetCompliance extends ObservableDecorator {
     super(...arguments);
 
     //sets default values for class fields
-    this.sortColumnWithName ||
-      set<DatasetCompliance, 'sortColumnWithName', string>(this, 'sortColumnWithName', 'identifierField');
-    this.filterBy || set<DatasetCompliance, 'filterBy', string>(this, 'filterBy', 'identifierField');
-    this.sortDirection || set<DatasetCompliance, 'sortDirection', string>(this, 'sortDirection', 'asc');
-    this.searchTerm || set<DatasetCompliance, 'searchTerm', string>(this, 'searchTerm', '');
+    this.editStepIndex = initialStepIndex;
+    this.sortColumnWithName || set(this, 'sortColumnWithName', 'identifierField');
+    this.filterBy || set(this, 'filterBy', 'identifierField');
+    this.sortDirection || set(this, 'sortDirection', 'asc');
+    this.searchTerm || set(this, 'searchTerm', '');
     this.schemaFieldNamesMappedToDataTypes || (this.schemaFieldNamesMappedToDataTypes = []);
     this.complianceDataTypes || (this.complianceDataTypes = []);
   }
@@ -323,8 +309,42 @@ export default class DatasetCompliance extends ObservableDecorator {
       { value: null, label: 'Select Field Type...', isDisabled: true },
       { value: ComplianceFieldIdValue.None, label: 'None' }
     ];
+    const dataTypes = get(this, 'complianceDataTypes') || [];
 
-    return [...noneAndUnSpecifiedDropdownOptions, ...getFieldIdentifierOptions(get(this, 'complianceDataTypes'))];
+    /**
+     * Compares each compliance data type
+     * @param {IComplianceDataType} a the compliance type to compare
+     * @param {IComplianceDataType} b the other
+     * @returns {number} 0, 1, -1 indicating sort order
+     */
+    const dataTypeComparator = (a: IComplianceDataType, b: IComplianceDataType): number =>
+      // Convert boolean values to number type
+      // True types first, hence negation
+      -(Number(a.idType) - Number(b.idType));
+
+    /**
+     * Inserts a divider in the list of compliance field identifier dropdown options
+     * @param {Array<IComplianceFieldIdentifierOption>} types
+     * @returns {Array<IComplianceFieldIdentifierOption>}
+     */
+    const insertDivider = (types: Array<IComplianceFieldIdentifierOption>): Array<IComplianceFieldIdentifierOption> => {
+      const isId = ({ isId }: IComplianceFieldIdentifierOption): boolean => isId;
+      const ids = types.filter(isId);
+      const nonIds = types.filter(type => !isId(type));
+      const divider = {
+        value: '',
+        label: '---------',
+        isId: false,
+        isDisabled: true
+      };
+
+      return [...ids, <IComplianceFieldIdentifierOption>divider, ...nonIds];
+    };
+
+    return [
+      ...noneAndUnSpecifiedDropdownOptions,
+      ...insertDivider(getFieldIdentifierOptions(dataTypes.sort(dataTypeComparator)))
+    ];
   });
 
   /**
@@ -406,7 +426,6 @@ export default class DatasetCompliance extends ObservableDecorator {
   }
 
   didInsertElement(this: DatasetCompliance) {
-    // @ts-ignore ts limitation with the ember object model, fixed in ember 3.1 with es5 getters
     get(this, 'complianceAvailabilityTask').perform();
   }
 
@@ -428,7 +447,6 @@ export default class DatasetCompliance extends ObservableDecorator {
   complianceAvailabilityTask = task(function*(
     this: DatasetCompliance
   ): IterableIterator<TaskInstance<Promise<Array<IDataPlatform>>>> {
-    // @ts-ignore ts limitation with the ember object model, fixed in ember 3.1 with es5 getters
     yield get(this, 'getPlatformPoliciesTask').perform();
 
     const supportedPurgePolicies = get(this, 'supportedPurgePolicies');
@@ -550,11 +568,12 @@ export default class DatasetCompliance extends ObservableDecorator {
   excludesSomeMemberData = computed(datasetClassificationKey, function(this: DatasetCompliance): boolean {
     const { datasetClassification } = get(this, 'complianceInfo') || { datasetClassification: {} };
 
-    return Object.values(datasetClassification).some(hasMemberData => !hasMemberData);
+    // `datasetClassification` is nullable hence default
+    return Object.values(datasetClassification || {}).some(hasMemberData => !hasMemberData);
   });
 
   /**
-   * Determines if all member data fields should be shown in the member data table i.e. show only fields contained in
+   * Determines if all types of data fields should be shown in the table i.e. show only fields contained in
    * this dataset or otherwise
    * @type {ComputedProperty<boolean>}
    * @memberof DatasetCompliance
@@ -606,7 +625,7 @@ export default class DatasetCompliance extends ObservableDecorator {
           ...datasetClassifiers,
           {
             classifier,
-            value: datasetClassification[classifier],
+            value: datasetClassification ? datasetClassification[classifier] : void 0, // undefined !== false, tri-state
             label: DatasetClassifiers[classifier]
           }
         ];
@@ -622,6 +641,7 @@ export default class DatasetCompliance extends ObservableDecorator {
    * @param {(policyModificationTime: string)} { policyModificationTime }
    * @returns {ISchemaFieldsToPolicy}
    * @memberof DatasetCompliance
+   * TODO: Move to separate module
    */
   mapColumnIdFieldsToCurrentPrivacyPolicy(
     columnFieldProps: Array<{ identifierField: string; dataType: string }>,
@@ -638,7 +658,6 @@ export default class DatasetCompliance extends ObservableDecorator {
 
       if (sourceField) {
         for (const [key, value] of <Array<[K, IComplianceEntity[K]]>>Object.entries(sourceField)) {
-          // includes is not generic, hence narrowing string assertion here
           if (keys.includes(key)) {
             ret = { ...ret, [key]: value };
           }
@@ -650,7 +669,7 @@ export default class DatasetCompliance extends ObservableDecorator {
 
     return columnFieldProps.reduce((acc, { identifierField, dataType }) => {
       const currentPrivacyAttrs = getKeysOnField(
-        ['identifierType', 'logicalType', 'securityClassification', 'nonOwner'],
+        ['identifierType', 'logicalType', 'securityClassification', 'nonOwner', 'readonly'],
         identifierField,
         complianceEntities
       );
@@ -660,6 +679,7 @@ export default class DatasetCompliance extends ObservableDecorator {
         [identifierField]: {
           identifierField,
           dataType,
+          readonly: false, // default value overridden by value in currentPrivacyAttrs below
           ...currentPrivacyAttrs,
           policyModificationTime,
           privacyPolicyExists: hasEnumerableKeys(currentPrivacyAttrs),
@@ -678,10 +698,12 @@ export default class DatasetCompliance extends ObservableDecorator {
     function(this: DatasetCompliance): ISchemaFieldsToPolicy {
       const { complianceEntities = [], modifiedTime = '0' } = get(this, 'complianceInfo') || {};
       // Truncated list of Dataset field names and data types currently returned from the column endpoint
-      const columnFieldProps = get(this, 'schemaFieldNamesMappedToDataTypes').map(({ fieldName, dataType }) => ({
-        identifierField: fieldName,
-        dataType
-      }));
+      const columnFieldProps = getWithDefault(this, 'schemaFieldNamesMappedToDataTypes', []).map(
+        ({ fieldName, dataType }) => ({
+          identifierField: fieldName,
+          dataType
+        })
+      );
 
       return this.mapColumnIdFieldsToCurrentPrivacyPolicy(columnFieldProps, complianceEntities, {
         policyModificationTime: modifiedTime
@@ -740,10 +762,15 @@ export default class DatasetCompliance extends ObservableDecorator {
   ): Array<IComplianceChangeSet> {
     // schemaFieldNamesMappedToDataTypes is a dependency for cp columnIdFieldsToCurrentPrivacyPolicy, so no need to dep on that directly
     // TODO: move source to TS
-    return mergeMappedColumnFieldsWithSuggestions(
+    const changeSet = mergeMappedColumnFieldsWithSuggestions(
       get(this, 'columnIdFieldsToCurrentPrivacyPolicy'),
       get(this, 'identifierFieldToSuggestion')
     );
+
+    run(() => next(this, 'notifyHandlerOfSuggestions', changeSet));
+    run(() => next(this, 'notifyHandlerOfFieldsRequiringReview', changeSet));
+
+    return changeSet;
   });
 
   /**
@@ -758,6 +785,16 @@ export default class DatasetCompliance extends ObservableDecorator {
 
     return get(this, 'fieldReviewOption') === 'showReview' ? changeSetFieldsRequiringReview(changeSet) : changeSet;
   });
+
+  notifyHandlerOfSuggestions = (changeSet: Array<IComplianceChangeSet>) => {
+    const hasChangeSetSuggestions = getFieldsSuggestions(changeSet).some(suggestion => !!suggestion);
+    this.notifyOnChangeSetSuggestions(hasChangeSetSuggestions);
+  };
+
+  notifyHandlerOfFieldsRequiringReview = (changeSet: Array<IComplianceChangeSet>) => {
+    const hasChangeSetDrift = getFieldsRequiringReview(changeSet).some((isReviewRequired: boolean) => isReviewRequired);
+    this.notifyOnChangeSetRequiresReview(hasChangeSetDrift);
+  };
 
   /**
    * Returns a count of changeSet fields that require user attention
@@ -782,43 +819,6 @@ export default class DatasetCompliance extends ObservableDecorator {
       _message: '',
       _alertType: ''
     });
-  }
-
-  /**
-   * Helper method to update user when an async server update to the
-   * security specification is handled.
-   * @template T
-   * @param {Promise<T>} request the server request
-   * @param {{successMessage?: string, isSaving?: boolean}} [{ successMessage = successUpdating, isSaving = false }={}]
-   * @prop {successMessage} optional message for successful response
-   * @prop {isSaving} optional flag indicating when the user intends to persist / save
-   * @returns {Promise<void>}
-   * @memberof DatasetCompliance
-   */
-  whenRequestCompletes<T extends { status: ApiStatus }>(
-    this: DatasetCompliance,
-    request: Promise<T>,
-    { successMessage = successUpdating, isSaving = false }: { successMessage?: string; isSaving?: boolean } = {}
-  ): Promise<void> {
-    const { notify } = get(this, 'notifications');
-
-    return Promise.resolve(request)
-      .then(({ status = ApiStatus.ERROR }): void | Promise<void> => {
-        return status === ApiStatus.OK
-          ? notify(NotificationEvent.success, { content: successMessage })
-          : Promise.reject(new Error(`Reason code for this is ${status}`));
-      })
-      .catch((err: string) => {
-        let message = `${failedUpdating} \n ${err}`;
-
-        if (get(this, 'isNewComplianceInfo') && !isSaving) {
-          return notify(NotificationEvent.info, {
-            content: 'This dataset does not have any previously saved fields with a identifying information.'
-          });
-        }
-
-        notify(NotificationEvent.error, { content: message });
-      });
   }
 
   /**
@@ -852,12 +852,13 @@ export default class DatasetCompliance extends ObservableDecorator {
     const formattedAndUnformattedEntities: FormattedAndUnformattedEntities = { formatted: [], unformatted: [] };
     // All candidate fields that can be on policy, excluding tracking type fields
     const changeSetEntities: Array<IComplianceEntity> = get(this, 'compliancePolicyChangeSet').map(
-      ({ identifierField, identifierType = null, logicalType, nonOwner, securityClassification }) => ({
+      ({ identifierField, identifierType = null, logicalType, nonOwner, securityClassification, readonly }) => ({
         identifierField,
         identifierType,
         logicalType,
         nonOwner,
-        securityClassification
+        securityClassification,
+        readonly
       })
     );
 
@@ -1006,6 +1007,7 @@ export default class DatasetCompliance extends ObservableDecorator {
    */
   updateStep(this: DatasetCompliance, step: number) {
     set(this, 'editStepIndex', step);
+    get(this, 'updateEditStepTask').perform();
   }
 
   actions: IDatasetComplianceActions = {
@@ -1022,8 +1024,8 @@ export default class DatasetCompliance extends ObservableDecorator {
       let willMarkAllAsNo = true;
 
       get(this, 'notifications').notify(NotificationEvent.confirm, {
-        content: 'Are you sure that any this dataset does not contain any of the listed types of member data?',
-        header: 'Dataset contains no member data',
+        content: 'Are you sure this dataset does not contain any of the listed types of data?',
+        header: 'Dataset contains no listed types of data',
         dialogActions
       });
 
@@ -1403,7 +1405,7 @@ export default class DatasetCompliance extends ObservableDecorator {
         const onSave = get(this, 'onSave');
         setSaveFlag(isSaving);
 
-        await this.whenRequestCompletes(onSave(), { isSaving });
+        await onSave();
         return this.updateStep(-1);
       } finally {
         setSaveFlag();
@@ -1413,10 +1415,7 @@ export default class DatasetCompliance extends ObservableDecorator {
     // Rolls back changes made to the compliance spec to current
     // server state
     resetCompliance(this: DatasetCompliance) {
-      const options = {
-        successMessage: 'Field classification has been reset to the previously saved state.'
-      };
-      this.whenRequestCompletes(get(this, 'onReset')(), options);
+      get(this, 'onReset')();
     }
   };
 }

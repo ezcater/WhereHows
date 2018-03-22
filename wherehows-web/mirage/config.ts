@@ -1,5 +1,7 @@
 import { faker } from 'ember-cli-mirage';
-import { getDatasetColumns } from 'wherehows-web/mirage/helpers/columns';
+import { IFunctionRouteHandler, IMirageServer } from 'wherehows-web/typings/ember-cli-mirage';
+import { ApiStatus } from 'wherehows-web/utils/api/shared';
+import { getDatasetColumns, getDatasetSchema } from 'wherehows-web/mirage/helpers/columns';
 import { getDatasetCompliance } from 'wherehows-web/mirage/helpers/compliance';
 import { getComplianceDataTypes } from 'wherehows-web/mirage/helpers/compliance-data-types';
 import { getDatasetComplianceSuggestion } from 'wherehows-web/mirage/helpers/compliance-suggestions';
@@ -17,8 +19,6 @@ import { getDatasetReferences } from 'wherehows-web/mirage/helpers/dataset-refer
 import { getDatasetSample } from 'wherehows-web/mirage/helpers/dataset-sample';
 import { getDatasetView } from 'wherehows-web/mirage/helpers/dataset-view';
 import { getOwnerTypes } from 'wherehows-web/mirage/helpers/owner-types';
-import { IFunctionRouteHandler, IMirageServer } from 'wherehows-web/typings/ember-cli-mirage';
-import { ApiStatus } from 'wherehows-web/utils/api/shared';
 import { getConfig } from 'wherehows-web/mirage/helpers/config';
 import { getAuth } from 'wherehows-web/mirage/helpers/authenticate';
 import { aclAuth } from 'wherehows-web/mirage/helpers/aclauth';
@@ -32,7 +32,17 @@ export default function(this: IMirageServer) {
 
   this.namespace = '/api/v2';
 
-  this.get('/list/complianceDataTypes', getComplianceDataTypes);
+  this.get('/datasets/:identifier/', getDatasetView);
+
+  this.get('/datasets/:identifier/owners', getDatasetOwners);
+
+  this.get('/datasets/:dataset_id/schema', getDatasetSchema);
+
+  this.get('/datasets/:dataset_id/compliance/suggestions', getDatasetComplianceSuggestion);
+
+  this.get('/datasets/:dataset_id/owners', getDatasetOwners);
+
+  this.get('/list/compliance-data-types', getComplianceDataTypes);
 
   this.get('/list/platforms', getDatasetPlatforms);
 
