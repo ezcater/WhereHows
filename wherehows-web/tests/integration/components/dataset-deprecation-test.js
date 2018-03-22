@@ -5,13 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 import { run } from '@ember/runloop';
 
 moduleForComponent('dataset-deprecation', 'Integration | Component | dataset deprecation', {
-  integration: true,
-
-  beforeEach() {
-    this.register('service:notifications', notificationsStub);
-
-    this.inject.service('notifications');
-  }
+  integration: true
 });
 
 test('it renders', function(assert) {
@@ -23,7 +17,7 @@ test('it renders', function(assert) {
     this.$()
       .text()
       .trim(),
-    'Dataset is deprecated?',
+    'Is this dataset deprecated?',
     'shows the question asking if the dataset is deprecated'
   );
   assert.equal(this.$('#dataset-is-deprecated').length, 1, 'has one input checkbox with known selector');
@@ -54,7 +48,7 @@ test('triggers the onUpdateDeprecation action when submitted', async function(as
   this.set('submit', function(deprecated, note) {
     submitActionCallCount++;
     assert.equal(deprecated, true, 'action is called with deprecation value of true');
-    assert.equal(note, null, 'action is called with null deprecation note');
+    assert.equal(note, '', 'action is called with an empty deprecation note');
   });
 
   this.render(hbs`{{dataset-deprecation onUpdateDeprecation=(action submit)}}`);

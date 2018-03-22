@@ -27,6 +27,8 @@ import play.libs.F.Promise;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Results;
+import wherehows.dao.table.AclDao;
 import wherehows.dao.table.DatasetComplianceDao;
 import wherehows.dao.table.DatasetOwnerDao;
 import wherehows.dao.table.DictDatasetDao;
@@ -35,10 +37,12 @@ import wherehows.dao.view.DatasetViewDao;
 import wherehows.dao.view.OwnerViewDao;
 import wherehows.models.view.DatasetCompliance;
 import wherehows.models.view.DatasetOwner;
+import wherehows.models.view.DatasetOwnership;
 import wherehows.models.view.DatasetSchema;
 import wherehows.models.view.DatasetView;
 import wherehows.models.view.DsComplianceSuggestion;
 
+import static controllers.api.v1.Dataset.*;
 import static utils.Dataset.*;
 
 
@@ -56,11 +60,22 @@ public class Dataset extends Controller {
 
   private static final DatasetComplianceDao COMPLIANCE_DAO = Application.DAO_FACTORY.getDatasetComplianceDao();
 
+  private static final AclDao ACL_DAO = initAclDao();
+
   private static final int _DEFAULT_PAGE_SIZE = 20;
 
   private static final JsonNode _EMPTY_RESPONSE = Json.newObject();
 
   private Dataset() {
+  }
+
+  private static AclDao initAclDao() {
+    try {
+      return Application.DAO_FACTORY.getAclDao();
+    } catch (Exception e) {
+      Logger.error("ACL DAO init error", e);
+    }
+    return null;
   }
 
   public static Promise<Result> listSegments(@Nullable String platform, @Nonnull String prefix) {
@@ -88,11 +103,14 @@ public class Dataset extends Controller {
 
   public static Promise<Result> listDatasets(@Nullable String platform, @Nonnull String prefix) {
     try {
+      int start = NumberUtils.toInt(request().getQueryString("start"), 0);
+      int count = NumberUtils.toInt(request().getQueryString("count"), _DEFAULT_PAGE_SIZE);
       int page = NumberUtils.toInt(request().getQueryString("page"), 0);
-      int start = page * _DEFAULT_PAGE_SIZE;
+      // 'start' takes precedence over 'page'
+      int startIndex = (request().getQueryString("start") == null && page > 0) ? page * _DEFAULT_PAGE_SIZE : start;
 
-      return Promise.promise(() -> ok(
-          Json.toJson(DATASET_VIEW_DAO.listDatasets(platform, "PROD", prefix, start, _DEFAULT_PAGE_SIZE))));
+      return Promise.promise(
+          () -> ok(Json.toJson(DATASET_VIEW_DAO.listDatasets(platform, "PROD", prefix, startIndex, count))));
     } catch (Exception e) {
       Logger.error("Fail to list datasets", e);
       return Promise.promise(() -> internalServerError(errorResponse(e)));
@@ -129,11 +147,26 @@ public class Dataset extends Controller {
     }
   }
 
+  public static Promise<Result> getWhUrnById(int id) {
+    String whUrn = getDatasetUrnByIdOrCache(id);
+
+    if (whUrn != null) {
+      response().setHeader("whUrn", whUrn);
+      return Promise.promise(Results::ok);
+    } else {
+      return Promise.promise(Results::notFound);
+    }
+  }
+
   public static Promise<Result> getDataset(@Nonnull String datasetUrn) {
     final DatasetView view;
     try {
       view = DATASET_VIEW_DAO.getDatasetView(datasetUrn);
     } catch (Exception e) {
+      if (e.toString().contains("Response status 404")) {
+        return Promise.promise(() -> notFound(_EMPTY_RESPONSE));
+      }
+
       Logger.error("Failed to get dataset view", e);
       return Promise.promise(() -> internalServerError(errorResponse(e)));
     }
@@ -151,10 +184,10 @@ public class Dataset extends Controller {
       JsonNode record = request().body().asJson();
 
       boolean deprecated = record.get("deprecated").asBoolean();
+      String deprecationNote = record.hasNonNull("deprecationNote") ? record.get("deprecationNote").asText() : "";
+      Long decommissionTime = record.hasNonNull("decommissionTime") ? record.get("decommissionTime").asLong() : null;
 
-      String deprecationNote = record.hasNonNull("deprecationNote") ? record.get("deprecationNote").asText() : null;
-
-      DICT_DATASET_DAO.setDatasetDeprecation(datasetUrn, deprecated, deprecationNote, username);
+      DICT_DATASET_DAO.setDatasetDeprecation(datasetUrn, deprecated, deprecationNote, decommissionTime, username);
     } catch (Exception e) {
       Logger.error("Update dataset deprecation fail", e);
       return Promise.promise(() -> internalServerError(errorResponse(e)));
@@ -176,13 +209,16 @@ public class Dataset extends Controller {
       return Promise.promise(() -> internalServerError(errorResponse(e)));
     }
 
+    if (schema == null) {
+      return Promise.promise(() -> notFound(_EMPTY_RESPONSE));
+    }
     return Promise.promise(() -> ok(Json.newObject().set("schema", Json.toJson(schema))));
   }
 
   public static Promise<Result> getDatasetOwners(String datasetUrn) {
-    final List<DatasetOwner> owners;
+    final DatasetOwnership ownership;
     try {
-      owners = OWNER_VIEW_DAO.getDatasetOwners(datasetUrn);
+      ownership = OWNER_VIEW_DAO.getDatasetOwners(datasetUrn);
     } catch (Exception e) {
       if (e.toString().contains("Response status 404")) {
         return Promise.promise(() -> notFound(_EMPTY_RESPONSE));
@@ -192,10 +228,10 @@ public class Dataset extends Controller {
       return Promise.promise(() -> internalServerError(errorResponse(e)));
     }
 
-    if (owners == null) {
+    if (ownership == null) {
       return Promise.promise(() -> notFound(_EMPTY_RESPONSE));
     }
-    return Promise.promise(() -> ok(Json.newObject().set("owners", Json.toJson(owners))));
+    return Promise.promise(() -> ok(Json.toJson(ownership)));
   }
 
   public static Promise<Result> updateDatasetOwners(String datasetUrn) {
@@ -270,7 +306,7 @@ public class Dataset extends Controller {
     return Promise.promise(() -> ok(_EMPTY_RESPONSE));
   }
 
-  public static Promise<Result> getDatasetSuggestedCompliance(String datasetUrn) {
+  public static Promise<Result> getDatasetSuggestedCompliance(@Nonnull String datasetUrn) {
     final DsComplianceSuggestion record;
     try {
       record = COMPLIANCE_DAO.getComplianceSuggestion(datasetUrn);
@@ -287,6 +323,66 @@ public class Dataset extends Controller {
       return Promise.promise(() -> notFound(_EMPTY_RESPONSE));
     }
     return Promise.promise(() -> ok(Json.newObject().set("complianceSuggestion", Json.toJson(record))));
+  }
+
+  public static Promise<Result> getDatasetAcls(@Nonnull String datasetUrn) {
+    final List<?> acls;
+    try {
+      acls = ACL_DAO.getDatasetAcls(datasetUrn);
+    } catch (Exception e) {
+      if (e.toString().contains("Response status 404")) {
+        return Promise.promise(() -> notFound(_EMPTY_RESPONSE));
+      }
+
+      Logger.error("Fetch ACLs error", e);
+      return Promise.promise(() -> internalServerError(errorResponse(e)));
+    }
+
+    if (acls == null) {
+      return Promise.promise(() -> notFound(_EMPTY_RESPONSE));
+    }
+    return Promise.promise(() -> ok(Json.toJson(acls)));
+  }
+
+  public static Promise<Result> addUserToDatasetAcl(@Nonnull String datasetUrn) {
+    final String username = session("user");
+    if (StringUtils.isBlank(username)) {
+      return Promise.promise(() -> unauthorized(_EMPTY_RESPONSE));
+    }
+
+    String accessType = request().getQueryString("accessType");
+    String businessJustification = request().getQueryString("businessJustification");
+    Long expireAt = NumberUtils.toLong(request().getQueryString("expireAt"), 0);
+    if (businessJustification == null) {
+      return Promise.promise(() -> badRequest(errorResponse("Missing business justification")));
+    }
+
+    try {
+      if (accessType == null) {
+        ACL_DAO.addUserToDatasetAcl(datasetUrn, username, businessJustification);
+      } else {
+        ACL_DAO.addUserToDatasetAcl(datasetUrn, username, accessType, businessJustification, expireAt);
+      }
+    } catch (Exception e) {
+      Logger.error("Add user to ACL error", e);
+      return Promise.promise(() -> internalServerError(errorResponse(e)));
+    }
+    return Promise.promise(() -> ok(_EMPTY_RESPONSE));
+  }
+
+  public static Promise<Result> removeUserFromDatasetAcl(@Nonnull String datasetUrn) {
+    final String username = session("user");
+    if (StringUtils.isBlank(username)) {
+      return Promise.promise(() -> unauthorized(_EMPTY_RESPONSE));
+    }
+
+    try {
+      ACL_DAO.removeUserFromDatasetAcl(datasetUrn, username);
+    } catch (Exception e) {
+      Logger.error("Remove User from ACL error", e);
+      return Promise.promise(() -> internalServerError(errorResponse(e)));
+    }
+    return Promise.promise(() -> ok(_EMPTY_RESPONSE));
   }
 
   private static <E extends Throwable> JsonNode errorResponse(E e) {
