@@ -29,11 +29,8 @@
     <tr class="results-header">
       <th style="min-width: 200px;" class="col-xs-2">Column</th>
       <th class="col-xs-1">Data Type</th>
-      <th title="Is nullable" style="width:15px;">N</th>
-      <th title="Is indexed" style="width:15px;">I</th>
-      <th title="Is partitioned" style="width:15px;">P</th>
-      <th title="Is distributed" style="width:15px;">D</th>
-      <th style="width:150px;">Default Comments</th>
+      <th title="Is nullable" style="width:100px;">N</th>
+      <th style="width:150px;">Definition</th>
       <th title="Comment Count" style="width:15px;">
         <i class="fa fa-comments" title="Comment Count"></i>
       </th>
@@ -46,21 +43,6 @@
         <td>{{schema.dataType}}</td>
         <td title="Is nullable" class="text-center">
           {{#if schema.nullable}}
-            <i class="glyphicon glyphicon-ok"></i>
-          {{/if}}
-        </td>
-        <td title="Is indexed" class="text-center">
-          {{#if schema.indexed}}
-            <i class="glyphicon glyphicon-ok"></i>
-          {{/if}}
-        </td>
-        <td title="Is partitioned" class="text-center">
-          {{#if schema.partitioned}}
-            <i class="glyphicon glyphicon-ok"></i>
-          {{/if}}
-        </td>
-        <td title="Is distributed" class="text-center">
-          {{#if schema.distributed}}
             <i class="glyphicon glyphicon-ok"></i>
           {{/if}}
         </td>
@@ -79,5 +61,6 @@
   </table>
   <div id="json-viewer" class="hidden"></div>
 {{else}}
+  No fields found
   <div id="json-viewer"></div>
 {{/if}}
