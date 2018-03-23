@@ -186,12 +186,6 @@ class RedshiftExtract:
     except (ValueError, TypeError):
       return None
 
-  def trim_newline(self, line):
-    if line:
-      return line.replace('\n', ' ').replace('\r', ' ').strip().encode('ascii', 'ignore') 
-    else:
-      return None
-
   def write_csv(self, csv_filename, csv_columns, data_list):
     csvfile = open(csv_filename, 'wb')
     os.chmod(csv_filename, 0644)

@@ -8,7 +8,7 @@ job.cron.expr=* * * * * ? *
 job.timeout=600
 #job.cmd.params=
 #job.disabled=1
-job.ref.id=82
+job.ref.id=500
 
 # Jython scripts
 job.jython.extract=jython/RedshiftExtract.py
