@@ -154,7 +154,7 @@ class RedshiftLoad:
         delete from dict_field_detail where field_id in (select field_id from t_deleted_fields);
 
         -- update the old record if some thing changed
-        update dict_field_detail t join
+        update ignore dict_field_detail t join
         (
           select x.field_id, s.*
           from stg_dict_field_detail s
