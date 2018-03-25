@@ -61,10 +61,10 @@ class RedshiftExtract:
             t.schemaname    -- 0
             ,t.tablename    -- 1
             ,t.column       -- 2
-            ,case when t.notnull then 'false' 
-              when not t.notnull then 'true' 
-              else null 
-              end         AS is_null     -- 3
+            ,CASE WHEN t.notnull THEN 'false' 
+              WHEN NOT t.notnull THEN 'true' 
+              ELSE null 
+              END           -- 3
             ,t.type         -- 4
             ,t.distkey      -- 5
             ,t.sortkey      -- 6
