@@ -170,9 +170,11 @@
       </span>
 
       {{!--renaming comments to table definition; referred to as comments throughout the code-}}
+      
       {{#tablist.tab tabIds.Comments on-select=(action "tabSelectionChanged")}}Table Definition{{/tablist.tab}}
 
       {{!--renaming schema to fields; referred to as schema throughout the code-}}
+      
       {{#tablist.tab tabIds.Schema on-select=(action "tabSelectionChanged")}}Fields{{/tablist.tab}}
 
       {{#tablist.tab tabIds.Ownership on-select=(action "tabSelectionChanged")}}
