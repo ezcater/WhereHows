@@ -169,9 +169,11 @@
         {{#tablist.tab tabIds.Access on-select=(action "tabSelectionChanged")}}ACL Access{{/tablist.tab}}
       </span>
 
-      {{#tablist.tab tabIds.Comments on-select=(action "tabSelectionChanged")}}Comments{{/tablist.tab}}
+      {{!-- renaming comments to table definition; referred to as comments throughout the code --}}
+      {{#tablist.tab tabIds.Comments on-select=(action "tabSelectionChanged")}}Table Definition{{/tablist.tab}}
 
-      {{#tablist.tab tabIds.Schema on-select=(action "tabSelectionChanged")}}Schema{{/tablist.tab}}
+      {{!-- renaming schema to fields; referred to as schema throughout the code --}}
+      {{#tablist.tab tabIds.Schema on-select=(action "tabSelectionChanged")}}Fields{{/tablist.tab}}
 
       {{#tablist.tab tabIds.Ownership on-select=(action "tabSelectionChanged")}}
         Ownership
@@ -191,11 +193,13 @@
         {{/tablist.tab}}
       {{/if}}
 
-      {{#unless isSFDC}}
-        {{#tablist.tab tabIds.SampleData on-select=(action "tabSelectionChanged")}}
-          Sample Data{{/tablist.tab}}
-      {{/unless}}
-
+      {{!--feature not available--}}
+      <span style="display:none">
+        {{#unless isSFDC}}
+          {{#tablist.tab tabIds.SampleData on-select=(action "tabSelectionChanged")}}
+            Sample Data{{/tablist.tab}}
+        {{/unless}}
+      </span>
       {{#tablist.tab tabIds.Relations on-select=(action "tabSelectionChanged")}}
         Relations{{/tablist.tab}}
 
@@ -226,7 +230,7 @@
       {{dataset-schema
         isTable=isTable
         json=model.schema
-        schemas=schemas
+        schemas=model.schemas
       }}
     {{/tabs.tabpanel}}
 
