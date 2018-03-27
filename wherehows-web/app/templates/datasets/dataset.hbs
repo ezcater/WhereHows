@@ -254,7 +254,7 @@
       {{/unless}}
     {{/tabs.tabpanel}}
 
-    {{#tabs.tabpanel tabIds.Compliance}}
+    {{!-- {{#tabs.tabpanel tabIds.Compliance}}
       {{dataset-compliance
         datasetName=model.name
         schemaless=schemaless
@@ -267,7 +267,7 @@
         onSave=(action "savePrivacyCompliancePolicy")
         onReset=(action "resetPrivacyCompliancePolicy")
       }}
-    {{/tabs.tabpanel}}
+    {{/tabs.tabpanel}} --}}
 
     {{#tabs.tabpanel tabIds.Access}}
       {{dataset-aclaccess

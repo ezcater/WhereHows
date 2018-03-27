@@ -48,7 +48,7 @@
         </td>
         <td class="commentsArea">
           <div class="commentsArea">
-            {{!--{{#schema-comment schema=schema datasetId=dataset.id fieldId=schema.id}}{{/schema-comment}}--}}
+            {{#schema-comment schema=schema datasetId=dataset.id columnId=schema.id comments=schema.comments}}{{/schema-comment}}
             {{schema.commentHtml}}
           </div>
         </td>

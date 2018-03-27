@@ -52,6 +52,7 @@ export class SchemaComment extends Component {
    * @type {"ember-concurrency".Task<Promise<Array<IDatasetComment>>, (a?: IGetCommentsTaskArgs) => "ember-concurrency".TaskInstance<Promise<Array<IDatasetComment>>>>}
    */
   getCommentsTask = task(function*({ datasetId, columnId, comments }: IGetCommentsTaskArgs) {
+    console.log(`getCommentsTask ${datasetId}, ${columnId}, ${comments}`);
     const schemaComments: Array<IDatasetComment> = yield readDatasetSchemaComments(datasetId, columnId);
     const withHtmlComments = augmentObjectsWithHtmlComments(
       schemaComments.map(({ text }) => <IDatasetColumn>{ comment: text })
@@ -61,7 +62,9 @@ export class SchemaComment extends Component {
 
   actions = {
     showComments(this: SchemaComment) {
+      console.log('showComments');
       const props = getProperties(this, ['datasetId', 'columnId', 'comments']);
+      console.log('props: ' + JSON.stringify(props));
       set(this, 'isShowingFieldComment', true);
 
       // @ts-ignore ts limitation with the ember object model, fixed in ember 3.1 with es5 getters
@@ -69,6 +72,7 @@ export class SchemaComment extends Component {
     },
 
     hideComments(this: SchemaComment) {
+      console.log('hideComments');
       return set(this, 'isShowingFieldComment', false);
     },
 
@@ -78,6 +82,7 @@ export class SchemaComment extends Component {
      * @return {Promise<boolean>}
      */
     async handleSchemaComment(this: SchemaComment, strategy: SchemaCommentActions) {
+      console.log('handleSchemaComment');
       const [, { text }] = arguments;
       const { datasetId, columnId, notifications, comments, getCommentsTask } = getProperties(this, [
         'datasetId',
