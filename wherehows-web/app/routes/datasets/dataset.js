@@ -54,13 +54,41 @@ export default Route.extend({
    * @return {Promise<IDataset>}
    */
   async model({ dataset_id, urn }) {
+    let model = {};
     let datasetId = dataset_id;
 
     if (datasetId === 'urn' && isDatasetUrn(urn)) {
       datasetId = await datasetUrnToId(urn);
     }
 
-    return await readDataset(datasetId);
+    const [ds, { schemaless, columns }] = await Promise.all([readDataset(datasetId), readDatasetColumns(datasetId)]);
+
+    if (ds && ds.id) {
+      let { originalSchema = null } = ds;
+
+      if (originalSchema) {
+        set(ds, 'schema', originalSchema);
+      }
+      model = ds;
+    } else if (ds.dataset) {
+      model = ds.dataset;
+    }
+
+    const schemas = augmentObjectsWithHtmlComments(columns).map(s =>
+      Object.assign(s, {
+        comments: (s.comment && [s.comment]) || []
+      })
+    );
+
+    console.log(`schemas ${JSON.stringify(schemas)}`);
+
+    return Object.assign(
+      {
+        schemas,
+        schemaless
+      },
+      model
+    );
   },
 
   /**
@@ -77,28 +105,11 @@ export default Route.extend({
     let id = 0;
     let urn = '';
 
-    if (model && model.id) {
-      ({ id, source, urn } = model);
-      let { originalSchema = null } = model;
+    ({ id, source, urn } = model);
 
-      this.controllerFor('datasets').set('detailview', true);
-      if (originalSchema) {
-        set(model, 'schema', originalSchema);
-      }
+    this.controllerFor('datasets').set('detailview', true);
 
-      const schemas = JSON.parse(model.schema).fields.map(field => ({
-        fieldName: field.name
-        , dataType: field.data_type
-        , nullable: field.nullable
-      }));
-      Object.assign(model, { schemas } );
-      controller.set('model', model);
-    } else if (model.dataset) {
-      ({ id, source, urn } = model.dataset);
-
-      controller.set('model', model.dataset);
-      this.controllerFor('datasets').set('detailview', true);
-    }
+    controller.set('model', model);
 
     // Don't set default zero Ids on controller
     if (id) {
@@ -118,29 +129,42 @@ export default Route.extend({
         try {
           let properties;
 
-          const [
-            { schemaless, columns },
-            compliance,
-            complianceDataTypes,
-            complianceSuggestion,
-            datasetComments,
-            isInternal,
-            datasetView,
-            owners,
-            { userEntitiesSource, userEntitiesMaps }
-          ] = await Promise.all([
-            readDatasetColumns(id),
-            readDatasetCompliance(id),
-            readComplianceDataTypes(),
-            readDatasetComplianceSuggestion(id),
-            readDatasetComments(id),
-            get(this, 'configurator').getConfig('isInternal'),
-            readDatasetView(id),
-            readDatasetOwners(id),
-            getUserEntities()
-          ]);
-          const { complianceInfo, isNewComplianceInfo } = compliance;
-          const schemas = augmentObjectsWithHtmlComments(columns);
+          const datasetComments = await readDatasetComments(id);
+          console.log('datasetComments');
+
+          const isInternal = await get(this, 'configurator').getConfig('isInternal');
+          console.log('isInternal');
+
+          const datasetView = await readDatasetView(id);
+          console.log('datasetView');
+
+          const owners = await readDatasetOwners(id);
+          console.log('owners');
+
+          const { userEntitiesSource, userEntitiesMaps } = await getUserEntities();
+          console.log('user entities');
+
+          // const [
+          //   // compliance,
+          //   // complianceDataTypes,
+          //   // complianceSuggestion,
+          //   datasetComments,
+          //   isInternal,
+          //   datasetView,
+          //   owners,
+          //   { userEntitiesSource, userEntitiesMaps }
+          // ] = await Promise.all([
+          //   // readDatasetColumns(id),
+          //   // readDatasetCompliance(id),
+          //   // readComplianceDataTypes(),
+          //   // readDatasetComplianceSuggestion(id),
+          //   readDatasetComments(id),
+          //   get(this, 'configurator').getConfig('isInternal'),
+          //   readDatasetView(id),
+          //   readDatasetOwners(id),
+          //   getUserEntities()
+          // ]);
+          // const { complianceInfo, isNewComplianceInfo } = compliance;
 
           if (String(source).toLowerCase() === 'pinot') {
             properties = await readPinotProperties(id);
@@ -149,16 +173,15 @@ export default Route.extend({
           }
 
           setProperties(controller, {
-            complianceInfo,
-            complianceDataTypes,
-            isNewComplianceInfo,
-            complianceSuggestion,
+            // complianceInfo,
+            // complianceDataTypes,
+            // isNewComplianceInfo,
+            // complianceSuggestion,
             datasetComments,
-            schemaless,
-            schemas,
+            schemaless: model.schemaless,
             isInternal,
             datasetView,
-            schemaFieldNamesMappedToDataTypes: columnDataTypesAndFieldNames(columns),
+            // schemaFieldNamesMappedToDataTypes: columnDataTypesAndFieldNames(columns),
             ...properties,
             owners,
             userEntitiesMaps,
