@@ -21,8 +21,38 @@ const init = async () => {
     });
 
     server.route({
+        method: 'POST',
+        path: '/{param}',
+        handler: {
+            proxy: {
+                uri: 'http://localhost:9001{path}'
+            }
+        }
+    });
+
+    server.route({
         method: 'GET',
-        path: '/{param*}',
+        path: '/config',
+        handler: {
+            proxy: {
+                uri: 'http://localhost:9001/config'
+            }
+        }
+    });
+
+    server.route({
+        method: 'GET',
+        path: '/assets',
+        handler: {
+            proxy: {
+                uri: 'http://localhost:9001/assets'
+            }
+        }
+    });
+
+    server.route({
+        method: 'GET',
+        path: '/{param}',
         handler: {
             directory: {
                 path: 'dist',
@@ -33,10 +63,32 @@ const init = async () => {
 
     server.route({
         method: 'GET',
-        path: '/api/{resource}',
+        path: '/assets/{param*}',
+        handler: {
+            directory: {
+                path: 'dist/assets',
+                index: ['index.html']
+            }
+        }
+    });
+
+    server.route({
+        method: 'GET',
+        path: '/assets/assets/{param*}',
+        handler: {
+            directory: {
+                path: 'dist/assets',
+                index: ['index.html']
+            }
+        }
+    });
+
+    server.route({
+        method: 'GET',
+        path: '/api/{resource*}',
         handler: {
             proxy: {
-                uri: 'http://localhost:9001/api/{resource}'
+                uri: 'http://localhost:9001/{path}'
             }
         }
     });
