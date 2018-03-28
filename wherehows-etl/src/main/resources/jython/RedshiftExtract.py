@@ -61,7 +61,7 @@ class RedshiftExtract:
             t.schemaname    -- 0
             ,t.tablename    -- 1
             ,t.column       -- 2
-            ,t.notnull      -- 3
+            , NOT t.notnull -- 3
             ,t.type         -- 4
             ,t.distkey      -- 5
             ,t.sortkey      -- 6
